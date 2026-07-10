@@ -358,34 +358,68 @@ button, input, select, textarea {
 
 @media (max-width: 768px) {
   :root {
-    --banner-h: 148px;
+    --banner-h: 96px;
   }
 
+  /* Same horizontal row arrangement as desktop, just tighter — items
+     wrap onto a second line only if they don't all fit, rather than
+     forcing every item onto its own full-width row. */
   .top-banner-inner {
-    flex-direction: column;
-    gap: 10px;
-    padding: 14px 20px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 10px 16px;
   }
 
-  .tb-divider {
-    display: none;
+  .tb-item {
+    gap: 6px;
+  }
+
+  .tb-icon {
+    width: 24px;
+    height: 24px;
+    font-size: 0.65rem;
+  }
+
+  .tb-label {
+    font-size: 0.55rem;
+    letter-spacing: 0.06em;
   }
 
   .tb-phone .tb-value {
-    font-size: 1rem;
-  }
-
-  .tb-location .tb-value {
     font-size: 0.8125rem;
   }
 
+  .tb-location .tb-value,
   .tb-email .tb-value {
-    font-size: 0.8125rem;
+    font-size: 0.6875rem;
+  }
+
+  .tb-divider {
+    height: 20px;
   }
 
   .tb-cta {
-    width: 100%;
+    padding: 7px 14px;
+    font-size: 0.6875rem;
+  }
+}
+
+@media (max-width: 400px) {
+  /* Below ~400px even the tightened row can't fit every item without
+     wrapping mid-item, so the location line (longest text) drops its
+     divider and gets its own row — everything stays horizontal
+     internally (icon beside text), just breaks between items rather
+     than mid-content. */
+  .tb-location {
+    flex-basis: 100%;
     justify-content: center;
+  }
+
+  /* the divider sitting between email and location — hidden only here,
+     since location now wraps onto its own full-width row */
+  .tb-email + .tb-divider {
+    display: none;
   }
 }
 
