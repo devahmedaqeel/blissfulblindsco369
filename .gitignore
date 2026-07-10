@@ -1,0 +1,19 @@
+# Node (review-system backend)
+node_modules/
+review-system/.env
+review-system/data/*.db
+review-system/data/*.db-journal
+review-system/data/*.db-wal
+review-system/data/*.db-shm
+*.log
+npm-debug.log*
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Env files anywhere in the project
+.env
+.env.local

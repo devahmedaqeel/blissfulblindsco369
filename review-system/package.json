@@ -1,0 +1,26 @@
+{
+  "name": "blissful-blinds-review-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Standalone backend for the Blissful Blinds Co 369 review system (API + admin panel) and site-wide email notifications (Nodemailer). Does not affect the main static site.",
+  "main": "server.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node src/db/seed.js",
+    "create-admin": "node src/db/createAdmin.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^9.0.3"
+  }
+}

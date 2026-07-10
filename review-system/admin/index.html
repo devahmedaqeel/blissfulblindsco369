@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Admin — Blissful Blinds Co 369</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+  <!-- Login view -->
+  <div id="loginView" class="login-screen">
+    <form id="loginForm" class="login-card" novalidate>
+      <div class="login-brand">
+        <span class="login-brand-name">Blissful Blinds</span>
+        <span class="login-brand-sub">Review Admin</span>
+      </div>
+      <h1 class="login-title">Sign in</h1>
+      <div class="field">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" autocomplete="current-password" required>
+      </div>
+      <div id="loginError" class="form-error" role="alert" hidden></div>
+      <button type="submit" class="btn btn-primary btn-block" id="loginSubmit">Sign In</button>
+    </form>
+  </div>
+
+  <!-- Dashboard view -->
+  <div id="dashboardView" class="dashboard" hidden>
+    <header class="admin-header">
+      <div class="admin-header-brand">
+        <span class="login-brand-name">Blissful Blinds</span>
+        <span class="login-brand-sub">Review Admin</span>
+      </div>
+      <div class="admin-header-actions">
+        <span id="whoami" class="whoami"></span>
+        <button type="button" id="logoutBtn" class="btn btn-ghost">Log Out</button>
+      </div>
+    </header>
+
+    <main class="admin-main">
+      <section class="summary-grid" id="summaryGrid" aria-label="Review summary">
+        <div class="summary-card">
+          <span class="summary-value" id="sumPending">–</span>
+          <span class="summary-label">Pending</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-value" id="sumApproved">–</span>
+          <span class="summary-label">Approved</span>
+        </div>
+        <div class="summary-card">
+          <span class="summary-value" id="sumRejected">–</span>
+          <span class="summary-label">Rejected</span>
+        </div>
+        <div class="summary-card summary-card-accent">
+          <span class="summary-value" id="sumAverage">–</span>
+          <span class="summary-label">Average Rating (approved)</span>
+        </div>
+      </section>
+
+      <section class="toolbar" aria-label="Filters">
+        <input type="search" id="searchInput" class="toolbar-search" placeholder="Search name, email, or review text…">
+        <select id="statusFilter" class="toolbar-select">
+          <option value="">All statuses</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+        <select id="ratingFilter" class="toolbar-select">
+          <option value="">All ratings</option>
+          <option value="5">★★★★★ (5)</option>
+          <option value="4">★★★★☆ (4)</option>
+          <option value="3">★★★☆☆ (3)</option>
+          <option value="2">★★☆☆☆ (2)</option>
+          <option value="1">★☆☆☆☆ (1)</option>
+        </select>
+        <select id="sortFilter" class="toolbar-select">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+          <option value="rating_high">Highest rating</option>
+          <option value="rating_low">Lowest rating</option>
+        </select>
+      </section>
+
+      <div id="reviewsTableWrap" class="table-wrap">
+        <table class="reviews-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Rating</th>
+              <th>Review</th>
+              <th>Status</th>
+              <th>Featured</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="reviewsTbody"></tbody>
+        </table>
+        <p id="emptyState" class="empty-state" hidden>No reviews match these filters.</p>
+      </div>
+
+      <div class="pagination" id="pagination"></div>
+    </main>
+  </div>
+
+  <!-- Edit modal -->
+  <div id="editModal" class="modal-overlay" hidden>
+    <form id="editForm" class="modal-card" novalidate>
+      <h2>Edit Review</h2>
+      <input type="hidden" id="editId">
+      <div class="field">
+        <label for="editName">Customer Name</label>
+        <input type="text" id="editName" required minlength="2" maxlength="80">
+      </div>
+      <div class="field">
+        <label for="editRating">Rating</label>
+        <select id="editRating" required>
+          <option value="5">★★★★★ (5)</option>
+          <option value="4">★★★★☆ (4)</option>
+          <option value="3">★★★☆☆ (3)</option>
+          <option value="2">★★☆☆☆ (2)</option>
+          <option value="1">★☆☆☆☆ (1)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="editReview">Review</label>
+        <textarea id="editReview" rows="5" required minlength="10" maxlength="1000"></textarea>
+      </div>
+      <div id="editError" class="form-error" role="alert" hidden></div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="editCancel">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+      </div>
+    </form>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="admin.js"></script>
+</body>
+</html>
