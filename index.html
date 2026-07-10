@@ -55,9 +55,6 @@
         "closes": "18:00"
       }
     ],
-    "sameAs": [
-      "https://uk.trustpilot.com/review/blissfulblindsco369.com"
-    ],
     "areaServed": [
       { "@type": "City", "name": "Peterborough" },
       { "@type": "City", "name": "Leicester" },
@@ -305,7 +302,7 @@
       </div>
     </section>
 
-    <!-- Trustpilot Bar -->
+    <!-- Trust Badges Bar -->
     <section class="trust-bar">
       <div class="container trust-flex">
         <div class="trust-item">
@@ -886,29 +883,6 @@
         <div class="text-center">
           <h2 class="section-title">Trusted by Our Customers</h2>
           <p class="section-subtitle">Read feedback from our happy clients who experienced our professional measuring, advice, and installation service.</p>
-          
-          <!-- Official Trustpilot TrustBox Widget (MicroReviewCount) -->
-          <div class="trustpilot-widget-wrapper" style="margin: 24px 0 30px 0; display: flex; justify-content: center; flex-wrap: wrap; gap: 16px; align-items: center;">
-            <!-- No Trustpilot business account yet: static styled badge only.
-                 Not using class="trustpilot-widget" here on purpose — the Trustpilot
-                 bootstrap script auto-initializes any element with that class and
-                 throws a console error without a data-businessunit-id. -->
-            <div class="trustpilot-widget-static"
-                 style="min-width: 220px; max-width: 360px;">
-              <a href="https://uk.trustpilot.com/review/blissfulblindsco369.com?utm_medium=trustbox&utm_source=MicroReviewCount"
-                 target="_blank"
-                 rel="noopener"
-                 class="trustpilot-microbox">
-                <span class="tp-star-icon" style="background:#00b67a;color:#fff;padding:6px 10px;border-radius:4px;font-weight:800;font-size:0.85rem;display:inline-flex;align-items:center;gap:4px;font-family:sans-serif;">★ Trustpilot</span>
-                <div style="text-align:left;line-height:1.3;">
-                  <span style="color:var(--text-primary);font-weight:700;font-size:0.9rem;display:block;">Read our reviews</span>
-                  <span style="color:var(--text-secondary);font-size:0.78rem;display:block;">Rate us on Trustpilot</span>
-                </div>
-                <i class="fa-solid fa-arrow-up-right-from-square" style="color:var(--text-muted);font-size:0.75rem;margin-left:6px;"></i>
-              </a>
-            </div>
-          </div>
-
         </div>
 
 
@@ -1478,9 +1452,6 @@
                 <img loading="lazy" decoding="async" class="new-review-logo-img" src="https://blindsworldltd.com/wp-content/uploads/2022/02/Google-Reviews-768x309.png.webp" alt="Google Reviews">
               </div>
               <div class="new-review-logo-item">
-                <img loading="lazy" decoding="async" class="new-review-logo-img" src="https://blindsworldltd.com/wp-content/uploads/2022/02/Trustpilot-logo-white.png.webp" alt="Trustpilot Reviews">
-              </div>
-              <div class="new-review-logo-item">
                 <img loading="lazy" decoding="async" class="new-review-logo-img" src="https://blindsworldltd.com/wp-content/uploads/2022/02/Facebook-reviews-logo.png.webp" alt="Facebook Reviews">
               </div>
             </div>
@@ -1579,25 +1550,8 @@
   <!-- Leaflet Map JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-  <!-- Official Trustpilot Widget Bootstrap Script -->
-  <script type="text/javascript" src="https://widget.trustpilot.com/bootstrap/v5/tp.widget.bootstrap.min.js" async></script>
-
   <!-- Modern JS Script -->
   <script src="app.js"></script>
-
-  <!-- Floating Trustpilot Badge (bottom-left, fixed) -->
-  <a href="https://uk.trustpilot.com/review/blissfulblindsco369.com?utm_medium=trustbox&utm_source=MicroReviewCount"
-     target="_blank"
-     rel="noopener"
-     class="tp-floating-badge"
-     id="tpFloatingBadge"
-     aria-label="Read our Trustpilot reviews">
-    <span class="tp-floating-logo">★ Trustpilot</span>
-    <div class="tp-floating-text">
-      <span class="tp-floating-score">Read our reviews</span>
-      <span class="tp-floating-count">Rate us on Trustpilot</span>
-    </div>
-  </a>
 
   <!-- AI Sales & Support Assistant (chat widget) — self-contained; builds
        its own UI inside this container once the page is interactive.
