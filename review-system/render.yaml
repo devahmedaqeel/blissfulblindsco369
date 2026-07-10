@@ -1,0 +1,62 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+#
+# Deploy: push this repo to GitHub, then in Render: New -> Blueprint ->
+# select this repo. Render reads this file automatically. Root directory
+# must be set to `review-system` (Render asks for this when creating the
+# Blueprint, since this file lives inside that subfolder of the repo).
+#
+# IMPORTANT: the free instance type has NO persistent disk support — the
+# `disk:` block below requires a paid instance type (starter or above,
+# a few dollars/month). On the free tier the SQLite database will reset
+# on every redeploy. If you're starting on free to test, that's fine;
+# upgrade the instance type (and this file already has the disk block
+# ready) once you need reviews/leads to actually persist.
+
+services:
+  - type: web
+    name: blissfulblindsco369-api
+    runtime: node
+    plan: free
+    rootDir: review-system
+    buildCommand: npm install
+    startCommand: node server.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 4000
+      - key: CORS_ORIGINS
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 8h
+      - key: TURNSTILE_SECRET_KEY
+        sync: false
+      - key: EMAIL_USER
+        value: blissfulblindsco369@gmail.com
+      - key: EMAIL_PASS
+        sync: false
+      - key: EMAIL_ADMIN_TO
+        value: blissfulblindsco369@gmail.com
+      - key: EMAIL_FROM_NAME
+        value: Blissful Blinds Co
+      - key: REVIEW_SUBMIT_RATE_LIMIT
+        value: 5
+      - key: REVIEW_SUBMIT_RATE_WINDOW_MINUTES
+        value: 15
+      - key: ADMIN_LOGIN_RATE_LIMIT
+        value: 10
+      - key: ADMIN_LOGIN_RATE_WINDOW_MINUTES
+        value: 15
+      - key: NOTIFY_SUBMIT_RATE_LIMIT
+        value: 5
+      - key: NOTIFY_SUBMIT_RATE_WINDOW_MINUTES
+        value: 15
+      - key: DATA_DIR
+        value: /var/data
+    disk:
+      name: review-system-data
+      mountPath: /var/data
+      sizeGB: 1

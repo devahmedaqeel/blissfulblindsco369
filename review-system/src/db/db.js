@@ -2,7 +2,11 @@ const path = require('path');
 const fs = require('fs');
 const { DatabaseSync } = require('node:sqlite');
 
-const DATA_DIR = path.join(__dirname, '..', '..', 'data');
+// Overridable so a host with a persistent-disk mount (e.g. Render) can
+// point this at that disk's absolute path — otherwise the database would
+// live on the container's ephemeral filesystem and be wiped on every
+// redeploy/restart. Defaults to the same local ./data folder as before.
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', '..', 'data');
 const DB_PATH = path.join(DATA_DIR, 'reviews.db');
 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
