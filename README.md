@@ -1,5 +1,8 @@
 # Blissful Blinds Co 369 — Website
 
+Official Blissful Blinds Co 369 website – responsive, SEO-optimized,
+high-performance business website.
+
 Static HTML/CSS/JS site. No build step, no framework — every page is served as-is.
 
 Project folder: `Blissful Blinds Co 369`. Nothing in the code references
@@ -73,3 +76,18 @@ JSON-LD block in `index.html`'s `<head>`.
 - `styles.css` is one 3000+ line file shared by all 9 pages. Normal for
   a hand-built static site without a build step, but means each page
   downloads CSS it doesn't fully use.
+
+## Additional features (additive, don't affect the above)
+
+- **`chatbot.js` / `chatbot-kb.js` / `chatbot.css`** — AI sales & support
+  assistant. Client-side retrieval over `knowledge-base/*.md`, no backend
+  required. See the knowledge-base files for the source of truth it draws
+  from.
+- **`reviews-widget.js` / `reviews-widget.css`** + the `#customer-reviews`
+  section in `index.html` — customer review display/submission widget.
+- **`review-system/`** — standalone Node.js/Express backend (own
+  `README.md` inside) that powers the review system's database + admin
+  panel, and sends email notifications (Nodemailer/Gmail SMTP) for the
+  booking form, chatbot lead form, and review submissions. Not part of
+  the static site's deploy — runs as its own process, see
+  `review-system/README.md` for setup and deployment.
