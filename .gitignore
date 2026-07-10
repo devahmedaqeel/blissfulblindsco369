@@ -17,3 +17,6 @@ Thumbs.db
 # Env files anywhere in the project
 .env
 .env.local
+
+.vercel
+.env*.local
