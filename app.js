@@ -704,32 +704,85 @@ document.addEventListener('DOMContentLoaded', () => {
   initCookieConsent();
 
   // ---------------------------------------------------------------------
-  // Draggable WhatsApp widget — lets a visitor drag it up/down so it can
-  // be moved out of the way of page content on any screen size. Only the
-  // vertical position (`bottom`) changes; the corner it's anchored to
-  // stays fixed. A small movement threshold tells a drag apart from a
-  // normal tap so the WhatsApp link still opens on click/tap as before.
-  // Position is remembered (per browser) via localStorage.
+  // Freely draggable floating widgets (WhatsApp here; the chatbot toggle
+  // has its own copy in chatbot.js since that widget builds its own DOM
+  // independently — see the note at the top of that file). Lets a
+  // visitor drag the widget anywhere on screen — up, down, left, right —
+  // like a mobile chat-head. Position (x, y) is remembered per browser
+  // via localStorage and re-clamped into view on resize/rotation. A
+  // small movement threshold tells a drag apart from a normal tap, so
+  // the WhatsApp link still opens instantly on click/tap.
   // ---------------------------------------------------------------------
-  function makeVerticallyDraggable(el, storageKey) {
+  function makeFreelyDraggable(el, storageKey) {
     if (!el) return;
-    let dragging = false;
-    let moved = false;
-    let startY = 0;
-    let startBottom = 0;
-    let currentBottom = 0;
-    let rafId = null;
-    let pendingClientY = null;
 
-    function clampBottom(value) {
-      const maxBottom = Math.max(12, window.innerHeight - el.offsetHeight - 90);
-      return Math.min(Math.max(value, 12), maxBottom);
+    var DRAG_THRESHOLD = 9; // px of movement before a tap becomes a drag
+    var EDGE_MARGIN = 12;
+
+    var dragging = false;
+    var moved = false;
+    var justDragged = false;
+    var activePointerId = null;
+    var startClientX = 0, startClientY = 0;
+    var startLeft = 0, startTop = 0;
+    var currentLeft = 0, currentTop = 0;
+    var rafId = null;
+    var pendingX = 0, pendingY = 0;
+
+    // Keeps the widget clear of the sticky announcement bar + header,
+    // whatever their current combined height is at this viewport width
+    // — re-read live rather than hard-coded so it stays correct across
+    // every breakpoint and if either bar's height ever changes.
+    function topClearance() {
+      var header = document.querySelector('.site-header');
+      if (header) {
+        var rect = header.getBoundingClientRect();
+        if (rect.height > 0) return rect.bottom + 10;
+      }
+      return 90;
     }
 
-    let saved = null;
-    try { saved = localStorage.getItem(storageKey); } catch (e) {}
-    const savedNum = saved !== null ? parseFloat(saved) : NaN;
-    if (!isNaN(savedNum)) el.style.bottom = clampBottom(savedNum) + 'px';
+    function getBounds(w, h) {
+      var top = topClearance();
+      return {
+        minX: EDGE_MARGIN,
+        maxX: Math.max(EDGE_MARGIN, window.innerWidth - w - EDGE_MARGIN),
+        minY: top,
+        maxY: Math.max(top, window.innerHeight - h - EDGE_MARGIN)
+      };
+    }
+
+    function loadSavedPosition() {
+      var raw = null;
+      try { raw = localStorage.getItem(storageKey); } catch (e) {}
+      if (!raw) return null;
+      try {
+        var parsed = JSON.parse(raw);
+        if (typeof parsed.x === 'number' && typeof parsed.y === 'number' &&
+            !isNaN(parsed.x) && !isNaN(parsed.y)) return parsed;
+      } catch (e) {}
+      return null;
+    }
+
+    function savePosition(x, y) {
+      try { localStorage.setItem(storageKey, JSON.stringify({ x: x, y: y })); } catch (e) {}
+    }
+
+    function init() {
+      var rect = el.getBoundingClientRect();
+      var b = getBounds(rect.width, rect.height);
+      var saved = loadSavedPosition();
+      var x = saved ? saved.x : rect.left;
+      var y = saved ? saved.y : rect.top;
+      x = Math.min(Math.max(x, b.minX), b.maxX);
+      y = Math.min(Math.max(y, b.minY), b.maxY);
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      el.style.right = 'auto';
+      el.style.bottom = 'auto';
+      currentLeft = x;
+      currentTop = y;
+    }
 
     // Deliberately NOT using setPointerCapture here: capturing the
     // pointer on this wrapping div also redirects the compatibility
@@ -738,83 +791,169 @@ document.addEventListener('DOMContentLoaded', () => {
     // document-level move/up listeners (added only while dragging) avoid
     // that entirely.
     //
-    // While dragging, the position is applied via `transform`
-    // (GPU-composited, no layout) instead of writing `bottom` on every
-    // event — writing `bottom` forces a synchronous reflow each time,
+    // While dragging, position is applied via `transform: translate3d()`
+    // (GPU-composited, no layout) instead of writing left/top on every
+    // event — writing left/top forces a synchronous reflow each time,
     // and on phones the browser can't keep up with pointermove's event
     // rate, so it drops frames and the widget visibly jumps instead of
-    // gliding with the finger. `bottom` is only written once, at the end
-    // of the drag. requestAnimationFrame also caps the work to once per
-    // frame even if pointermove fires faster than that.
+    // gliding with the finger. left/top are only written once the drag
+    // ends. requestAnimationFrame also caps the work to once per frame
+    // even if pointermove fires faster than that (a passive listener, so
+    // it never blocks the browser's own scroll/compositor work either).
     function applyMove() {
       rafId = null;
-      const dy = pendingClientY - startY;
-      if (Math.abs(dy) > 4) moved = true;
-      currentBottom = clampBottom(startBottom - dy);
-      el.style.transform = `translateY(${startBottom - currentBottom}px)`;
+      var dx = pendingX - startClientX;
+      var dy = pendingY - startClientY;
+      if (!moved) {
+        if (Math.sqrt(dx * dx + dy * dy) < DRAG_THRESHOLD) return;
+        moved = true;
+        el.classList.add('is-dragging');
+      }
+      var b = getBounds(el.offsetWidth, el.offsetHeight);
+      currentLeft = Math.min(Math.max(startLeft + dx, b.minX), b.maxX);
+      currentTop = Math.min(Math.max(startTop + dy, b.minY), b.maxY);
+      el.style.transform = 'translate3d(' + (currentLeft - startLeft) + 'px, ' + (currentTop - startTop) + 'px, 0)';
     }
 
     function onPointerMove(e) {
-      if (!dragging) return;
-      pendingClientY = e.clientY;
+      if (!dragging || e.pointerId !== activePointerId) return;
+      pendingX = e.clientX;
+      pendingY = e.clientY;
       if (rafId === null) rafId = requestAnimationFrame(applyMove);
     }
 
-    function onPointerUp() {
+    function finishDrag() {
       if (!dragging) return;
       dragging = false;
+      activePointerId = null;
       // Flush any move that arrived after the last rAF-scheduled update
-      // ran, so the final committed position matches exactly where the
-      // pointer was released instead of lagging one frame behind.
+      // ran, so the release position is exactly where the pointer was
+      // let go instead of lagging one frame behind.
       if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; applyMove(); }
-      // Clear the transform and commit the final `bottom` first, then
-      // wait two frames before removing `is-dragging` (transition: none).
-      // Setting the style and removing the class in the same tick isn't
-      // enough — the browser only diffs style state across the whole
-      // task, so it would still see "transition re-enabled" + "transform
-      // changed" together and animate the reset. The extra frames give
-      // the instant, transition-free state a chance to actually paint
-      // first, so re-enabling the transition afterward has nothing left
-      // to animate.
-      el.style.transform = '';
-      el.style.bottom = currentBottom + 'px';
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          el.classList.remove('is-dragging');
-        });
-      });
       document.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
       document.removeEventListener('pointercancel', onPointerUp);
-      if (moved) {
-        try { localStorage.setItem(storageKey, currentBottom); } catch (err) {}
-        // Suppress the synthetic click that follows this drag gesture so
-        // it doesn't also open the WhatsApp link. Attached on document
-        // (an ancestor of the click target) so its capture-phase handler
-        // runs before the target's own click listener.
-        document.addEventListener('click', (ev) => {
-          ev.preventDefault();
-          ev.stopPropagation();
-        }, { capture: true, once: true });
-      }
-    }
+      window.removeEventListener('blur', finishDrag);
 
-    el.addEventListener('pointerdown', (e) => {
+      if (!moved) {
+        el.classList.remove('is-dragging');
+        return;
+      }
+
+      // Commit the exact release position first, instantly (still under
+      // `is-dragging`'s transition:none) — this becomes the start point
+      // for the eased magnetic-snap animation below. Doing this in one
+      // step and the snap in a separate, later step (rather than jumping
+      // straight to the snapped position) is what makes the release feel
+      // like a continuation of the drag instead of a jump.
+      el.style.transform = '';
+      el.style.left = currentLeft + 'px';
+      el.style.top = currentTop + 'px';
+      // Flags the click that follows this drag gesture so the listener
+      // below can cancel the WhatsApp link's navigation for it. Checked
+      // (and reset) inline rather than via a one-time document-level
+      // capture listener with stopPropagation() — that approach worked,
+      // but stopping propagation on a click this way was found to also
+      // interfere with a browser's user-activation bookkeeping, silently
+      // breaking a *later*, genuinely separate click on the same link.
+      justDragged = true;
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          var b = getBounds(el.offsetWidth, el.offsetHeight);
+          // Magnetic edge snap — settle horizontally to whichever side
+          // (left/right) is closer, like WhatsApp/Messenger chat heads.
+          // Vertical position stays exactly where it was released.
+          var snappedX = (currentLeft - b.minX) <= (b.maxX - currentLeft) ? b.minX : b.maxX;
+          var clampedY = Math.min(Math.max(currentTop, b.minY), b.maxY);
+
+          if (snappedX !== currentLeft || clampedY !== currentTop) {
+            el.classList.add('is-snapping');
+            el.style.left = snappedX + 'px';
+            el.style.top = clampedY + 'px';
+          }
+          currentLeft = snappedX;
+          currentTop = clampedY;
+          savePosition(currentLeft, currentTop);
+
+          var cleanup = function () {
+            el.classList.remove('is-dragging', 'is-snapping');
+            el.removeEventListener('transitionend', cleanup);
+          };
+          el.addEventListener('transitionend', cleanup);
+          setTimeout(cleanup, 400); // fallback in case transitionend never fires
+        });
+      });
+    }
+    var onPointerUp = finishDrag;
+
+    // Cancels the WhatsApp link's navigation only for the click that
+    // immediately follows a drag; a plain tap (justDragged left false)
+    // passes through untouched. Bubble phase on the wrapping div (an
+    // ancestor of the actual <a>) is enough — preventDefault() cancels
+    // the anchor's default action from any point in propagation.
+    el.addEventListener('click', function (ev) {
+      window.__waClickDebug = window.__waClickDebug || [];
+      window.__waClickDebug.push({ justDragged: justDragged, defaultPrevented: ev.defaultPrevented, t: Date.now() });
+      if (justDragged) {
+        justDragged = false;
+        ev.preventDefault();
+      }
+    });
+
+    el.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
+      if (dragging) return; // already tracking a different pointer
       dragging = true;
       moved = false;
-      startY = e.clientY;
-      const rect = el.getBoundingClientRect();
-      startBottom = window.innerHeight - rect.bottom;
-      currentBottom = startBottom;
-      el.classList.add('is-dragging');
-      document.addEventListener('pointermove', onPointerMove);
+      // Clear any stale flag from a previous drag whose release click
+      // never landed back on this element (e.g. released far away) —
+      // every legitimate click is preceded by its own pointerdown here,
+      // so this guarantees the flag never leaks into an unrelated tap.
+      justDragged = false;
+      activePointerId = e.pointerId;
+      startClientX = e.clientX;
+      startClientY = e.clientY;
+      var rect = el.getBoundingClientRect();
+      startLeft = rect.left;
+      startTop = rect.top;
+      currentLeft = startLeft;
+      currentTop = startTop;
+      document.addEventListener('pointermove', onPointerMove, { passive: true });
       document.addEventListener('pointerup', onPointerUp);
       document.addEventListener('pointercancel', onPointerUp);
+      // Safety net: if the window loses focus mid-drag (alt-tab, a
+      // mobile browser interruption, etc.) the pointerup we'd normally
+      // get can be lost — end the drag anyway so it never gets stuck.
+      window.addEventListener('blur', finishDrag);
     });
+
+    // Keep the widget inside the viewport if it's resized or rotated
+    // (foldables, orientation change, browser window resize) — never
+    // lets it end up stranded off-screen or behind the header.
+    var resizeTimer = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        var b = getBounds(el.offsetWidth, el.offsetHeight);
+        var x = Math.min(Math.max(currentLeft, b.minX), b.maxX);
+        var y = Math.min(Math.max(currentTop, b.minY), b.maxY);
+        if (x !== currentLeft || y !== currentTop) {
+          el.classList.add('is-snapping');
+          el.style.left = x + 'px';
+          el.style.top = y + 'px';
+          currentLeft = x;
+          currentTop = y;
+          savePosition(x, y);
+          setTimeout(function () { el.classList.remove('is-snapping'); }, 400);
+        }
+      }, 150);
+    });
+
+    init();
   }
 
-  makeVerticallyDraggable(document.getElementById('waChatWidget'), 'bb_wa_widget_bottom');
+  makeFreelyDraggable(document.getElementById('waChatWidget'), 'bb_wa_widget_pos');
 });
 
 

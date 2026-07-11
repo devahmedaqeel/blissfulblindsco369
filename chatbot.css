@@ -11,7 +11,10 @@
 /* Mirrored onto the opposite (left) corner from the WhatsApp widget
    (bottom:28px/right:24px) so the two never stack on top of each other.
    Bottom offset is kept tall enough to still clear the cookie banner,
-   which spans near-full width and can appear on either side. */
+   which spans near-full width and can appear on either side. This is
+   only the pre-JS default — makeFreelyDraggable() in this file converts
+   it to explicit left/top on init and allows free movement in any
+   direction from there. */
 .bb-chat-toggle {
   position: fixed;
   bottom: 130px;
@@ -22,10 +25,13 @@
   border-radius: 50%;
   border: none;
   cursor: grab;
-  /* Draggable vertically — see makeToggleDraggable() in chatbot.js.
-     touch-action: none stops the page from scrolling under a touch drag
-     instead of the button moving. */
+  /* touch-action: none stops the page from scrolling under a touch
+     drag instead of the button moving. -webkit-user-drag/user-select
+     stop the browser's own native drag/text-selection gestures from
+     competing with the custom pointer-based drag. */
   touch-action: none;
+  -webkit-user-drag: none;
+  user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,6 +51,18 @@
   cursor: grabbing;
   transition: none;
   animation: none;
+  /* Hints the compositor to put this on its own GPU layer while it's
+     actively being transformed, avoiding a layer-promotion hitch on the
+     very first drag frame. Removed once the drag ends so the layer
+     isn't kept around needlessly. */
+  will-change: transform;
+}
+
+/* One-time eased settle after a drag ends — magnetic edge snap and the
+   viewport-resize reposition both use this. Deliberately a plain
+   ease-out curve (no overshoot) per "no bounce glitches". */
+.bb-chat-toggle.is-snapping {
+  transition: left 0.32s cubic-bezier(0.22, 1, 0.36, 1), top 0.32s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .bb-chat-toggle:focus-visible {

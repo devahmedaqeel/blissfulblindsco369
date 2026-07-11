@@ -610,6 +610,12 @@
   // Open / close
   // ---------------------------------------------------------------------
   var initialized = false;
+  // Set by the drag handler below (makeToggleDraggable) for the one
+  // click that follows a drag gesture, so the click handler can skip
+  // toggling the panel for it. Shared here (rather than local to the
+  // drag IIFE) since the click listener that needs to check it is
+  // registered before that IIFE runs.
+  var toggleJustDragged = false;
 
   function renderWelcomeIfEmpty() {
     if (history.length) {
@@ -627,11 +633,11 @@
 
   function openPanel() {
     ensureKBLoaded();
-    // Keep the panel anchored to the toggle button's current position —
-    // matters once the toggle has been dragged to a new spot (see
-    // makeToggleDraggable below); an empty string falls back to the
-    // stylesheet's default `bottom`.
-    panelEl.style.bottom = toggleBtn.style.bottom || '';
+    // Anchor the panel near the toggle button's current position —
+    // matters once the toggle has been freely dragged around the screen
+    // (see makeToggleDraggable below). No-op on mobile, where the panel
+    // is always full-screen regardless of the toggle's position.
+    positionPanelNearToggle();
     panelEl.hidden = false;
     widgetEl.classList.add('bb-open');
     toggleBtn.setAttribute('aria-expanded', 'true');
@@ -652,127 +658,274 @@
     toggleBtn.focus();
   }
 
+  // Keeps floating UI clear of the sticky announcement bar + header,
+  // whatever their current combined height is at this viewport width —
+  // re-read live rather than hard-coded so it stays correct across every
+  // breakpoint and if either bar's height ever changes. Shared by the
+  // toggle's drag bounds and the panel positioning below.
+  function topClearance() {
+    var header = document.querySelector('.site-header');
+    if (header) {
+      var rect = header.getBoundingClientRect();
+      if (rect.height > 0) return rect.bottom + 10;
+    }
+    return 90;
+  }
+
+  // Places the panel next to wherever the toggle currently is (it can be
+  // anywhere on screen now that it's freely draggable), flipping above/
+  // below and left/right as needed so it always fits fully on screen.
+  // No-op on mobile, where CSS forces the panel full-screen regardless.
+  function positionPanelNearToggle() {
+    if (window.innerWidth <= 480) return;
+    var margin = 12;
+    var toggleRect = toggleBtn.getBoundingClientRect();
+    var panelW = Math.min(392, window.innerWidth - 32);
+    var panelH = Math.min(640, window.innerHeight - 166);
+    var top = topClearance();
+
+    var openAbove = (toggleRect.top - panelH - margin) >= top;
+    var panelTop = openAbove
+      ? toggleRect.top - panelH - margin
+      : toggleRect.bottom + margin;
+    panelTop = Math.min(Math.max(panelTop, top), window.innerHeight - panelH - margin);
+
+    var alignLeft = (toggleRect.left + panelW + margin) <= window.innerWidth;
+    var panelLeft = alignLeft ? toggleRect.left : toggleRect.right - panelW;
+    panelLeft = Math.min(Math.max(panelLeft, margin), window.innerWidth - panelW - margin);
+
+    panelEl.style.left = panelLeft + 'px';
+    panelEl.style.top = panelTop + 'px';
+    panelEl.style.right = 'auto';
+    panelEl.style.bottom = 'auto';
+    panelEl.style.width = panelW + 'px';
+    panelEl.style.height = panelH + 'px';
+    panelEl.style.transformOrigin = (openAbove ? 'bottom' : 'top') + ' ' + (alignLeft ? 'left' : 'right');
+  }
+
   toggleBtn.addEventListener('click', function () {
+    // Skip the one click that immediately follows a drag gesture (see
+    // makeToggleDraggable below) so dragging the button never also
+    // opens/closes the panel.
+    if (toggleJustDragged) { toggleJustDragged = false; return; }
     if (panelEl.hidden) openPanel(); else closePanel();
   });
   closeBtn.addEventListener('click', closePanel);
 
   // ---------------------------------------------------------------------
-  // Draggable toggle button — lets a visitor drag it up/down so it can be
-  // moved out of the way of page content on any screen size. Only the
-  // vertical position (`bottom`) changes; the corner stays fixed. A small
-  // movement threshold tells a drag apart from a normal tap, so the
-  // button still opens/closes the panel on click/tap as before. Position
-  // is remembered (per browser) via localStorage.
+  // Freely draggable toggle button — lets a visitor drag it anywhere on
+  // screen (up, down, left, right), like a mobile chat-head, so it can
+  // always be moved out of the way of page content. Position (x, y) is
+  // remembered per browser via localStorage and re-clamped into view on
+  // resize/rotation. A small movement threshold tells a drag apart from
+  // a normal tap, so the button still opens/closes the panel on click as
+  // before.
   // ---------------------------------------------------------------------
   (function makeToggleDraggable() {
-    var TOGGLE_POS_KEY = 'bb_chat_toggle_bottom';
+    var POS_KEY = 'bb_chat_toggle_pos';
+    var DRAG_THRESHOLD = 9; // px of movement before a tap becomes a drag
+    var EDGE_MARGIN = 12;
+
     var dragging = false;
     var moved = false;
-    var startY = 0;
-    var startBottom = 0;
-    var currentBottom = 0;
+    var activePointerId = null;
+    var startClientX = 0, startClientY = 0;
+    var startLeft = 0, startTop = 0;
+    var currentLeft = 0, currentTop = 0;
     var rafId = null;
-    var pendingClientY = null;
+    var pendingX = 0, pendingY = 0;
 
-    function clampBottom(value) {
-      // Above 480px the panel opens anchored to the toggle's own bottom
-      // and is far taller than the toggle (up to 640px) — so the bound
-      // has to leave room for the *panel*, not just the toggle button,
-      // otherwise dragging the toggle too high would open the panel
-      // partly off the top of the screen. Below 480px the panel is
-      // full-screen regardless of position, so only the toggle itself
-      // (plus clearance for the cookie banner) needs to fit.
-      var isMobile = window.innerWidth <= 480;
-      var reserved = isMobile ? toggleBtn.offsetHeight + 90 : Math.min(640, window.innerHeight - 166) + 12;
-      var maxBottom = Math.max(12, window.innerHeight - reserved);
-      return Math.min(Math.max(value, 12), maxBottom);
+    function getBounds(w, h) {
+      var top = topClearance();
+      return {
+        minX: EDGE_MARGIN,
+        maxX: Math.max(EDGE_MARGIN, window.innerWidth - w - EDGE_MARGIN),
+        minY: top,
+        maxY: Math.max(top, window.innerHeight - h - EDGE_MARGIN)
+      };
     }
 
-    var saved = null;
-    try { saved = localStorage.getItem(TOGGLE_POS_KEY); } catch (e) {}
-    var savedNum = saved !== null ? parseFloat(saved) : NaN;
-    if (!isNaN(savedNum)) toggleBtn.style.bottom = clampBottom(savedNum) + 'px';
+    function loadSavedPosition() {
+      var raw = null;
+      try { raw = localStorage.getItem(POS_KEY); } catch (e) {}
+      if (!raw) return null;
+      try {
+        var parsed = JSON.parse(raw);
+        if (typeof parsed.x === 'number' && typeof parsed.y === 'number' &&
+            !isNaN(parsed.x) && !isNaN(parsed.y)) return parsed;
+      } catch (e) {}
+      return null;
+    }
+
+    function savePosition(x, y) {
+      try { localStorage.setItem(POS_KEY, JSON.stringify({ x: x, y: y })); } catch (e) {}
+    }
+
+    function init() {
+      var rect = toggleBtn.getBoundingClientRect();
+      var b = getBounds(rect.width, rect.height);
+      var saved = loadSavedPosition();
+      var x = saved ? saved.x : rect.left;
+      var y = saved ? saved.y : rect.top;
+      x = Math.min(Math.max(x, b.minX), b.maxX);
+      y = Math.min(Math.max(y, b.minY), b.maxY);
+      toggleBtn.style.left = x + 'px';
+      toggleBtn.style.top = y + 'px';
+      toggleBtn.style.right = 'auto';
+      toggleBtn.style.bottom = 'auto';
+      currentLeft = x;
+      currentTop = y;
+    }
 
     // Document-level move/up listeners (added only while dragging) rather
     // than setPointerCapture — capturing the pointer on the toggle button
     // also redirects its compatibility click event, which can interfere
     // with the button's own click handler above in some browsers.
     //
-    // While dragging, the position is applied via `transform`
-    // (GPU-composited, no layout) instead of writing `bottom` on every
-    // event — writing `bottom` forces a synchronous reflow each time,
+    // While dragging, position is applied via `transform: translate3d()`
+    // (GPU-composited, no layout) instead of writing left/top on every
+    // event — writing left/top forces a synchronous reflow each time,
     // and on phones the browser can't keep up with pointermove's event
     // rate, so it drops frames and the button visibly jumps instead of
-    // gliding with the finger. `bottom` is only written once, at the end
-    // of the drag. requestAnimationFrame also caps the work to once per
-    // frame even if pointermove fires faster than that.
+    // gliding with the finger. left/top are only written once the drag
+    // ends. requestAnimationFrame also caps the work to once per frame
+    // even if pointermove fires faster than that (a passive listener, so
+    // it never blocks the browser's own scroll/compositor work either).
     function applyMove() {
       rafId = null;
-      var dy = pendingClientY - startY;
-      if (Math.abs(dy) > 4) moved = true;
-      currentBottom = clampBottom(startBottom - dy);
-      toggleBtn.style.transform = 'translateY(' + (startBottom - currentBottom) + 'px)';
+      var dx = pendingX - startClientX;
+      var dy = pendingY - startClientY;
+      if (!moved) {
+        if (Math.sqrt(dx * dx + dy * dy) < DRAG_THRESHOLD) return;
+        moved = true;
+        toggleBtn.classList.add('is-dragging');
+      }
+      var b = getBounds(toggleBtn.offsetWidth, toggleBtn.offsetHeight);
+      currentLeft = Math.min(Math.max(startLeft + dx, b.minX), b.maxX);
+      currentTop = Math.min(Math.max(startTop + dy, b.minY), b.maxY);
+      toggleBtn.style.transform = 'translate3d(' + (currentLeft - startLeft) + 'px, ' + (currentTop - startTop) + 'px, 0)';
     }
 
     function onPointerMove(e) {
-      if (!dragging) return;
-      pendingClientY = e.clientY;
+      if (!dragging || e.pointerId !== activePointerId) return;
+      pendingX = e.clientX;
+      pendingY = e.clientY;
       if (rafId === null) rafId = requestAnimationFrame(applyMove);
     }
 
-    function onPointerUp() {
+    function finishDrag() {
       if (!dragging) return;
       dragging = false;
+      activePointerId = null;
       // Flush any move that arrived after the last rAF-scheduled update
-      // ran, so the final committed position matches exactly where the
-      // pointer was released instead of lagging one frame behind.
+      // ran, so the release position is exactly where the pointer was
+      // let go instead of lagging one frame behind.
       if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; applyMove(); }
-      // Clear the transform and commit the final `bottom` first, then
-      // wait two frames before removing `is-dragging` (transition: none).
-      // Setting the style and removing the class in the same tick isn't
-      // enough — the browser only diffs style state across the whole
-      // task, so it would still see "transition re-enabled" + "transform
-      // changed" together and animate the reset. The extra frames give
-      // the instant, transition-free state a chance to actually paint
-      // first, so re-enabling the transition afterward has nothing left
-      // to animate.
-      toggleBtn.style.transform = '';
-      toggleBtn.style.bottom = currentBottom + 'px';
-      requestAnimationFrame(function () {
-        requestAnimationFrame(function () {
-          toggleBtn.classList.remove('is-dragging');
-        });
-      });
       document.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
       document.removeEventListener('pointercancel', onPointerUp);
-      if (moved) {
-        try { localStorage.setItem(TOGGLE_POS_KEY, currentBottom); } catch (err) {}
-        // Suppress the synthetic click that follows this drag gesture so
-        // it doesn't also open/close the panel. Attached on document (an
-        // ancestor of the toggle button) so its capture-phase handler
-        // runs before the button's own click listener above.
-        document.addEventListener('click', function (ev) {
-          ev.preventDefault();
-          ev.stopPropagation();
-        }, { capture: true, once: true });
+      window.removeEventListener('blur', finishDrag);
+
+      if (!moved) {
+        toggleBtn.classList.remove('is-dragging');
+        return;
       }
+
+      // Commit the exact release position first, instantly (still under
+      // `is-dragging`'s transition:none) — this becomes the start point
+      // for the eased magnetic-snap animation below, so the release
+      // feels like a continuation of the drag instead of a jump.
+      toggleBtn.style.transform = '';
+      toggleBtn.style.left = currentLeft + 'px';
+      toggleBtn.style.top = currentTop + 'px';
+      // Flags the click that follows this drag gesture so the toggle's
+      // own click handler (registered above) skips it. Checked inline
+      // rather than via a one-time document-level capture listener with
+      // preventDefault()+stopPropagation() — that approach worked, but
+      // stopping propagation on a click this way was found to also
+      // interfere with a browser's user-activation bookkeeping, silently
+      // breaking a *later*, genuinely separate click on the button.
+      toggleJustDragged = true;
+
+      requestAnimationFrame(function () {
+        requestAnimationFrame(function () {
+          var b = getBounds(toggleBtn.offsetWidth, toggleBtn.offsetHeight);
+          // Magnetic edge snap — settle horizontally to whichever side
+          // (left/right) is closer, like WhatsApp/Messenger chat heads.
+          // Vertical position stays exactly where it was released.
+          var snappedX = (currentLeft - b.minX) <= (b.maxX - currentLeft) ? b.minX : b.maxX;
+          var clampedY = Math.min(Math.max(currentTop, b.minY), b.maxY);
+
+          if (snappedX !== currentLeft || clampedY !== currentTop) {
+            toggleBtn.classList.add('is-snapping');
+            toggleBtn.style.left = snappedX + 'px';
+            toggleBtn.style.top = clampedY + 'px';
+          }
+          currentLeft = snappedX;
+          currentTop = clampedY;
+          savePosition(currentLeft, currentTop);
+
+          var cleanup = function () {
+            toggleBtn.classList.remove('is-dragging', 'is-snapping');
+            toggleBtn.removeEventListener('transitionend', cleanup);
+          };
+          toggleBtn.addEventListener('transitionend', cleanup);
+          setTimeout(cleanup, 400); // fallback in case transitionend never fires
+        });
+      });
     }
+    var onPointerUp = finishDrag;
 
     toggleBtn.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'mouse' && e.button !== 0) return;
+      if (dragging) return; // already tracking a different pointer
       dragging = true;
       moved = false;
-      startY = e.clientY;
+      // Clear any stale flag from a previous drag whose release click
+      // never landed back on this button (e.g. released far away) —
+      // every legitimate click is preceded by its own pointerdown here,
+      // so this guarantees the flag never leaks into an unrelated tap.
+      toggleJustDragged = false;
+      activePointerId = e.pointerId;
+      startClientX = e.clientX;
+      startClientY = e.clientY;
       var rect = toggleBtn.getBoundingClientRect();
-      startBottom = window.innerHeight - rect.bottom;
-      currentBottom = startBottom;
-      toggleBtn.classList.add('is-dragging');
-      document.addEventListener('pointermove', onPointerMove);
+      startLeft = rect.left;
+      startTop = rect.top;
+      currentLeft = startLeft;
+      currentTop = startTop;
+      document.addEventListener('pointermove', onPointerMove, { passive: true });
       document.addEventListener('pointerup', onPointerUp);
       document.addEventListener('pointercancel', onPointerUp);
+      // Safety net: if the window loses focus mid-drag (alt-tab, a
+      // mobile browser interruption, etc.) the pointerup we'd normally
+      // get can be lost — end the drag anyway so it never gets stuck.
+      window.addEventListener('blur', finishDrag);
     });
+
+    // Keep the toggle inside the viewport if it's resized or rotated
+    // (foldables, orientation change, browser window resize) — never
+    // lets it end up stranded off-screen or behind the header.
+    var resizeTimer = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        var b = getBounds(toggleBtn.offsetWidth, toggleBtn.offsetHeight);
+        var x = Math.min(Math.max(currentLeft, b.minX), b.maxX);
+        var y = Math.min(Math.max(currentTop, b.minY), b.maxY);
+        if (x !== currentLeft || y !== currentTop) {
+          toggleBtn.classList.add('is-snapping');
+          toggleBtn.style.left = x + 'px';
+          toggleBtn.style.top = y + 'px';
+          currentLeft = x;
+          currentTop = y;
+          savePosition(x, y);
+          setTimeout(function () { toggleBtn.classList.remove('is-snapping'); }, 400);
+        }
+      }, 150);
+    });
+
+    init();
   })();
 
   document.addEventListener('keydown', function (e) {
