@@ -195,21 +195,48 @@ button, input, select, textarea {
 }
 
 .top-banner-inner {
+  /* Fluid design tokens — every size below scales continuously with
+     viewport width instead of jumping between fixed breakpoints. Scoped
+     to the banner (not :root) so they can't leak into or be confused
+     with the rest of the site's design tokens. */
+  --tb-pad-y: clamp(0.5rem, 0.4rem + 0.5vw, 0.8125rem);
+  --tb-pad-x: clamp(0.875rem, 0.5rem + 2vw, 1.5rem);
+  --tb-gap: clamp(0.5rem, 0.1rem + 2.5vw, 1.75rem);
+  --tb-item-gap: clamp(0.375rem, 0.3rem + 0.4vw, 0.625rem);
+  --tb-icon-size: clamp(1.375rem, 1.15rem + 1vw, 2rem);
+  --tb-icon-font: clamp(0.6rem, 0.52rem + 0.35vw, 0.8rem);
+  --tb-label-font: clamp(0.5rem, 0.45rem + 0.25vw, 0.65rem);
+  --tb-value-font: clamp(0.6875rem, 0.56rem + 0.6vw, 0.9375rem);
+  --tb-phone-font: clamp(0.75rem, 0.55rem + 1vw, 1.0625rem);
+  --tb-divider-h: clamp(1.125rem, 0.9rem + 1vw, 1.625rem);
+  --tb-cta-pad-y: clamp(0.4375rem, 0.36rem + 0.4vw, 0.5625rem);
+  --tb-cta-pad-x: clamp(0.875rem, 0.55rem + 1.5vw, 1.25rem);
+  --tb-cta-font: clamp(0.6875rem, 0.6rem + 0.4vw, 0.8125rem);
+
+  /* Lets descendants query the bar's own rendered width (via @container
+     below) rather than assuming it always equals the viewport. */
+  container-type: inline-size;
+  container-name: tb;
+
   max-width: var(--container-max-width);
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 28px;
-  padding: 11px 24px;
+  gap: var(--tb-gap);
+  padding: var(--tb-pad-y) var(--tb-pad-x);
 }
 
-/* Shared icon + label/value pattern for the phone and location items */
+/* Shared icon + label/value pattern for the phone, email & location items.
+   Grid (rather than inline-flex) gives the icon and text columns
+   consistent, independently-sized tracks so every item lines up on the
+   same baseline regardless of label/value length. */
 .tb-item {
-  display: inline-flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, max-content);
   align-items: center;
-  gap: 10px;
+  gap: var(--tb-item-gap);
   color: var(--white);
   text-decoration: none;
 }
@@ -218,13 +245,14 @@ button, input, select, textarea {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: var(--tb-icon-size);
+  height: var(--tb-icon-size);
+  aspect-ratio: 1;
   flex-shrink: 0;
   border-radius: 50%;
   background: rgba(217, 119, 6, 0.18);
   color: var(--accent-light);
-  font-size: 0.8rem;
+  font-size: var(--tb-icon-font);
   transition: var(--transition-fast);
 }
 
@@ -232,10 +260,11 @@ button, input, select, textarea {
   display: flex;
   flex-direction: column;
   line-height: 1.2;
+  min-width: 0;
 }
 
 .tb-label {
-  font-size: 0.65rem;
+  font-size: var(--tb-label-font);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.09em;
@@ -244,7 +273,7 @@ button, input, select, textarea {
 
 .tb-value {
   font-family: var(--font-heading);
-  font-size: 0.9375rem;
+  font-size: var(--tb-value-font);
   font-weight: 600;
   letter-spacing: 0.01em;
   color: var(--white);
@@ -252,7 +281,7 @@ button, input, select, textarea {
 
 /* Phone number — primary CTA, so it gets extra weight/size and a gold glow */
 .tb-phone .tb-value {
-  font-size: 1.0625rem;
+  font-size: var(--tb-phone-font);
   font-weight: 700;
   text-shadow: 0 0 16px rgba(217, 119, 6, 0.45);
   transition: var(--transition-fast);
@@ -310,37 +339,41 @@ button, input, select, textarea {
 /* Divider */
 .tb-divider {
   width: 1px;
-  height: 26px;
+  height: var(--tb-divider-h);
   background: rgba(255, 255, 255, 0.16);
+  flex-shrink: 0;
 }
 
-/* CTA button */
+/* CTA button — fluid padding/typography instead of a fixed width, so it
+   scales with the rest of the bar rather than staying pixel-locked. */
 .tb-cta {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  gap: clamp(0.375rem, 0.3rem + 0.3vw, 0.5rem);
   background: linear-gradient(135deg, var(--accent), var(--accent-hover));
   color: var(--white);
   font-family: var(--font-heading);
   font-weight: 600;
-  font-size: 0.8125rem;
+  font-size: var(--tb-cta-font);
   letter-spacing: 0.02em;
-  padding: 9px 20px;
+  padding: var(--tb-cta-pad-y) var(--tb-cta-pad-x);
   border-radius: 50px;
   text-decoration: none;
   white-space: nowrap;
   box-shadow: 0 4px 14px rgba(217, 119, 6, 0.4);
-  transition: var(--transition-normal);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal), filter var(--transition-normal);
 }
 
 .tb-cta i {
-  font-size: 0.75rem;
+  font-size: clamp(0.6875rem, 0.62rem + 0.25vw, 0.75rem);
   transition: transform var(--transition-fast);
 }
 
 .tb-cta:hover {
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.03);
   box-shadow: 0 6px 20px rgba(217, 119, 6, 0.6);
+  filter: brightness(1.05);
 }
 
 .tb-cta:hover i {
@@ -356,70 +389,46 @@ button, input, select, textarea {
   border-radius: 6px;
 }
 
+/* Below this, the fluid clamp() tokens above have already tightened
+   padding/gaps/typography as far as they should go on their own — this
+   only corrects the sticky-header offset estimate for small viewports
+   (the real value is kept in sync by the ResizeObserver in app.js). */
 @media (max-width: 768px) {
   :root {
-    --banner-h: 96px;
-  }
-
-  /* Same horizontal row arrangement as desktop, just tighter — items
-     wrap onto a second line only if they don't all fit, rather than
-     forcing every item onto its own full-width row. */
-  .top-banner-inner {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 8px 12px;
-    padding: 10px 16px;
-  }
-
-  .tb-item {
-    gap: 6px;
-  }
-
-  .tb-icon {
-    width: 24px;
-    height: 24px;
-    font-size: 0.65rem;
-  }
-
-  .tb-label {
-    font-size: 0.55rem;
-    letter-spacing: 0.06em;
-  }
-
-  .tb-phone .tb-value {
-    font-size: 0.8125rem;
-  }
-
-  .tb-location .tb-value,
-  .tb-email .tb-value {
-    font-size: 0.6875rem;
-  }
-
-  .tb-divider {
-    height: 20px;
-  }
-
-  .tb-cta {
-    padding: 7px 14px;
-    font-size: 0.6875rem;
+    --banner-h: 88px;
   }
 }
 
-@media (max-width: 400px) {
-  /* Below ~400px even the tightened row can't fit every item without
-     wrapping mid-item, so the location line (longest text) drops its
-     divider and gets its own row — everything stays horizontal
-     internally (icon beside text), just breaks between items rather
-     than mid-content. */
+/* Container query: once the bar's own available width can no longer fit
+   every item on one line without a mid-item wrap, the location item
+   (longest text) drops its divider and takes a full-width row of its
+   own — everything stays horizontal internally (icon beside text), it
+   just breaks between items rather than mid-content. Keyed to the bar's
+   rendered width rather than the viewport, so it responds correctly even
+   if the bar is ever placed in a narrower container. */
+@container tb (max-width: 26rem) {
   .tb-location {
     flex-basis: 100%;
     justify-content: center;
   }
 
-  /* the divider sitting between email and location — hidden only here,
-     since location now wraps onto its own full-width row */
   .tb-email + .tb-divider {
     display: none;
+  }
+}
+
+/* Fallback for the small set of browsers without container query
+   support — same rule, keyed to viewport width instead. */
+@supports not (container-type: inline-size) {
+  @media (max-width: 400px) {
+    .tb-location {
+      flex-basis: 100%;
+      justify-content: center;
+    }
+
+    .tb-email + .tb-divider {
+      display: none;
+    }
   }
 }
 
