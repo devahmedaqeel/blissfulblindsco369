@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // success transition below is unchanged either way; if delivery
       // fails, a small fallback note is appended to the success message
       // the customer is already looking at.
-      sendBookingEmailNotification({ name, email, phone, postcode, blindsType, callTime, hearAboutUs, message }, successMessage);
+      sendBookingEmailNotification({ name, email, phone, postcode, address, blindsType, callTime, hearAboutUs, message }, successMessage);
 
       // Successful state
       bookingForm.style.display = 'none';
@@ -347,9 +347,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // notification + customer confirmation email via Gmail SMTP /
   // Nodemailer. Same-origin, so no API base URL or CORS setup needed.
   function sendBookingEmailNotification(data, successMessage) {
-    var combinedMessage = data.message +
-      (data.hearAboutUs ? (data.message ? ' ' : '') + '(Heard about us via: ' + data.hearAboutUs + ')' : '');
-
     fetch('/api/notify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -358,10 +355,12 @@ document.addEventListener('DOMContentLoaded', () => {
         name: data.name,
         email: data.email,
         phone: data.phone,
+        address: data.address,
         postcode: data.postcode,
         service: data.blindsType,
         appointmentTime: data.callTime,
-        message: combinedMessage
+        hearAboutUs: data.hearAboutUs,
+        message: data.message
       })
     }).then(function (res) {
       if (!res.ok) throw new Error('notify request failed');

@@ -4,18 +4,22 @@
  * renders email with Word's engine (no flexbox/grid support at all),
  * and Gmail strips <style> blocks in some contexts, so inline styles +
  * tables are the only layout approach that reliably survives across
- * Gmail, Outlook, Apple Mail, and Yahoo.
+ * Gmail, Outlook, Apple Mail, and Yahoo. Branding (colors, logo, footer)
+ * mirrors the live site so these read as unmistakably the same brand.
  */
 
 const BRAND = {
   navy: '#0f172a',
+  navyLight: '#1c2c4c',
   accent: '#d97706',
+  accentHover: '#b45309',
   accentLight: '#fef3c7',
   text: '#0f172a',
   textSecondary: '#475569',
   textMuted: '#94a3b8',
   border: '#e2e8f0',
   bg: '#f8fafc',
+  rowAlt: '#f8fafc',
   white: '#ffffff'
 };
 
@@ -23,6 +27,7 @@ const SITE_URL = 'https://blissfulblindsco369.vercel.app';
 const PHONE_DISPLAY = '07341 645339';
 const PHONE_TEL = '+447341645339';
 const EMAIL = 'blissfulblindsco369@gmail.com';
+const BUSINESS_ADDRESS = '75 Ringwood Bretton, Peterborough, PE3 9SR, United Kingdom';
 const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=+447341645339';
 
 function escapeHtml(value) {
@@ -34,7 +39,14 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
+/**
+ * Shared chrome (header + footer) every email is wrapped in. Table-based,
+ * fixed 600px card that shrinks to the viewport on small screens — the
+ * standard responsive-email pattern, since real CSS media queries inside
+ * <style> are stripped by several major clients (notably Gmail's app).
+ */
 function wrapEmailLayout({ title, previewText, bodyHtml }) {
+  const year = new Date().getFullYear();
   return `<!doctype html>
 <html lang="en-GB" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -59,16 +71,20 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
 
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:100%; background-color:${BRAND.white}; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(15,23,42,0.08);">
 
+          <!-- Header: navy background, brand wordmark + subtitle, orange accent line — matches the site's top header exactly.
+               Text-based wordmark rather than an <img> logo: it's a guaranteed-render, zero-network-request match for the
+               site header's own brand-name/brand-tagline typography, with no risk of a blocked/broken remote image. -->
           <tr>
-            <td style="background-color:${BRAND.navy}; padding:28px 32px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
-                <tr>
-                  <td style="font-family:Arial,Helvetica,sans-serif; color:${BRAND.white};">
-                    <span style="font-size:20px; font-weight:700; letter-spacing:0.02em;">Blissful Blinds Co</span><br>
-                    <span style="font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:${BRAND.accent};">369</span>
-                  </td>
-                </tr>
-              </table>
+            <td style="background-color:${BRAND.navy}; background:linear-gradient(120deg, ${BRAND.navy} 0%, ${BRAND.navyLight} 50%, ${BRAND.navy} 100%); padding:30px 32px 26px;" align="center">
+              <div style="font-family:Arial,Helvetica,sans-serif; font-size:24px; font-weight:800; letter-spacing:0.02em; color:${BRAND.white};">
+                Blissful Blinds
+              </div>
+              <div style="font-family:Arial,Helvetica,sans-serif; font-size:12px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:${BRAND.accent}; margin:2px 0 12px;">
+                Co. 369
+              </div>
+              <div style="font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:rgba(255,255,255,0.55);">
+                Professional Window Blinds Specialists
+              </div>
             </td>
           </tr>
           <tr>
@@ -81,6 +97,7 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
             </td>
           </tr>
 
+          <!-- Footer: same brand chrome as the site footer — business details, WhatsApp/website links, copyright, automated-email disclaimer. -->
           <tr>
             <td style="background-color:${BRAND.navy}; padding:28px 32px; font-family:Arial,Helvetica,sans-serif;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -90,22 +107,24 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
                   </td>
                 </tr>
                 <tr>
-                  <td style="color:rgba(255,255,255,0.65); font-size:12px; line-height:1.7; padding-bottom:14px;">
-                    75 Ringwood Bretton, Peterborough, PE3 9SR, United Kingdom<br>
+                  <td style="color:rgba(255,255,255,0.65); font-size:12px; line-height:1.7; padding-bottom:16px;">
+                    ${BUSINESS_ADDRESS}<br>
                     &#128222; <a href="tel:${PHONE_TEL}" style="color:rgba(255,255,255,0.85); text-decoration:none;">${PHONE_DISPLAY}</a>
                     &nbsp;&middot;&nbsp;
                     &#9993; <a href="mailto:${EMAIL}" style="color:rgba(255,255,255,0.85); text-decoration:none;">${EMAIL}</a>
+                    &nbsp;&middot;&nbsp;
+                    <a href="${SITE_URL}" style="color:rgba(255,255,255,0.85); text-decoration:none;">blissfulblindsco369.com</a>
                   </td>
                 </tr>
                 <tr>
-                  <td>
-                    <a href="${WHATSAPP_URL}" style="display:inline-block; margin-right:10px; padding:6px 14px; border-radius:999px; background-color:#25d366; color:#ffffff; font-size:11px; font-weight:700; text-decoration:none;">WhatsApp</a>
-                    <a href="${SITE_URL}" style="display:inline-block; padding:6px 14px; border-radius:999px; background-color:rgba(255,255,255,0.12); color:#ffffff; font-size:11px; font-weight:700; text-decoration:none;">Website</a>
+                  <td style="padding-bottom:16px;">
+                    <a href="${WHATSAPP_URL}" style="display:inline-block; padding:7px 16px; border-radius:999px; background-color:#25d366; color:#ffffff; font-size:11px; font-weight:700; text-decoration:none;">&#128172; WhatsApp Us</a>
                   </td>
                 </tr>
                 <tr>
-                  <td style="color:rgba(255,255,255,0.4); font-size:10px; padding-top:16px;">
-                    This is an automated message from blissfulblindsco369.com. Please do not reply directly to this address unless invited to.
+                  <td style="border-top:1px solid rgba(255,255,255,0.12); padding-top:14px; color:rgba(255,255,255,0.45); font-size:11px; line-height:1.6;">
+                    &copy; ${year} Blissful Blinds Co 369. All rights reserved.<br>
+                    This is an automated notification generated by the Blissful Blinds Co website.
                   </td>
                 </tr>
               </table>
@@ -121,60 +140,94 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
 </html>`;
 }
 
-function row(label, value) {
+/** One label/value row in the customer-details table, with alternating
+ *  row shading (set inline per-row rather than via CSS, since Outlook
+ *  desktop ignores :nth-child entirely). Skips rendering when the value
+ *  is empty, so fields that don't apply to a given form (e.g. the
+ *  chatbot lead form has no "address" field) simply don't appear. */
+function detailRow(label, value, index) {
   if (!value) return '';
+  const bg = index % 2 === 0 ? BRAND.white : BRAND.rowAlt;
   return `
     <tr>
-      <td style="padding:10px 14px; border-bottom:1px solid ${BRAND.border}; font-size:12px; font-weight:700; color:${BRAND.textSecondary}; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; vertical-align:top; width:150px;">
+      <td style="background-color:${bg}; padding:13px 18px; font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:700; color:${BRAND.textMuted}; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap; vertical-align:top; width:170px; border-bottom:1px solid ${BRAND.border};">
         ${escapeHtml(label)}
       </td>
-      <td style="padding:10px 14px; border-bottom:1px solid ${BRAND.border}; font-size:14px; color:${BRAND.text};">
+      <td style="background-color:${bg}; padding:13px 18px; font-family:Arial,Helvetica,sans-serif; font-size:14px; font-weight:600; color:${BRAND.text}; border-bottom:1px solid ${BRAND.border};">
         ${escapeHtml(value)}
       </td>
     </tr>`;
 }
 
+/** One large pill action button, in the site's gradient CTA style. */
+function actionButton(href, label, variant) {
+  const styles = {
+    dark: `background-color:${BRAND.navy}; background:linear-gradient(135deg, ${BRAND.navy}, ${BRAND.navyLight});`,
+    accent: `background-color:${BRAND.accent}; background:linear-gradient(135deg, ${BRAND.accent}, ${BRAND.accentHover});`,
+    outline: `background-color:${BRAND.white}; border:2px solid ${BRAND.accent}; color:${BRAND.accent} !important;`
+  };
+  const color = variant === 'outline' ? BRAND.accent : '#ffffff';
+  return `
+    <td style="padding:0 6px 12px 0;">
+      <a href="${href}" style="display:inline-block; padding:13px 22px; border-radius:999px; ${styles[variant]} color:${color}; font-family:Arial,Helvetica,sans-serif; font-size:13px; font-weight:700; text-decoration:none; white-space:nowrap;">${label}</a>
+    </td>`;
+}
+
 /** Internal admin notification email for a form submission (booking or chatbot lead). */
-function adminNotificationEmail({ sourceLabel, name, phone, email, postcode, service, appointment, message, submittedAt, ip }) {
+function adminNotificationEmail({ source, sourceLabel, name, phone, email, address, postcode, service, appointment, hearAboutUs, message, submittedAt }) {
+  const isBooking = source === 'booking';
+  const badgeText = `${sourceLabel} Received`.toUpperCase();
+  const heading = isBooking ? 'New Customer Booking Enquiry' : `New Customer ${sourceLabel}`;
+
   const subject = `🔔 New ${sourceLabel} | Blissful Blinds Co`;
   const tel = phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : null;
   const mailto = email ? `mailto:${email}` : null;
+  const fullAddress = [address, postcode].filter(Boolean).join(', ');
+  const mapsUrl = fullAddress ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}` : null;
+
+  let i = 0;
+  const rows = [
+    detailRow('Customer Name', name, i++),
+    detailRow('Phone Number', phone, i++),
+    detailRow('Email Address', email, i++),
+    detailRow('Home Address', address, i++),
+    detailRow('Postcode', postcode, i++),
+    detailRow('Type of Blinds', service, i++),
+    detailRow('Best Time To Call', appointment, i++),
+    detailRow('How Did You Hear About Us', hearAboutUs, i++),
+    detailRow('Customer Message', message, i++),
+    detailRow('Submitted Date & Time', submittedAt, i++),
+    detailRow('Source Form', sourceLabel, i++)
+  ].join('');
+
+  const buttons = [
+    tel ? actionButton(tel, '&#128222; Call Customer', 'dark') : '',
+    mailto ? actionButton(mailto, '&#9993; Reply by Email', 'accent') : '',
+    mapsUrl ? actionButton(mapsUrl, '&#128205; View Address on Maps', 'outline') : ''
+  ].join('');
 
   const bodyHtml = `
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:18px;">
       <tr>
-        <td>
-          <span style="display:inline-block; padding:5px 12px; border-radius:999px; background-color:${BRAND.accentLight}; color:#92400e; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">
-            ${escapeHtml(sourceLabel)}
+        <td align="center">
+          <span style="display:inline-block; padding:6px 16px; border-radius:999px; background-color:${BRAND.accentLight}; color:#92400e; font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em;">
+            ${escapeHtml(badgeText)}
           </span>
         </td>
       </tr>
     </table>
 
-    <h1 style="margin:0 0 8px; font-size:20px; font-weight:700; color:${BRAND.text};">New enquiry received</h1>
-    <p style="margin:0 0 24px; font-size:14px; color:${BRAND.textSecondary};">A customer just submitted the ${escapeHtml(sourceLabel.toLowerCase())} on the website. Details below.</p>
+    <h1 style="margin:0 0 8px; font-family:Arial,Helvetica,sans-serif; font-size:21px; font-weight:800; color:${BRAND.text}; text-align:center;">${escapeHtml(heading)}</h1>
+    <p style="margin:0 0 26px; font-family:Arial,Helvetica,sans-serif; font-size:14px; color:${BRAND.textSecondary}; text-align:center;">A customer just submitted this on the website. Full details are below.</p>
 
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid ${BRAND.border}; border-radius:10px; overflow:hidden; margin-bottom:24px;">
-      ${row('Customer Name', name)}
-      ${row('Phone Number', phone)}
-      ${row('Email Address', email)}
-      ${row('Postcode', postcode)}
-      ${row('Service Requested', service)}
-      ${row('Preferred Appointment', appointment)}
-      ${row('Customer Message', message)}
-      ${row('Submitted', submittedAt)}
-      ${row('Source Form', sourceLabel)}
-      ${row('IP Address', ip)}
+    <!-- Rounded, bordered card wrapping the details table — same "rounded card" language as the site. -->
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid ${BRAND.border}; border-radius:14px; overflow:hidden; margin-bottom:26px;">
+      ${rows}
     </table>
 
     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
       <tr>
-        ${tel ? `<td style="padding-right:10px;">
-          <a href="${tel}" style="display:inline-block; padding:12px 22px; border-radius:999px; background-color:${BRAND.navy}; color:#ffffff; font-size:13px; font-weight:700; text-decoration:none;">&#128222; Call Customer</a>
-        </td>` : ''}
-        ${mailto ? `<td>
-          <a href="${mailto}" style="display:inline-block; padding:12px 22px; border-radius:999px; background-color:${BRAND.accent}; color:#ffffff; font-size:13px; font-weight:700; text-decoration:none;">&#9993; Reply by Email</a>
-        </td>` : ''}
+        ${buttons}
       </tr>
     </table>
   `;
@@ -186,17 +239,18 @@ function adminNotificationEmail({ sourceLabel, name, phone, email, postcode, ser
   });
 
   const text = [
-    `New ${sourceLabel} — Blissful Blinds Co`,
+    `${heading} — Blissful Blinds Co`,
     '',
     name ? `Customer Name: ${name}` : null,
     phone ? `Phone Number: ${phone}` : null,
     email ? `Email Address: ${email}` : null,
+    address ? `Home Address: ${address}` : null,
     postcode ? `Postcode: ${postcode}` : null,
-    service ? `Service Requested: ${service}` : null,
-    appointment ? `Preferred Appointment: ${appointment}` : null,
+    service ? `Type of Blinds: ${service}` : null,
+    appointment ? `Best Time To Call: ${appointment}` : null,
+    hearAboutUs ? `How Did You Hear About Us: ${hearAboutUs}` : null,
     message ? `Customer Message: ${message}` : null,
-    submittedAt ? `Submitted: ${submittedAt}` : null,
-    ip ? `IP Address: ${ip}` : null,
+    submittedAt ? `Submitted Date & Time: ${submittedAt}` : null,
     `Source Form: ${sourceLabel}`
   ].filter(Boolean).join('\n');
 

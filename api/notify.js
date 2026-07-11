@@ -63,13 +63,13 @@ module.exports = async (req, res) => {
     return res.status(400).json({ error: 'Validation failed.', fields: result.errors });
   }
 
-  const { sourceLabel, name, email, phone, postcode, service, appointmentDate, appointmentTime, message } = result.data;
+  const { source, sourceLabel, name, email, phone, address, postcode, service, appointmentDate, appointmentTime, hearAboutUs, message } = result.data;
   const submittedAtDisplay = formatSubmittedAt(new Date());
   const appointment = [appointmentDate, appointmentTime].filter(Boolean).join(' ');
 
   const admin = adminNotificationEmail({
-    sourceLabel, name, phone, email, postcode, service, appointment, message,
-    submittedAt: submittedAtDisplay, ip
+    source, sourceLabel, name, phone, email, address, postcode, service, appointment, hearAboutUs, message,
+    submittedAt: submittedAtDisplay
   });
   const customer = customerConfirmationEmail({ name });
 
