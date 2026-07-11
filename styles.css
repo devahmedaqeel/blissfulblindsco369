@@ -252,10 +252,17 @@ button, input, select, textarea {
   aspect-ratio: 1;
   flex-shrink: 0;
   border-radius: 50%;
-  background: rgba(217, 119, 6, 0.18);
+  background: linear-gradient(155deg, rgba(217, 119, 6, 0.28), rgba(217, 119, 6, 0.1));
+  border: 1px solid rgba(217, 119, 6, 0.28);
   color: var(--accent-light);
   font-size: var(--tb-icon-font);
   transition: var(--transition-fast);
+}
+
+.tb-phone:active .tb-icon,
+.tb-email:active .tb-icon,
+.tb-location:active .tb-icon {
+  transform: scale(0.9);
 }
 
 .tb-text {
@@ -382,6 +389,10 @@ button, input, select, textarea {
   transform: scale(1.15) rotate(8deg);
 }
 
+.tb-cta:active {
+  transform: translateY(0) scale(0.97);
+}
+
 .tb-phone:focus-visible,
 .tb-email:focus-visible,
 .tb-location:focus-visible,
@@ -397,16 +408,82 @@ button, input, select, textarea {
    (the real value is kept in sync by the ResizeObserver in app.js). */
 @media (max-width: 768px) {
   :root {
-    --banner-h: 88px;
+    --banner-h: 56px;
+  }
+}
+
+/* Mobile: icon-only compact mode. Below tablet width there isn't room to
+   show full contact details without wrapping into several stacked rows,
+   so the phone/email/location items collapse to just their icon — a
+   single, evenly spaced, tap-friendly row that echoes the desktop bar's
+   rhythm at a fraction of the height, sitting neatly above the logo
+   instead of pushing it down the page. The number/email/area text stays
+   in the markup — still readable by screen readers via each link's
+   aria-label and still present for search engines — it's simply not
+   duplicated on-screen once space is this tight. */
+@container tb (max-width: 47.99rem) {
+  .top-banner-inner {
+    --tb-gap: clamp(0.625rem, 0.3rem + 1.6vw, 1.125rem);
+    --tb-pad-x: clamp(0.75rem, 0.5rem + 1.5vw, 1.25rem);
+    --tb-pad-y: clamp(0.4375rem, 0.36rem + 0.35vw, 0.625rem);
+    --tb-cta-pad-y: clamp(0.4375rem, 0.38rem + 0.3vw, 0.5rem);
+    --tb-cta-pad-x: clamp(0.75rem, 0.6rem + 1vw, 1rem);
+    --tb-cta-font: clamp(0.6875rem, 0.62rem + 0.3vw, 0.75rem);
+  }
+
+  .tb-text {
+    display: none;
+  }
+
+  .tb-item {
+    grid-template-columns: auto;
+    gap: 0;
+    /* Padding here (offset by an equal negative margin so it doesn't
+       shift layout) extends the tap target past the visible circle —
+       keeps it touch-friendly even though its usual visual anchor, the
+       label/value text, is hidden at this size. */
+    padding: 0.375rem;
+    margin: -0.375rem;
+  }
+
+  .tb-icon {
+    width: clamp(1.75rem, 1.5rem + 1vw, 2.125rem);
+    height: clamp(1.75rem, 1.5rem + 1vw, 2.125rem);
+    font-size: clamp(0.75rem, 0.65rem + 0.4vw, 0.875rem);
+  }
+
+  .tb-divider {
+    height: 1.25rem;
+  }
+}
+
+@supports not (container-type: inline-size) {
+  @media (max-width: 767px) {
+    .tb-text {
+      display: none;
+    }
+
+    .tb-item {
+      grid-template-columns: auto;
+      gap: 0;
+      padding: 0.375rem;
+      margin: -0.375rem;
+    }
+
+    .tb-icon {
+      width: 1.875rem;
+      height: 1.875rem;
+      font-size: 0.8125rem;
+    }
   }
 }
 
 /* Tablet band: there's room for every item to sit on one row exactly
-   like desktop, labels included — it just needs a tighter version of
+   like desktop, full text included — it just needs a tighter version of
    the same fluid tokens than the general desktop curve would give it at
    this width, so the row's total content width comes in under the
    container instead of wrapping the CTA to a second line. */
-@container tb (min-width: 36rem) and (max-width: 61.9rem) {
+@container tb (min-width: 48rem) and (max-width: 61.9rem) {
   .top-banner-inner {
     --tb-gap: clamp(0.5rem, 0.3rem + 1vw, 1rem);
     --tb-pad-x: clamp(0.75rem, 0.5rem + 1vw, 1.125rem);
@@ -418,61 +495,6 @@ button, input, select, textarea {
     --tb-phone-font: 0.8125rem;
     --tb-cta-pad-x: clamp(0.75rem, 0.5rem + 1vw, 1rem);
     --tb-cta-font: 0.75rem;
-  }
-}
-
-/* Compact mode: on tablet/mobile-width containers, drop the small
-   uppercase label above each value so every item is a single line
-   (icon + value) instead of two — this is what actually shortens the
-   bar on small screens, since the label rarely changes an item's width
-   (the value is almost always the longer string) but always adds a
-   second line of height. Nothing is lost for assistive tech: each link
-   already carries a full aria-label ("Call us today on…"), so the
-   visible label was a sighted-only visual duplication. */
-@container tb (max-width: 36rem) {
-  .tb-label {
-    display: none;
-  }
-}
-
-@supports not (container-type: inline-size) {
-  @media (max-width: 576px) {
-    .tb-label {
-      display: none;
-    }
-  }
-}
-
-/* Container query: once the bar's own available width can no longer fit
-   every item on one line without a mid-item wrap, the location item
-   (longest text) drops its divider and takes a full-width row of its
-   own — everything stays horizontal internally (icon beside text), it
-   just breaks between items rather than mid-content. Keyed to the bar's
-   rendered width rather than the viewport, so it responds correctly even
-   if the bar is ever placed in a narrower container. */
-@container tb (max-width: 26rem) {
-  .tb-location {
-    flex-basis: 100%;
-    justify-content: center;
-  }
-
-  .tb-email + .tb-divider {
-    display: none;
-  }
-}
-
-/* Fallback for the small set of browsers without container query
-   support — same rule, keyed to viewport width instead. */
-@supports not (container-type: inline-size) {
-  @media (max-width: 400px) {
-    .tb-location {
-      flex-basis: 100%;
-      justify-content: center;
-    }
-
-    .tb-email + .tb-divider {
-      display: none;
-    }
   }
 }
 
