@@ -21,7 +21,11 @@
   height: 64px;
   border-radius: 50%;
   border: none;
-  cursor: pointer;
+  cursor: grab;
+  /* Draggable vertically — see makeToggleDraggable() in chatbot.js.
+     touch-action: none stops the page from scrolling under a touch drag
+     instead of the button moving. */
+  touch-action: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,6 +39,12 @@
 .bb-chat-toggle:hover {
   transform: translateY(-3px) scale(1.05);
   box-shadow: 0 12px 32px rgba(217, 119, 6, 0.6);
+}
+
+.bb-chat-toggle.is-dragging {
+  cursor: grabbing;
+  transition: none;
+  animation: none;
 }
 
 .bb-chat-toggle:focus-visible {

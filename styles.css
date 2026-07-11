@@ -2564,6 +2564,16 @@ button, input, select, textarea {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  /* Draggable vertically — see makeVerticallyDraggable() in app.js.
+     touch-action: none stops the page from scrolling under a touch drag
+     instead of the widget moving. */
+  cursor: grab;
+  touch-action: none;
+}
+
+.wa-chat-widget.is-dragging {
+  cursor: grabbing;
+  transition: none;
 }
 
 .wa-chat-bubble {
@@ -2576,7 +2586,11 @@ button, input, select, textarea {
   box-shadow: 0 8px 32px rgba(0,0,0,0.35);
   animation: waSlideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
   border: 1px solid rgba(255,255,255,0.07);
-  cursor: default;
+  cursor: grab;
+}
+
+.wa-chat-widget.is-dragging .wa-chat-bubble {
+  cursor: grabbing;
 }
 
 @keyframes waSlideIn {

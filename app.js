@@ -702,6 +702,80 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   initCookieConsent();
+
+  // ---------------------------------------------------------------------
+  // Draggable WhatsApp widget — lets a visitor drag it up/down so it can
+  // be moved out of the way of page content on any screen size. Only the
+  // vertical position (`bottom`) changes; the corner it's anchored to
+  // stays fixed. A small movement threshold tells a drag apart from a
+  // normal tap so the WhatsApp link still opens on click/tap as before.
+  // Position is remembered (per browser) via localStorage.
+  // ---------------------------------------------------------------------
+  function makeVerticallyDraggable(el, storageKey) {
+    if (!el) return;
+    let dragging = false;
+    let moved = false;
+    let startY = 0;
+    let startBottom = 0;
+
+    function clampBottom(value) {
+      const maxBottom = Math.max(12, window.innerHeight - el.offsetHeight - 90);
+      return Math.min(Math.max(value, 12), maxBottom);
+    }
+
+    let saved = null;
+    try { saved = localStorage.getItem(storageKey); } catch (e) {}
+    const savedNum = saved !== null ? parseFloat(saved) : NaN;
+    if (!isNaN(savedNum)) el.style.bottom = clampBottom(savedNum) + 'px';
+
+    // Deliberately NOT using setPointerCapture here: capturing the
+    // pointer on this wrapping div also redirects the compatibility
+    // mouse/click events it generates to the div itself, which silently
+    // breaks the nested WhatsApp <a>'s native click-to-navigate. Plain
+    // document-level move/up listeners (added only while dragging) avoid
+    // that entirely.
+    function onPointerMove(e) {
+      if (!dragging) return;
+      const dy = e.clientY - startY;
+      if (Math.abs(dy) > 4) moved = true;
+      el.style.bottom = clampBottom(startBottom - dy) + 'px';
+    }
+
+    function onPointerUp() {
+      if (!dragging) return;
+      dragging = false;
+      el.classList.remove('is-dragging');
+      document.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('pointerup', onPointerUp);
+      document.removeEventListener('pointercancel', onPointerUp);
+      if (moved) {
+        try { localStorage.setItem(storageKey, parseFloat(el.style.bottom)); } catch (err) {}
+        // Suppress the synthetic click that follows this drag gesture so
+        // it doesn't also open the WhatsApp link. Attached on document
+        // (an ancestor of the click target) so its capture-phase handler
+        // runs before the target's own click listener.
+        document.addEventListener('click', (ev) => {
+          ev.preventDefault();
+          ev.stopPropagation();
+        }, { capture: true, once: true });
+      }
+    }
+
+    el.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      dragging = true;
+      moved = false;
+      startY = e.clientY;
+      const rect = el.getBoundingClientRect();
+      startBottom = window.innerHeight - rect.bottom;
+      el.classList.add('is-dragging');
+      document.addEventListener('pointermove', onPointerMove);
+      document.addEventListener('pointerup', onPointerUp);
+      document.addEventListener('pointercancel', onPointerUp);
+    });
+  }
+
+  makeVerticallyDraggable(document.getElementById('waChatWidget'), 'bb_wa_widget_bottom');
 });
 
 

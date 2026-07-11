@@ -627,6 +627,11 @@
 
   function openPanel() {
     ensureKBLoaded();
+    // Keep the panel anchored to the toggle button's current position —
+    // matters once the toggle has been dragged to a new spot (see
+    // makeToggleDraggable below); an empty string falls back to the
+    // stylesheet's default `bottom`.
+    panelEl.style.bottom = toggleBtn.style.bottom || '';
     panelEl.hidden = false;
     widgetEl.classList.add('bb-open');
     toggleBtn.setAttribute('aria-expanded', 'true');
@@ -651,6 +656,85 @@
     if (panelEl.hidden) openPanel(); else closePanel();
   });
   closeBtn.addEventListener('click', closePanel);
+
+  // ---------------------------------------------------------------------
+  // Draggable toggle button — lets a visitor drag it up/down so it can be
+  // moved out of the way of page content on any screen size. Only the
+  // vertical position (`bottom`) changes; the corner stays fixed. A small
+  // movement threshold tells a drag apart from a normal tap, so the
+  // button still opens/closes the panel on click/tap as before. Position
+  // is remembered (per browser) via localStorage.
+  // ---------------------------------------------------------------------
+  (function makeToggleDraggable() {
+    var TOGGLE_POS_KEY = 'bb_chat_toggle_bottom';
+    var dragging = false;
+    var moved = false;
+    var startY = 0;
+    var startBottom = 0;
+
+    function clampBottom(value) {
+      // Above 480px the panel opens anchored to the toggle's own bottom
+      // and is far taller than the toggle (up to 640px) — so the bound
+      // has to leave room for the *panel*, not just the toggle button,
+      // otherwise dragging the toggle too high would open the panel
+      // partly off the top of the screen. Below 480px the panel is
+      // full-screen regardless of position, so only the toggle itself
+      // (plus clearance for the cookie banner) needs to fit.
+      var isMobile = window.innerWidth <= 480;
+      var reserved = isMobile ? toggleBtn.offsetHeight + 90 : Math.min(640, window.innerHeight - 166) + 12;
+      var maxBottom = Math.max(12, window.innerHeight - reserved);
+      return Math.min(Math.max(value, 12), maxBottom);
+    }
+
+    var saved = null;
+    try { saved = localStorage.getItem(TOGGLE_POS_KEY); } catch (e) {}
+    var savedNum = saved !== null ? parseFloat(saved) : NaN;
+    if (!isNaN(savedNum)) toggleBtn.style.bottom = clampBottom(savedNum) + 'px';
+
+    // Document-level move/up listeners (added only while dragging) rather
+    // than setPointerCapture — capturing the pointer on the toggle button
+    // also redirects its compatibility click event, which can interfere
+    // with the button's own click handler above in some browsers.
+    function onPointerMove(e) {
+      if (!dragging) return;
+      var dy = e.clientY - startY;
+      if (Math.abs(dy) > 4) moved = true;
+      toggleBtn.style.bottom = clampBottom(startBottom - dy) + 'px';
+    }
+
+    function onPointerUp() {
+      if (!dragging) return;
+      dragging = false;
+      toggleBtn.classList.remove('is-dragging');
+      document.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('pointerup', onPointerUp);
+      document.removeEventListener('pointercancel', onPointerUp);
+      if (moved) {
+        try { localStorage.setItem(TOGGLE_POS_KEY, parseFloat(toggleBtn.style.bottom)); } catch (err) {}
+        // Suppress the synthetic click that follows this drag gesture so
+        // it doesn't also open/close the panel. Attached on document (an
+        // ancestor of the toggle button) so its capture-phase handler
+        // runs before the button's own click listener above.
+        document.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          ev.stopPropagation();
+        }, { capture: true, once: true });
+      }
+    }
+
+    toggleBtn.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      dragging = true;
+      moved = false;
+      startY = e.clientY;
+      var rect = toggleBtn.getBoundingClientRect();
+      startBottom = window.innerHeight - rect.bottom;
+      toggleBtn.classList.add('is-dragging');
+      document.addEventListener('pointermove', onPointerMove);
+      document.addEventListener('pointerup', onPointerUp);
+      document.addEventListener('pointercancel', onPointerUp);
+    });
+  })();
 
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape' && !panelEl.hidden) closePanel();
