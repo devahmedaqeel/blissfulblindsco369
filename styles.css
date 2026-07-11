@@ -833,6 +833,41 @@ button, input, select, textarea {
   }
 }
 
+/* On phones the header row was a flat 80px regardless of how much room
+   the (now much shorter) announcement bar above it left — shrink it to
+   match, so the logo doesn't eat more vertical space than it needs.
+   The mobile nav dropdown's offset/height are updated to match (kept
+   relative to the header's own height, not the viewport — .nav-menu is
+   `position: fixed` but sits inside `.site-header`, which is
+   `position: sticky`, and a sticky ancestor acts as the containing
+   block for a fixed descendant, so `top` here is already relative to
+   the header's own box, not the banner + header combined). */
+@media (max-width: 768px) {
+  .nav-container {
+    height: 60px;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .brand-name {
+    font-size: 1.0625rem;
+  }
+
+  .brand-tagline {
+    font-size: 0.5625rem;
+    letter-spacing: 2px;
+    margin-top: 1px;
+  }
+
+  .nav-menu {
+    top: 60px;
+    height: calc(100vh - 60px);
+  }
+}
+
 
 /* Hero Section */
 .hero {
