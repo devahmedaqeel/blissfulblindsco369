@@ -717,6 +717,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let moved = false;
     let startY = 0;
     let startBottom = 0;
+    let currentBottom = 0;
+    let rafId = null;
+    let pendingClientY = null;
 
     function clampBottom(value) {
       const maxBottom = Math.max(12, window.innerHeight - el.offsetHeight - 90);
@@ -734,22 +737,57 @@ document.addEventListener('DOMContentLoaded', () => {
     // breaks the nested WhatsApp <a>'s native click-to-navigate. Plain
     // document-level move/up listeners (added only while dragging) avoid
     // that entirely.
+    //
+    // While dragging, the position is applied via `transform`
+    // (GPU-composited, no layout) instead of writing `bottom` on every
+    // event — writing `bottom` forces a synchronous reflow each time,
+    // and on phones the browser can't keep up with pointermove's event
+    // rate, so it drops frames and the widget visibly jumps instead of
+    // gliding with the finger. `bottom` is only written once, at the end
+    // of the drag. requestAnimationFrame also caps the work to once per
+    // frame even if pointermove fires faster than that.
+    function applyMove() {
+      rafId = null;
+      const dy = pendingClientY - startY;
+      if (Math.abs(dy) > 4) moved = true;
+      currentBottom = clampBottom(startBottom - dy);
+      el.style.transform = `translateY(${startBottom - currentBottom}px)`;
+    }
+
     function onPointerMove(e) {
       if (!dragging) return;
-      const dy = e.clientY - startY;
-      if (Math.abs(dy) > 4) moved = true;
-      el.style.bottom = clampBottom(startBottom - dy) + 'px';
+      pendingClientY = e.clientY;
+      if (rafId === null) rafId = requestAnimationFrame(applyMove);
     }
 
     function onPointerUp() {
       if (!dragging) return;
       dragging = false;
-      el.classList.remove('is-dragging');
+      // Flush any move that arrived after the last rAF-scheduled update
+      // ran, so the final committed position matches exactly where the
+      // pointer was released instead of lagging one frame behind.
+      if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; applyMove(); }
+      // Clear the transform and commit the final `bottom` first, then
+      // wait two frames before removing `is-dragging` (transition: none).
+      // Setting the style and removing the class in the same tick isn't
+      // enough — the browser only diffs style state across the whole
+      // task, so it would still see "transition re-enabled" + "transform
+      // changed" together and animate the reset. The extra frames give
+      // the instant, transition-free state a chance to actually paint
+      // first, so re-enabling the transition afterward has nothing left
+      // to animate.
+      el.style.transform = '';
+      el.style.bottom = currentBottom + 'px';
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          el.classList.remove('is-dragging');
+        });
+      });
       document.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('pointerup', onPointerUp);
       document.removeEventListener('pointercancel', onPointerUp);
       if (moved) {
-        try { localStorage.setItem(storageKey, parseFloat(el.style.bottom)); } catch (err) {}
+        try { localStorage.setItem(storageKey, currentBottom); } catch (err) {}
         // Suppress the synthetic click that follows this drag gesture so
         // it doesn't also open the WhatsApp link. Attached on document
         // (an ancestor of the click target) so its capture-phase handler
@@ -768,6 +806,7 @@ document.addEventListener('DOMContentLoaded', () => {
       startY = e.clientY;
       const rect = el.getBoundingClientRect();
       startBottom = window.innerHeight - rect.bottom;
+      currentBottom = startBottom;
       el.classList.add('is-dragging');
       document.addEventListener('pointermove', onPointerMove);
       document.addEventListener('pointerup', onPointerUp);
