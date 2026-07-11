@@ -8,12 +8,14 @@
 }
 
 /* ---------- Floating toggle button ---------- */
-/* Stacked above the existing WhatsApp widget (bottom:28px/right:24px,
-   ~74px tall) and cookie banner so neither is covered or unreachable. */
+/* Mirrored onto the opposite (left) corner from the WhatsApp widget
+   (bottom:28px/right:24px) so the two never stack on top of each other.
+   Bottom offset is kept tall enough to still clear the cookie banner,
+   which spans near-full width and can appear on either side. */
 .bb-chat-toggle {
   position: fixed;
   bottom: 130px;
-  right: 24px;
+  left: 24px;
   z-index: 9997;
   width: 64px;
   height: 64px;
@@ -90,7 +92,7 @@
 .bb-chat-panel {
   position: fixed;
   bottom: 130px;
-  right: 24px;
+  left: 24px;
   z-index: 10000;
   width: 392px;
   max-width: calc(100vw - 32px);
@@ -102,7 +104,7 @@
   flex-direction: column;
   overflow: hidden;
   font-family: var(--font-body, sans-serif);
-  transform-origin: bottom right;
+  transform-origin: bottom left;
   animation: bbPanelIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
@@ -524,8 +526,8 @@
 /* ---------- Mobile ---------- */
 @media (max-width: 480px) {
   .bb-chat-toggle {
-    bottom: 92px;
-    right: 16px;
+    bottom: 16px;
+    left: 16px;
     width: 56px;
     height: 56px;
   }
