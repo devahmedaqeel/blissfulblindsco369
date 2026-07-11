@@ -475,14 +475,14 @@
     });
   }
 
-  // Sends the chatbot's lead form to the same email-notification backend
-  // used by the site's main booking form (admin notification + customer
-  // confirmation via Gmail SMTP / Nodemailer). Resolves to true/false
-  // rather than throwing, so the caller can always show the visitor a
-  // clear outcome instead of a silently-broken form.
+  // Sends the chatbot's lead form to /api/notify (a Vercel Serverless
+  // Function in this same deployment — see /api/notify.js), the same
+  // endpoint the site's main booking form uses (admin notification +
+  // customer confirmation via Gmail SMTP / Nodemailer). Resolves to
+  // true/false rather than throwing, so the caller can always show the
+  // visitor a clear outcome instead of a silently-broken form.
   function sendChatLeadNotification(data) {
-    if (!window.BB_REVIEWS_API_BASE) return Promise.resolve(false);
-    return fetch(window.BB_REVIEWS_API_BASE + '/notify', {
+    return fetch('/api/notify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

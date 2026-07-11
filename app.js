@@ -342,16 +342,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Posts booking form data to the review-system backend's email service
-  // (admin notification + customer confirmation, sent via Gmail SMTP /
-  // Nodemailer). window.BB_REVIEWS_API_BASE is set inline near the bottom
-  // of the page, right beside where this script is loaded.
+  // Posts booking form data to /api/notify (a Vercel Serverless Function
+  // in this same deployment — see /api/notify.js), which sends an admin
+  // notification + customer confirmation email via Gmail SMTP /
+  // Nodemailer. Same-origin, so no API base URL or CORS setup needed.
   function sendBookingEmailNotification(data, successMessage) {
-    if (!window.BB_REVIEWS_API_BASE) return;
     var combinedMessage = data.message +
       (data.hearAboutUs ? (data.message ? ' ' : '') + '(Heard about us via: ' + data.hearAboutUs + ')' : '');
 
-    fetch(window.BB_REVIEWS_API_BASE + '/notify', {
+    fetch('/api/notify', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

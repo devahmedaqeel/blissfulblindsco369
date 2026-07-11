@@ -1,0 +1,8 @@
+{
+  "name": "blissful-blinds-co-369",
+  "private": true,
+  "description": "Static site + /api serverless functions (email notifications for the booking form and chatbot lead capture) for Blissful Blinds Co 369.",
+  "dependencies": {
+    "nodemailer": "^9.0.3"
+  }
+}
