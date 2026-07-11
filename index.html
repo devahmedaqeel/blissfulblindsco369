@@ -990,30 +990,16 @@
     <section class="new-reviews-section section-padding" id="customer-reviews">
       <div class="container">
         <div class="text-center">
-          <span class="hero-tagline" style="color: var(--accent);">Verified Feedback</span>
           <h2 class="section-title">Customer Reviews</h2>
           <p class="section-subtitle">Real, moderated feedback from real customers — every review is checked before it's published.</p>
         </div>
 
         <div class="nr-summary">
-          <div class="nr-summary-score" id="nrScore">–</div>
-          <div class="nr-summary-stars" id="nrStars" aria-hidden="true"></div>
           <div class="nr-summary-count" id="nrCount">Loading reviews&hellip;</div>
         </div>
 
-        <div class="nr-toolbar">
-          <div class="nr-filter-chips" id="nrFilterChips" role="group" aria-label="Filter reviews by star rating">
-            <button type="button" class="nr-chip is-active" data-rating="">All</button>
-            <button type="button" class="nr-chip" data-rating="5">5&#9733;</button>
-            <button type="button" class="nr-chip" data-rating="4">4&#9733;</button>
-            <button type="button" class="nr-chip" data-rating="3">3&#9733;</button>
-            <button type="button" class="nr-chip" data-rating="2">2&#9733;</button>
-            <button type="button" class="nr-chip" data-rating="1">1&#9733;</button>
-          </div>
-        </div>
-
         <div class="nr-grid" id="nrGrid"></div>
-        <p class="nr-empty" id="nrEmpty" hidden>No reviews yet for this filter.</p>
+        <p class="nr-empty" id="nrEmpty" hidden>No reviews yet.</p>
 
         <div class="nr-load-more-wrap" id="nrLoadMoreWrap">
           <button type="button" class="btn btn-outline" id="nrLoadMore" hidden>Load More Reviews</button>
