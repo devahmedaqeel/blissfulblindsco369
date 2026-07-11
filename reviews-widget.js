@@ -22,21 +22,7 @@
     grid: document.getElementById('nrGrid'),
     empty: document.getElementById('nrEmpty'),
     loadMoreWrap: document.getElementById('nrLoadMoreWrap'),
-    loadMoreBtn: document.getElementById('nrLoadMore'),
-    writeBtn: document.getElementById('nrWriteReviewBtn'),
-    overlay: document.getElementById('nrModalOverlay'),
-    modalClose: document.getElementById('nrModalClose'),
-    form: document.getElementById('nrReviewForm'),
-    starPicker: document.getElementById('nrStarPicker'),
-    ratingInput: document.getElementById('nrRatingInput'),
-    name: document.getElementById('nrName'),
-    email: document.getElementById('nrEmail'),
-    review: document.getElementById('nrReview'),
-    website: document.getElementById('nrWebsite'),
-    formError: document.getElementById('nrFormError'),
-    submitBtn: document.getElementById('nrSubmitBtn'),
-    formSuccess: document.getElementById('nrFormSuccess'),
-    turnstileWrap: document.getElementById('nrTurnstileWrap')
+    loadMoreBtn: document.getElementById('nrLoadMore')
   };
 
   if (!els.section) return;
@@ -235,127 +221,7 @@
   }
 
   // ---------------------------------------------------------------------
-  // Write-a-review modal
-  // ---------------------------------------------------------------------
-  let selectedRating = 0;
-
-  function openModal() {
-    els.overlay.hidden = false;
-    els.form.hidden = false;
-    els.formSuccess.hidden = true;
-    document.body.style.overflow = 'hidden';
-    els.name.focus();
-  }
-
-  function closeModal() {
-    els.overlay.hidden = true;
-    document.body.style.overflow = '';
-    els.form.reset();
-    els.formError.hidden = true;
-    setRating(0);
-  }
-
-  function setRating(n) {
-    selectedRating = n;
-    els.ratingInput.value = n ? String(n) : '';
-    Array.from(els.starPicker.children).forEach((btn) => {
-      btn.classList.toggle('is-filled', Number(btn.dataset.value) <= n);
-      btn.setAttribute('aria-checked', Number(btn.dataset.value) === n ? 'true' : 'false');
-    });
-  }
-
-  els.writeBtn.addEventListener('click', openModal);
-  els.modalClose.addEventListener('click', closeModal);
-  els.overlay.addEventListener('click', (e) => { if (e.target === els.overlay) closeModal(); });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !els.overlay.hidden) closeModal();
-  });
-
-  Array.from(els.starPicker.children).forEach((btn) => {
-    btn.addEventListener('click', () => setRating(Number(btn.dataset.value)));
-  });
-
-  function getTurnstileToken() {
-    if (window.turnstile && els.turnstileWrap.dataset.widgetId !== undefined) {
-      try {
-        return window.turnstile.getResponse(els.turnstileWrap.dataset.widgetId) || '';
-      } catch (e) {
-        return '';
-      }
-    }
-    return '';
-  }
-
-  function renderTurnstileIfConfigured() {
-    const siteKey = els.turnstileWrap.getAttribute('data-sitekey');
-    if (!siteKey || siteKey.indexOf('YOUR_') === 0) {
-      els.turnstileWrap.hidden = true; // no real key configured yet — dev mode
-      return;
-    }
-    const check = setInterval(() => {
-      if (window.turnstile) {
-        clearInterval(check);
-        const id = window.turnstile.render(els.turnstileWrap, { sitekey: siteKey });
-        els.turnstileWrap.dataset.widgetId = id;
-      }
-    }, 200);
-  }
-
-  function clientValidate() {
-    const name = els.name.value.trim();
-    const email = els.email.value.trim();
-    const review = els.review.value.trim();
-    if (!selectedRating) return 'Please select a star rating.';
-    if (name.length < 2 || name.length > 80) return 'Please enter your full name.';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return 'Please enter a valid email address.';
-    if (review.length < 10 || review.length > 1000) return 'Review must be between 10 and 1000 characters.';
-    return null;
-  }
-
-  els.form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    els.formError.hidden = true;
-
-    const clientError = clientValidate();
-    if (clientError) {
-      els.formError.textContent = clientError;
-      els.formError.hidden = false;
-      return;
-    }
-
-    els.submitBtn.disabled = true;
-    els.submitBtn.classList.add('nr-btn-loading');
-
-    try {
-      const res = await fetch(API_BASE + '/reviews', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: els.name.value.trim(),
-          email: els.email.value.trim(),
-          rating: selectedRating,
-          review: els.review.value.trim(),
-          website: els.website.value, // honeypot — real users leave this empty
-          turnstileToken: getTurnstileToken()
-        })
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || 'Something went wrong. Please try again.');
-
-      els.form.hidden = true;
-      els.formSuccess.hidden = false;
-    } catch (err) {
-      els.formError.textContent = err.message;
-      els.formError.hidden = false;
-    } finally {
-      els.submitBtn.disabled = false;
-      els.submitBtn.classList.remove('nr-btn-loading');
-    }
-  });
-
-  // ---------------------------------------------------------------------
   // Init
   // ---------------------------------------------------------------------
   loadFirstPage();
-  renderTurnstileIfConfigured();
 })();
