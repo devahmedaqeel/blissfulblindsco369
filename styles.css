@@ -2669,26 +2669,29 @@ button, input, select, textarea {
   color: #ffffff;
 }
 
+/* Below 480px the "Need Help? Chat with..." bubble now stays visible
+   (matching desktop/laptop) instead of collapsing to icon-only — just
+   at a slightly tighter size so it still fits comfortably on the
+   narrowest phones without overflowing. */
 @media (max-width: 480px) {
-  .wa-chat-widget {
-    bottom: 16px;
-    right: 16px;
-  }
   .wa-chat-bubble {
-    padding: 0;
-    gap: 0;
-    background: none;
-    border: none;
-    box-shadow: none;
+    gap: 8px;
+    padding: 8px 10px 8px 14px;
   }
-  .wa-bubble-content {
-    display: none;
+
+  .wa-bubble-line1 {
+    font-size: 0.6875rem;
   }
+
+  .wa-bubble-line2 {
+    font-size: 0.8rem;
+  }
+
   .wa-icon-btn {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    font-size: 1.4rem;
+    width: 42px;
+    height: 42px;
+    min-width: 42px;
+    font-size: 1.3rem;
   }
 }
 
