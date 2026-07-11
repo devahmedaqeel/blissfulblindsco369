@@ -154,10 +154,6 @@
   <link rel="preload" href="chatbot.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="chatbot.css"></noscript>
 
-  <!-- Customer Review System — self-contained; see reviews-widget.js -->
-  <link rel="preload" href="reviews-widget.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link rel="stylesheet" href="reviews-widget.css"></noscript>
-
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Performance Preconnect Resource Hints -->
@@ -984,29 +980,6 @@
       </div>
     </section>
 
-    <!-- Customer Review System — new, separate feature. Does not touch the
-         testimonials carousel above; renders only genuine admin-approved
-         reviews fetched from the standalone review-system API. -->
-    <section class="new-reviews-section section-padding" id="customer-reviews">
-      <div class="container">
-        <div class="text-center">
-          <h2 class="section-title">Customer Reviews</h2>
-          <p class="section-subtitle">Real, moderated feedback from real customers — every review is checked before it's published.</p>
-        </div>
-
-        <div class="nr-summary">
-          <div class="nr-summary-count" id="nrCount">Loading reviews&hellip;</div>
-        </div>
-
-        <div class="nr-grid" id="nrGrid"></div>
-        <p class="nr-empty" id="nrEmpty" hidden>No reviews yet.</p>
-
-        <div class="nr-load-more-wrap" id="nrLoadMoreWrap">
-          <button type="button" class="btn btn-outline" id="nrLoadMore" hidden>Load More Reviews</button>
-        </div>
-      </div>
-    </section>
-
     <!-- Commercial & Landlord Blinds Section -->
     <section class="commercial section-padding" id="commercial">
       <div class="container commercial-grid">
@@ -1493,13 +1466,6 @@
   <script src="chatbot-kb.js" defer></script>
   <script src="chatbot.js" defer></script>
 
-  <!-- Customer Review System — self-contained; see reviews-widget.js.
-       Safe to remove: delete the #customer-reviews section + modal above,
-       and these tags. BB_REVIEWS_API_BASE must point at wherever the
-       review-system backend (/review-system) is deployed. -->
-  <script>window.BB_REVIEWS_API_BASE = 'http://localhost:4000/api';</script>
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  <script src="reviews-widget.js" defer></script>
 
 </body>
 </html>
