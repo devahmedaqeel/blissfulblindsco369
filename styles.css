@@ -8,10 +8,10 @@
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #94a3b8;
-  --accent: #d97706;
-  --accent-hover: #b45309;
-  --accent-soft: rgba(217, 119, 6, 0.08);
-  --accent-light: #fef3c7;
+  --accent: #e11d48;
+  --accent-hover: #be123c;
+  --accent-soft: rgba(225, 29, 72, 0.08);
+  --accent-light: #ffe4e6;
   --white: #ffffff;
   --border-color: #e2e8f0;
 
@@ -198,7 +198,7 @@ button, input, select, textarea {
   right: 0;
   bottom: -1px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(217, 119, 6, 0.7), transparent);
+  background: linear-gradient(90deg, transparent, rgba(225, 29, 72, 0.7), transparent);
 }
 
 .top-banner-inner {
@@ -252,8 +252,8 @@ button, input, select, textarea {
   aspect-ratio: 1;
   flex-shrink: 0;
   border-radius: 50%;
-  background: linear-gradient(155deg, rgba(217, 119, 6, 0.28), rgba(217, 119, 6, 0.1));
-  border: 1px solid rgba(217, 119, 6, 0.28);
+  background: linear-gradient(155deg, rgba(225, 29, 72, 0.28), rgba(225, 29, 72, 0.1));
+  border: 1px solid rgba(225, 29, 72, 0.28);
   color: var(--accent-light);
   font-size: var(--tb-icon-font);
   transition: var(--transition-fast);
@@ -292,7 +292,7 @@ button, input, select, textarea {
 .tb-phone .tb-value {
   font-size: var(--tb-phone-font);
   font-weight: 700;
-  text-shadow: 0 0 16px rgba(217, 119, 6, 0.45);
+  text-shadow: 0 0 16px rgba(225, 29, 72, 0.45);
   transition: var(--transition-fast);
 }
 
@@ -304,7 +304,7 @@ button, input, select, textarea {
 
 .tb-phone:hover .tb-value {
   color: var(--accent-light);
-  text-shadow: 0 0 22px rgba(217, 119, 6, 0.7);
+  text-shadow: 0 0 22px rgba(225, 29, 72, 0.7);
 }
 
 /* Email — same icon/spacing language as phone & location, but a lighter
@@ -370,7 +370,7 @@ button, input, select, textarea {
   border-radius: 50px;
   text-decoration: none;
   white-space: nowrap;
-  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.4);
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.4);
   transition: transform var(--transition-normal), box-shadow var(--transition-normal), filter var(--transition-normal);
 }
 
@@ -381,7 +381,7 @@ button, input, select, textarea {
 
 .tb-cta:hover {
   transform: translateY(-2px) scale(1.03);
-  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.6);
+  box-shadow: 0 6px 20px rgba(225, 29, 72, 0.6);
   filter: brightness(1.05);
 }
 
@@ -720,7 +720,7 @@ button, input, select, textarea {
 .btn-primary {
   background: linear-gradient(135deg, var(--accent), var(--accent-hover));
   color: var(--white);
-  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.4);
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.4);
 }
 
 .btn-primary::after {
@@ -752,7 +752,7 @@ button, input, select, textarea {
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(217, 119, 6, 0.6);
+  box-shadow: 0 6px 20px rgba(225, 29, 72, 0.6);
 }
 
 .btn-secondary {
@@ -1255,13 +1255,13 @@ button, input, select, textarea {
 
 @keyframes pulseGlow {
   0% {
-    box-shadow: 0 0 0 0px rgba(217, 119, 6, 0.4), var(--shadow-sm);
+    box-shadow: 0 0 0 0px rgba(225, 29, 72, 0.4), var(--shadow-sm);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(217, 119, 6, 0), var(--shadow-sm);
+    box-shadow: 0 0 0 10px rgba(225, 29, 72, 0), var(--shadow-sm);
   }
   100% {
-    box-shadow: 0 0 0 0px rgba(217, 119, 6, 0), var(--shadow-sm);
+    box-shadow: 0 0 0 0px rgba(225, 29, 72, 0), var(--shadow-sm);
   }
 }
 
@@ -1898,7 +1898,7 @@ button, input, select, textarea {
   align-items: center;
   gap: 10px;
   background-color: var(--accent-soft);
-  border: 1px solid rgba(217, 119, 6, 0.15);
+  border: 1px solid rgba(225, 29, 72, 0.15);
   padding: 6px 16px;
   border-radius: 30px;
   margin: 0 auto 20px;
@@ -2110,7 +2110,7 @@ button, input, select, textarea {
   background-color: var(--accent);
   color: var(--white);
   border-color: var(--accent);
-  box-shadow: 0 4px 10px rgba(217, 119, 6, 0.2);
+  box-shadow: 0 4px 10px rgba(225, 29, 72, 0.2);
 }
 
 .faq-group {
@@ -3032,9 +3032,9 @@ textarea.new-form-control {
   transform: translateY(-1px);
 }
 
-/* Teal Review Footer Banner */
+/* Review Footer Banner */
 .new-booking-footer {
-  background-color: #1dbcd6;
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover));
   padding: 24px 30px;
   text-align: center;
   color: var(--white);
@@ -3180,7 +3180,7 @@ textarea.new-form-control {
 }
 
 .coverage-tab-btn.active i {
-  color: #1dbcd6;
+  color: var(--accent);
 }
 
 .postcode-checker-box {
@@ -3202,7 +3202,7 @@ textarea.new-form-control {
 }
 
 .postcode-checker-title i {
-  color: #1dbcd6;
+  color: var(--accent);
 }
 
 .postcode-checker-input-wrap {
@@ -3224,7 +3224,7 @@ textarea.new-form-control {
 
 .postcode-input:focus {
   outline: none;
-  border-color: #1dbcd6;
+  border-color: var(--accent);
 }
 
 .postcode-btn {
@@ -3291,7 +3291,7 @@ textarea.new-form-control {
 }
 
 .coverage-details-item i {
-  color: #1dbcd6;
+  color: var(--accent);
   margin-top: 3px;
   font-size: 0.8rem;
 }
@@ -3482,8 +3482,8 @@ textarea.new-form-control {
 
 .glass-card:hover {
   background: rgba(255, 255, 255, 0.78) !important;
-  border-color: rgba(217, 119, 6, 0.45) !important;
-  box-shadow: 0 12px 40px 0 rgba(217, 119, 6, 0.12) !important;
+  border-color: rgba(225, 29, 72, 0.45) !important;
+  box-shadow: 0 12px 40px 0 rgba(225, 29, 72, 0.12) !important;
   transform: translateY(-4px) !important;
 }
 
@@ -3538,7 +3538,7 @@ textarea.new-form-control {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
   }
   100% {
-    box-shadow: 0 8px 24px rgba(217, 119, 6, 0.15), 0 0 10px rgba(217, 119, 6, 0.1);
+    box-shadow: 0 8px 24px rgba(225, 29, 72, 0.15), 0 0 10px rgba(225, 29, 72, 0.1);
     transform: scale(1.02);
   }
 }

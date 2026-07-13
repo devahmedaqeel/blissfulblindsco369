@@ -571,8 +571,8 @@ document.addEventListener('DOMContentLoaded', () => {
       // Draw service circle on map to show coverage range
       const circle = L.circle(reg.circle.center, {
         radius: reg.circle.radius,
-        color: '#1dbcd6',
-        fillColor: '#1dbcd6',
+        color: '#e11d48',
+        fillColor: '#e11d48',
         fillOpacity: 0.18,
         weight: 2.5
       }).addTo(shapeLayerGroup);
