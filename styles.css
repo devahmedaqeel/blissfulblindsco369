@@ -1686,6 +1686,48 @@ button, input, select, textarea {
   fill: currentColor;
 }
 
+/* Small always-on brand watermark in the corner of each installation
+   photo — after gallery-overlay in the DOM so it stays above it (and
+   thus stays legible) even when the hover overlay is showing. */
+.gallery-watermark {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px 3px 5px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(2px);
+  color: rgba(255, 255, 255, 0.92);
+  font-family: var(--font-heading);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.gallery-watermark svg {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+}
+
+@media (max-width: 480px) {
+  .gallery-watermark {
+    font-size: 0.5625rem;
+    padding: 2px 6px 2px 4px;
+  }
+
+  .gallery-watermark svg {
+    width: 11px;
+    height: 11px;
+  }
+}
+
 /* Lightbox Modal */
 .lightbox {
   position: fixed;
