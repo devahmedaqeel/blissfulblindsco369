@@ -898,7 +898,7 @@ button, input, select, textarea {
 
 /* Hero Section */
 .hero {
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.8)), url('https://blindsworldltd.com/wp-content/uploads/2022/03/window-blind-installation.jpg.webp') no-repeat center center/cover;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(225, 29, 72, 0.15)), url('https://blindsworldltd.com/wp-content/uploads/2022/03/window-blind-installation.jpg.webp') no-repeat center center/cover;
   min-height: 90vh;
   display: flex;
   align-items: center;
