@@ -71,7 +71,20 @@ document.addEventListener('DOMContentLoaded', () => {
       if (window.innerWidth <= 1024) {
         e.preventDefault();
         const parent = trigger.parentElement;
-        parent.classList.toggle('open');
+        const opened = parent.classList.toggle('open');
+        // The dropdown expands inline inside the scrollable mobile nav
+        // panel rather than as an overlay, so a submenu with many items
+        // (e.g. the 13-item "Window Blinds" list) can expand well past
+        // the bottom of the panel with no visual hint that there's more
+        // below — a user opening it sees the list cut off partway
+        // through and no obvious way to reach the last few items.
+        // Scrolling the freshly-revealed menu's bottom edge into view
+        // fixes that without needing a redesign of the dropdown itself.
+        if (opened) {
+          requestAnimationFrame(() => {
+            navMenu.scrollTo({ top: navMenu.scrollHeight, behavior: 'smooth' });
+          });
+        }
       }
     });
   });
