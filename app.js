@@ -583,6 +583,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }).addTo(shapeLayerGroup);
       marker.bindPopup(`<strong>${reg.title}</strong><br>Free home visits, measurement & fitting.`).openPopup();
 
+      // Ensure Leaflet container dimensions are fully updated before calculating bounds
+      map.invalidateSize();
+
       // Automatically adjust map zoom and position to fit the entire circle on screen
       map.fitBounds(circle.getBounds(), {
         padding: [20, 20],
@@ -590,6 +593,11 @@ document.addEventListener('DOMContentLoaded', () => {
         duration: 0.8
       });
     }
+
+    // Keep Leaflet map container dimensions correct on window resize
+    window.addEventListener('resize', () => {
+      map.invalidateSize();
+    }, { passive: true });
 
     // Initial render
     renderRegion('peterborough');
