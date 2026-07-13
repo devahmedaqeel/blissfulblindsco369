@@ -1749,9 +1749,11 @@ button, input, select, textarea {
   pointer-events: none;
 }
 
-.gallery-watermark svg {
+.gallery-watermark svg,
+.gallery-watermark img {
   width: 13px;
   height: 13px;
+  object-fit: contain;
   flex-shrink: 0;
 }
 
@@ -1761,9 +1763,11 @@ button, input, select, textarea {
     padding: 2px 6px 2px 4px;
   }
 
-  .gallery-watermark svg {
+  .gallery-watermark svg,
+  .gallery-watermark img {
     width: 11px;
     height: 11px;
+    object-fit: contain;
   }
 }
 
