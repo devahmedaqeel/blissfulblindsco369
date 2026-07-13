@@ -1020,21 +1020,47 @@ button, input, select, textarea {
   position: relative;
   opacity: 0;
   transform: scale(0.95);
-  animation: fadeIn 1s forwards ease-out 0.4s;
+  animation: fadeIn 1s forwards ease-out 0.4s, floatCard 6s ease-in-out infinite 1.4s;
 }
 
 .hero-image-card {
   background-color: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 24px;
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.5s ease, 
+              border-color 0.5s ease,
+              background-color 0.5s ease;
+}
+
+.hero-image-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(225, 29, 72, 0.35);
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px rgba(225, 29, 72, 0.15);
 }
 
 .hero-image-card img {
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-md);
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hero-image-card:hover img {
+  transform: scale(1.02);
+}
+
+@keyframes floatCard {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 /* Trustpilot bar */
