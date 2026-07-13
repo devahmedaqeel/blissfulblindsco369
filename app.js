@@ -625,7 +625,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const postcodeMap = {
         peterborough: ['PE'],
         leicester:    ['LE'],
-        luton:        ['LU', 'MK', 'SG', 'AL', 'HP']
+        luton:        ['LU', 'MK', 'SG']
       };
 
       const checkPostcode = () => {

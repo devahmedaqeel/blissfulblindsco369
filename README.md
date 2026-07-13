@@ -61,8 +61,8 @@ dev-tools/                 NOT part of the live site — nothing here is
 - Phone: `07341 645339` / Email: `blissfulblindsco369@gmail.com`
 - Address: 75 Ringwood Bretton, Peterborough, PE3 9SR
 - Hours: Mon–Sat 09:00–18:00, Sun closed
-- Primary service areas: Peterborough, Leicester, Luton (+ Milton Keynes,
-  Northampton, Bedford, Cambridge)
+- Primary service areas: Peterborough, Leicester, Luton (Luton's coverage
+  also extends to Bedford and the surrounding towns listed in the footer)
 
 If any of the above changes, it needs updating in multiple places: the
 visible page text, the footer on every page, and the `LocalBusiness`
