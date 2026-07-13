@@ -89,8 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // 4. Scroll Animations (Fade-in using IntersectionObserver)
   const animElements = document.querySelectorAll('.scroll-animate, .timeline-item');
   const observerOptions = {
-    threshold: 0.15,
-    rootMargin: '0px 0px -50px 0px'
+    threshold: 0.05,
+    rootMargin: '0px 0px -10px 0px'
   };
 
   const observer = new IntersectionObserver((entries) => {
