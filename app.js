@@ -955,6 +955,28 @@ document.addEventListener('DOMContentLoaded', () => {
     init();
   }
 
+  // 12. Scroll Reveal IntersectionObserver
+  function initScrollReveal() {
+    const revealEls = document.querySelectorAll('.reveal-fade-up');
+    if (revealEls.length === 0) return;
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      rootMargin: '0px 0px -8% 0px',
+      threshold: 0.05
+    });
+
+    revealEls.forEach(el => revealObserver.observe(el));
+  }
+
+  initScrollReveal();
+
   makeFreelyDraggable(document.getElementById('waChatWidget'), 'bb_wa_widget_pos');
 });
 

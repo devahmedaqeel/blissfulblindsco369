@@ -511,9 +511,11 @@ button, input, select, textarea {
      so the two never overlap once both are pinned. --banner-h is kept in
      sync with the banner's real rendered height by app.js. */
   top: var(--banner-h);
-  background-color: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-color);
+  background-color: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 30px rgba(15, 23, 42, 0.03);
   z-index: 999;
   transition: var(--transition-normal);
 }
@@ -711,12 +713,41 @@ button, input, select, textarea {
   cursor: pointer;
   transition: var(--transition-normal);
   border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-primary {
   background: linear-gradient(135deg, var(--accent), var(--accent-hover));
   color: var(--white);
   box-shadow: 0 4px 14px rgba(217, 119, 6, 0.4);
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  transition: none;
+}
+
+.btn-primary:hover::after {
+  animation: shimmer-effect 1.3s ease-out infinite;
+}
+
+@keyframes shimmer-effect {
+  100% {
+    left: 200%;
+  }
 }
 
 .btn-primary:hover {
@@ -3431,4 +3462,83 @@ textarea.new-form-control {
 #map,
 .leaflet-container {
   z-index: 990 !important;
+}
+
+/* ============================================================
+   GLASSMORPHISM & PREMIUM SCROLL REVEAL STYLES
+   ============================================================ */
+
+/* Frost glass card container */
+.glass-card {
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.05) !important;
+  transition: transform var(--transition-normal) var(--transition-ease),
+              box-shadow var(--transition-normal) var(--transition-ease),
+              border-color var(--transition-normal) !important;
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border-color: rgba(217, 119, 6, 0.45) !important;
+  box-shadow: 0 12px 40px 0 rgba(217, 119, 6, 0.12) !important;
+  transform: translateY(-4px) !important;
+}
+
+/* Glassmorphism for specific elements */
+.timeline-card,
+.postcode-checker-box {
+  background: rgba(248, 250, 252, 0.65) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(203, 213, 225, 0.6) !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02) !important;
+}
+
+.new-booking-card {
+  background: rgba(255, 255, 255, 0.72) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.06) !important;
+}
+
+/* Scroll reveal system */
+.reveal-fade-up,
+.scroll-animate {
+  opacity: 0;
+  transform: translateY(35px);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.reveal-fade-up.revealed,
+.scroll-animate.animated {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Delayed transition utilities for staggered grids */
+.delay-100 { transition-delay: 100ms !important; }
+.delay-200 { transition-delay: 200ms !important; }
+.delay-300 { transition-delay: 300ms !important; }
+.delay-400 { transition-delay: 400ms !important; }
+
+/* Breathing blinking glow for floating contact widgets */
+.wa-chat-widget,
+.tp-floating-badge {
+  animation: breathing-glow 3s ease-in-out infinite alternate;
+}
+
+@keyframes breathing-glow {
+  0% {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+  100% {
+    box-shadow: 0 8px 24px rgba(217, 119, 6, 0.15), 0 0 10px rgba(217, 119, 6, 0.1);
+    transform: scale(1.02);
+  }
 }
