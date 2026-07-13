@@ -545,6 +545,7 @@ button, input, select, textarea {
   transition: var(--transition-fast);
 }
 
+
 .logo-icon {
   width: clamp(1.625rem, 1.4rem + 0.9vw, 2.3125rem);
   height: clamp(1.625rem, 1.4rem + 0.9vw, 2.3125rem);
@@ -3267,14 +3268,16 @@ textarea.new-form-control {
 .coverage-map-wrap {
   min-width: 0;
   width: 100%;
-  height: 550px;
+  height: 400px;
   position: relative;
   background-color: #e5e7eb;
 }
 
-#map {
+#map,
+#map-iframe {
   width: 100%;
   height: 100%;
+  border: none;
 }
 
 /* Ensure Leaflet zoom controls and styles look clean */
@@ -3308,7 +3311,7 @@ textarea.new-form-control {
     border-bottom: 1px solid var(--border-color);
   }
   .coverage-map-wrap {
-    height: 400px;
+    height: 300px;
   }
 }
 
@@ -3424,3 +3427,8 @@ textarea.new-form-control {
   }
 }
 
+/* Fix Leaflet map controls overlapping sticky header on scroll */
+#map,
+.leaflet-container {
+  z-index: 990 !important;
+}

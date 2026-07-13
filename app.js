@@ -528,14 +528,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    // Initialize Leaflet Map — centered on Peterborough by default
+    // Initialize Leaflet Map using official Google Maps Roadmap tile layers
     const map = L.map('map', {
       scrollWheelZoom: false
     }).setView(regions.peterborough.center, regions.peterborough.zoom);
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      maxZoom: 18
+    L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+      attribution: 'Map data &copy; <a href="https://maps.google.com">Google</a>',
+      maxZoom: 20
     }).addTo(map);
 
     const shapeLayerGroup = L.layerGroup().addTo(map);
@@ -568,7 +568,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
 
-      // Draw service circle on map
+      // Draw service circle on map to show coverage range
       const circle = L.circle(reg.circle.center, {
         radius: reg.circle.radius,
         color: '#1dbcd6',
@@ -583,8 +583,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }).addTo(shapeLayerGroup);
       marker.bindPopup(`<strong>${reg.title}</strong><br>Free home visits, measurement & fitting.`).openPopup();
 
-      // Fly to the selected region smoothly
-      map.flyTo(reg.center, reg.zoom, { duration: 0.8 });
+      // Automatically adjust map zoom and position to fit the entire circle on screen
+      map.fitBounds(circle.getBounds(), {
+        padding: [20, 20],
+        animate: true,
+        duration: 0.8
+      });
     }
 
     // Initial render
