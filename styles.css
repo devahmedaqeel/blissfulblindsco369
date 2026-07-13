@@ -678,20 +678,18 @@ button, input, select, textarea {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
-  padding: 10px;
-  min-width: 250px;
+  padding: 16px;
+  min-width: 440px;
   opacity: 0;
   visibility: hidden;
   transition: var(--transition-normal);
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  max-height: none !important;
-  overflow: visible !important;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 16px;
 }
 
 .dropdown-link {
-  padding: 6px 12px;
+  padding: 8px 12px;
   border-radius: var(--radius-sm);
   font-weight: 500;
   font-size: 0.9375rem;
@@ -860,7 +858,9 @@ button, input, select, textarea {
   }
   
   .nav-item-dropdown.open .dropdown-menu {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     position: relative;
     top: 0;
     left: 0;
