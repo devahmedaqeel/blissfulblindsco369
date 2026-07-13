@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
         center: [51.8787, -0.4143],
         zoom: 11,
         circle: { center: [51.8787, -0.4143], radius: 18000 },
-        title: 'Luton & Bedfordshire Service Area',
+        title: 'Luton Service Area',
         cities: [
           'Luton Town Centre',
           'Dunstable',

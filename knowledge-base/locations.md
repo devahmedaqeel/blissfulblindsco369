@@ -13,7 +13,7 @@ Leicester City Centre, Loughborough, Hinckley, Wigston, Coalville, Melton Mowbra
 Market Harborough, Oadby, Lutterworth, Ashby-de-la-Zouch.
 Postcode prefix: LE
 
-## Luton & Bedfordshire Area
+## Luton Area
 Luton Town Centre, Dunstable, Bedford, Leighton Buzzard, Houghton Regis, Ampthill,
 Flitwick, Sandy, Biggleswade, Kempston.
 Postcode prefixes: LU, MK, SG
@@ -23,8 +23,8 @@ The site's own postcode checker matches only the first 1–2 letters of a postco
 region:
 - PE → Peterborough area
 - LE → Leicester area
-- LU, MK, SG → Luton & Bedfordshire area (MK covers Bedford/Ampthill, SG covers
-  Sandy/Biggleswade — not Milton Keynes or Stevenage themselves)
+- LU, MK, SG → Luton area (MK covers Bedford/Ampthill, SG covers Sandy/Biggleswade —
+  not Milton Keynes or Stevenage themselves)
 
 If a customer's postcode prefix isn't one of these, the site's own checker tells them
 they're outside the current service area and to call to confirm — the chatbot should
