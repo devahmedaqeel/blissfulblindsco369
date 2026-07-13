@@ -2614,6 +2614,14 @@ button, input, select, textarea {
 .wa-chat-widget.is-dragging {
   cursor: grabbing;
   transition: none;
+  /* The infinite breathing-glow animation (below) sets its own
+     `transform: scale()` on alternating cycles, which otherwise fights
+     the per-frame translate3d() app.js applies while dragging — the
+     widget would visibly snap back to the animation's transform mid-
+     drag. Suspending it here (mirrors .bb-chat-toggle.is-dragging in
+     chatbot.css) keeps the drag transform authoritative for the whole
+     gesture. */
+  animation: none;
   /* Hints the compositor to put this on its own GPU layer while it's
      actively being transformed, avoiding a layer-promotion hitch on the
      very first drag frame. Removed once the drag ends (see app.js) so
