@@ -3578,11 +3578,11 @@ textarea.new-form-control {
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.06) !important;
 }
 
-/* Scroll reveal system */
+/* Scroll reveal system with premium flex scale-up motion */
 .reveal-fade-up,
 .scroll-animate {
   opacity: 0;
-  transform: translateY(35px);
+  transform: translateY(40px) scale(0.97);
   transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
@@ -3591,7 +3591,7 @@ textarea.new-form-control {
 .reveal-fade-up.revealed,
 .scroll-animate.animated {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 /* Delayed transition utilities for staggered grids */
@@ -3616,53 +3616,13 @@ textarea.new-form-control {
   }
 }
 
-/* Booking Header Live status badge & accent */
-.booking-status-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background-color: var(--accent-soft);
-  color: var(--accent);
-  padding: 6px 14px;
-  border-radius: 50px;
-  font-size: 0.8rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 15px;
-  border: 1px solid rgba(225, 29, 72, 0.15);
-}
-
-.pulse-dot {
-  width: 8px;
-  height: 8px;
-  background-color: var(--accent);
-  border-radius: 50%;
-  display: inline-block;
-  position: relative;
-}
-
-.pulse-dot::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background-color: var(--accent);
-  border-radius: 50%;
-  animation: pulse-ring 1.8s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
-}
-
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.95);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(2.8);
-    opacity: 0;
-  }
+/* Booking Header Subtitle & accent */
+.new-booking-subtitle {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  margin-top: 8px;
+  font-weight: 500;
+  line-height: 1.4;
 }
 
 .booking-header-accent-line {
@@ -3671,4 +3631,77 @@ textarea.new-form-control {
   background: linear-gradient(90deg, var(--accent), var(--accent-hover));
   border-radius: 50px;
   margin-top: 15px;
+}
+
+/* Form inputs hover & focus animations */
+.new-form-control {
+  border: 1px solid rgba(226, 232, 240, 0.8) !important;
+  background-color: rgba(247, 247, 247, 0.6) !important;
+  transition: border-color var(--transition-normal),
+              box-shadow var(--transition-normal),
+              background-color var(--transition-normal) !important;
+}
+
+.new-form-control:hover {
+  border-color: rgba(225, 29, 72, 0.25) !important;
+  background-color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.new-form-control:focus {
+  background-color: var(--white) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.15) !important;
+  outline: none;
+}
+
+/* Submit Button Theme Sync with Shimmer & Scale Animation */
+.new-submit-btn {
+  background: linear-gradient(135deg, var(--accent), var(--accent-hover)) !important;
+  box-shadow: 0 4px 14px rgba(225, 29, 72, 0.3) !important;
+  transition: transform var(--transition-normal),
+              box-shadow var(--transition-normal) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.new-submit-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  transition: none;
+}
+
+.new-submit-btn:hover::after {
+  animation: shimmer-effect 1.3s ease-out infinite;
+}
+
+.new-submit-btn:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(225, 29, 72, 0.5) !important;
+}
+
+/* Action alignment responsive flex overrides */
+@media (max-width: 640px) {
+  .new-form-actions {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 16px !important;
+  }
+  .new-checkbox-group {
+    max-width: 100% !important;
+  }
+  .new-submit-btn {
+    width: 100% !important;
+    text-align: center !important;
+  }
 }
