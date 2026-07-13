@@ -2500,23 +2500,86 @@ button, input, select, textarea {
 }
 
 .areas-covered-box {
-  background-color: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-md);
-  padding: 24px;
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-lg);
+  padding: 26px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
 .areas-covered-title {
   font-family: var(--font-heading);
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  color: var(--white);
 }
 
 .areas-covered-list {
-  font-size: 0.8125rem;
-  color: var(--text-muted);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
   line-height: 1.8;
+}
+
+.footer-regions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 15px;
+}
+
+.footer-region-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-region-name {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.footer-region-name::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+.footer-city-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.footer-city-tags span {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 3px 10px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.footer-city-tags span:hover {
+  background-color: rgba(225, 29, 72, 0.12);
+  border-color: rgba(225, 29, 72, 0.4);
+  color: var(--white);
+  transform: translateY(-1px);
 }
 
 .footer-bottom {
