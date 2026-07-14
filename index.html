@@ -965,10 +965,14 @@
             <!-- Blind Style tabs -->
             <div>
               <span class="visualizer-control-group-title">Select Blind Style</span>
-              <div class="visualizer-tabs visualizer-tabs-3">
+              <div class="visualizer-tabs" style="grid-template-columns: repeat(3, 1fr); gap: 6px; background: #f1f5f9; padding: 4px; border-radius: 8px; display: grid;">
                 <button class="visualizer-tab-btn active" id="styleTabRoller" onclick="setVisualizerStyle('roller')">Roller</button>
                 <button class="visualizer-tab-btn" id="styleTabVertical" onclick="setVisualizerStyle('vertical')">Vertical</button>
+                <button class="visualizer-tab-btn" id="styleTabVenetian" onclick="setVisualizerStyle('venetian')">Venetian</button>
                 <button class="visualizer-tab-btn" id="styleTabRoman" onclick="setVisualizerStyle('roman')">Roman</button>
+                <button class="visualizer-tab-btn" id="styleTabVision" onclick="setVisualizerStyle('vision')">Vision</button>
+                <button class="visualizer-tab-btn" id="styleTabPleated" onclick="setVisualizerStyle('pleated')">Pleated</button>
+                <button class="visualizer-tab-btn" id="styleTabShutters" onclick="setVisualizerStyle('shutters')" style="grid-column: span 3; font-size: 12px; padding: 6px;">Shutters (Wood Panels)</button>
               </div>
             </div>
 

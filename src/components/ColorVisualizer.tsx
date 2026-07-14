@@ -46,16 +46,25 @@ const collections: Collection[] = [
 
 export default function ColorVisualizer() {
   const [selectedRoom, setSelectedRoom] = useState<"living-room" | "bedroom">("living-room");
-  const [selectedStyle, setSelectedStyle] = useState<"roller" | "vertical" | "roman">("roller");
+  const [selectedStyle, setSelectedStyle] = useState<"roller" | "vertical" | "venetian" | "roman" | "vision" | "pleated" | "shutters">("roller");
   const [selectedColor, setSelectedColor] = useState<ColorItem>(collections[0].colors[0]);
   const [blindHeight, setBlindHeight] = useState<number>(85); // 0 to 100 percentage
 
   const handleApplyToBooking = () => {
+    let blindsValue = 'Roller Blinds';
+    if (selectedStyle === 'roller') blindsValue = 'Roller Blinds';
+    else if (selectedStyle === 'vertical') blindsValue = 'Vertical Blinds';
+    else if (selectedStyle === 'venetian') blindsValue = 'Venetian Blinds';
+    else if (selectedStyle === 'roman') blindsValue = 'Roman Blinds';
+    else if (selectedStyle === 'vision') blindsValue = 'Vision Blinds';
+    else if (selectedStyle === 'pleated') blindsValue = 'Pleated Blinds';
+    else if (selectedStyle === 'shutters') blindsValue = 'Window Shutters';
+
     // Dispatch a custom event to update the booking form
     const customEvent = new CustomEvent("claimOffer", {
       detail: {
-        type: selectedStyle === "roller" ? "roller" : selectedStyle === "vertical" ? "vertical" : "roman",
-        message: `I configured my blinds in the Color Visualizer! I prefer: ${selectedStyle.toUpperCase()} Blinds in "${selectedColor.name}" (Hex: ${selectedColor.hex}) set to ${blindHeight}% height.`
+        type: selectedStyle,
+        message: `I configured my blinds in the Color Visualizer! I prefer: ${blindsValue} in "${selectedColor.name}" (Hex: ${selectedColor.hex}) set to ${blindHeight}% height.`
       }
     });
     window.dispatchEvent(customEvent);
@@ -71,7 +80,11 @@ export default function ColorVisualizer() {
     switch (selectedStyle) {
       case "roller": return "Roller Blinds";
       case "vertical": return "Vertical Blinds";
+      case "venetian": return "Venetian Blinds";
       case "roman": return "Roman Blinds";
+      case "vision": return "Vision (Zebra) Blinds";
+      case "pleated": return "Pleated Blinds";
+      case "shutters": return "Plantation Shutters";
     }
   };
 
@@ -177,24 +190,21 @@ export default function ColorVisualizer() {
             {/* Blind Style Toggle */}
             <div>
               <span className="visualizer-control-group-title">Select Blind Style</span>
-              <div className="visualizer-tabs visualizer-tabs-3">
+              <div className="grid grid-cols-3 gap-1.5 bg-[#f1f5f9] p-1 rounded-[8px] w-full">
+                {(["roller", "vertical", "venetian", "roman", "vision", "pleated"] as const).map((style) => (
+                  <button
+                    key={style}
+                    onClick={() => setSelectedStyle(style)}
+                    className={`py-2 px-1 text-[12px] font-nav font-semibold rounded-[6px] transition-all cursor-pointer text-center ${selectedStyle === style ? "bg-white text-text-dark shadow-sm" : "text-text-secondary hover:text-text-dark"}`}
+                  >
+                    {style.charAt(0).toUpperCase() + style.slice(1)}
+                  </button>
+                ))}
                 <button
-                  onClick={() => setSelectedStyle("roller")}
-                  className={`visualizer-tab-btn ${selectedStyle === "roller" ? "active" : ""}`}
+                  onClick={() => setSelectedStyle("shutters")}
+                  className={`col-span-3 py-1.5 text-[11px] font-nav font-semibold rounded-[6px] transition-all cursor-pointer text-center ${selectedStyle === "shutters" ? "bg-white text-text-dark shadow-sm" : "text-text-secondary hover:text-text-dark"}`}
                 >
-                  Roller
-                </button>
-                <button
-                  onClick={() => setSelectedStyle("vertical")}
-                  className={`visualizer-tab-btn ${selectedStyle === "vertical" ? "active" : ""}`}
-                >
-                  Vertical
-                </button>
-                <button
-                  onClick={() => setSelectedStyle("roman")}
-                  className={`visualizer-tab-btn ${selectedStyle === "roman" ? "active" : ""}`}
-                >
-                  Roman
+                  Shutters (Wood Panels)
                 </button>
               </div>
             </div>

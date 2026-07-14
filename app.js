@@ -1077,32 +1077,38 @@ document.addEventListener('DOMContentLoaded', () => {
     activeStyle = style;
     const shader = document.getElementById('visualizerBlindShader');
     const choiceStyle = document.getElementById('visualizerChoiceStyle');
-    const tabRoller = document.getElementById('styleTabRoller');
-    const tabVertical = document.getElementById('styleTabVertical');
-    const tabRoman = document.getElementById('styleTabRoman');
 
-    if (!shader || !choiceStyle || !tabRoller || !tabVertical || !tabRoman) return;
+    if (!shader || !choiceStyle) return;
 
     // Reset styles
     shader.className = 'visualizer-blind-shader style-' + style;
     
-    // Update labels
-    if (style === 'roller') {
-      choiceStyle.textContent = 'Roller Blinds';
-      tabRoller.classList.add('active');
-      tabVertical.classList.remove('active');
-      tabRoman.classList.remove('active');
-    } else if (style === 'vertical') {
-      choiceStyle.textContent = 'Vertical Blinds';
-      tabRoller.classList.remove('active');
-      tabVertical.classList.add('active');
-      tabRoman.classList.remove('active');
-    } else if (style === 'roman') {
-      choiceStyle.textContent = 'Roman Blinds';
-      tabRoller.classList.remove('active');
-      tabVertical.classList.remove('active');
-      tabRoman.classList.add('active');
-    }
+    // Update style choice display label
+    let label = 'Roller Blinds';
+    if (style === 'roller') label = 'Roller Blinds';
+    else if (style === 'vertical') label = 'Vertical Blinds';
+    else if (style === 'venetian') label = 'Venetian Blinds';
+    else if (style === 'roman') label = 'Roman Blinds';
+    else if (style === 'vision') label = 'Vision (Zebra) Blinds';
+    else if (style === 'pleated') label = 'Pleated Blinds';
+    else if (style === 'shutters') label = 'Plantation Shutters';
+
+    choiceStyle.textContent = label;
+
+    // Remove active class from all style buttons
+    const styleButtons = [
+      'styleTabRoller', 'styleTabVertical', 'styleTabVenetian', 
+      'styleTabRoman', 'styleTabVision', 'styleTabPleated', 'styleTabShutters'
+    ];
+    styleButtons.forEach(id => {
+      const btn = document.getElementById(id);
+      if (btn) btn.classList.remove('active');
+    });
+
+    // Add active to clicked style button
+    const activeId = 'styleTab' + style.charAt(0).toUpperCase() + style.slice(1);
+    const activeBtn = document.getElementById(activeId);
+    if (activeBtn) activeBtn.classList.add('active');
   };
 
   window.setVisualizerColor = function(colorId, colorName, colorHex, isLight, colorDesc) {
@@ -1168,7 +1174,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let blindsValue = 'Roller Blinds';
     if (activeStyle === 'roller') blindsValue = 'Roller Blinds';
     else if (activeStyle === 'vertical') blindsValue = 'Vertical Blinds';
+    else if (activeStyle === 'venetian') blindsValue = 'Venetian Blinds';
     else if (activeStyle === 'roman') blindsValue = 'Roman Blinds';
+    else if (activeStyle === 'vision') blindsValue = 'Vision Blinds';
+    else if (activeStyle === 'pleated') blindsValue = 'Pleated Blinds';
+    else if (activeStyle === 'shutters') blindsValue = 'Window Shutters';
 
     blindsSelect.value = blindsValue;
 

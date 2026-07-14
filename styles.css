@@ -4724,6 +4724,43 @@ textarea.new-form-control {
   mix-blend-mode: multiply;
 }
 
+.visualizer-blind-shader.style-venetian {
+  background: repeating-linear-gradient(180deg, rgba(255,255,255,0.08) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,0.12) 14px, rgba(0,0,0,0.28) 16px);
+  mix-blend-mode: multiply;
+}
+
+.visualizer-blind-shader.style-venetian::before,
+.visualizer-blind-shader.style-venetian::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 12px;
+  height: 100%;
+  background: rgba(0,0,0,0.18);
+  box-shadow: inset 1px 0 2px rgba(255,255,255,0.08), inset -1px 0 2px rgba(0,0,0,0.25);
+  opacity: 0.75;
+}
+
+.visualizer-blind-shader.style-venetian::before { left: 25%; }
+.visualizer-blind-shader.style-venetian::after { right: 25%; }
+
+.visualizer-blind-shader.style-vision {
+  background: repeating-linear-gradient(180deg, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 24px, rgba(0,0,0,0.65) 24px, rgba(0,0,0,0.65) 44px);
+  mix-blend-mode: multiply;
+}
+
+.visualizer-blind-shader.style-pleated {
+  background: repeating-linear-gradient(180deg, rgba(255,255,255,0.06) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,0.1) 10px, rgba(0,0,0,0.26) 12px);
+  mix-blend-mode: multiply;
+}
+
+.visualizer-blind-shader.style-shutters {
+  background: repeating-linear-gradient(180deg, rgba(255,255,255,0.06) 0px, rgba(0,0,0,0) 2px, rgba(0,0,0,0.1) 20px, rgba(0,0,0,0.3) 22px);
+  mix-blend-mode: multiply;
+  border: 8px solid rgba(0,0,0,0.04);
+  box-shadow: inset 0 0 8px rgba(0,0,0,0.08);
+}
+
 .visualizer-bottom-bar {
   height: 10px;
   background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
