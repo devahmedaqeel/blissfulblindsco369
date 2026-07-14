@@ -51,6 +51,7 @@ function validateLeadSubmission(body) {
   const address = collapseWhitespace(stripTags(body.address || '')).slice(0, 200);
   const postcode = collapseWhitespace(stripTags(body.postcode || '')).slice(0, 20);
   const service = collapseWhitespace(stripTags(body.service || '')).slice(0, 100);
+  const preferredColor = collapseWhitespace(stripTags(body.preferredColor || '')).slice(0, 100);
   const appointmentDate = collapseWhitespace(stripTags(body.appointmentDate || '')).slice(0, 60);
   const appointmentTime = collapseWhitespace(stripTags(body.appointmentTime || '')).slice(0, 60);
   const hearAboutUs = collapseWhitespace(stripTags(body.hearAboutUs || '')).slice(0, 60);
@@ -69,7 +70,7 @@ function validateLeadSubmission(body) {
     data: {
       source: sourceKey,
       sourceLabel: KNOWN_SOURCES[sourceKey],
-      name, email, phone, address, postcode, service, appointmentDate, appointmentTime, hearAboutUs, message
+      name, email, phone, address, postcode, service, preferredColor, appointmentDate, appointmentTime, hearAboutUs, message
     }
   };
 }

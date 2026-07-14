@@ -364,6 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const postcode = document.getElementById('postcode').value.trim();
       const address = document.getElementById('address') ? document.getElementById('address').value.trim() : 'N/A';
       const blindsType = document.getElementById('blindsType') ? document.getElementById('blindsType').value.trim() : '';
+      const preferredColor = document.getElementById('preferredColor') ? document.getElementById('preferredColor').value.trim() : '';
       const callTime = document.getElementById('callTime') ? document.getElementById('callTime').value.trim() : '';
       const hearAboutUs = document.getElementById('hearAboutUs') ? document.getElementById('hearAboutUs').value.trim() : '';
       const message = document.getElementById('message') ? document.getElementById('message').value.trim() : '';
@@ -380,19 +381,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
       }
 
-      // Send an email notification (admin + customer confirmation) in the
-      // background. Not awaited on purpose — the existing instant
-      // success transition below is unchanged either way; if delivery
-      // fails, a small fallback note is appended to the success message
-      // the customer is already looking at.
-      sendBookingEmailNotification({ name, email, phone, postcode, address, blindsType, callTime, hearAboutUs, message }, successMessage);
+      // Send an email notification
+      sendBookingEmailNotification({ name, email, phone, postcode, address, blindsType, preferredColor, callTime, hearAboutUs, message }, successMessage);
 
       // Successful state
       bookingForm.style.display = 'none';
       successMessage.style.display = 'block';
 
       // Clear sessionStorage on successful submit
-      const fields = ['name', 'phone', 'email', 'postcode', 'blindsType', 'message', 'address', 'callTime', 'hearAboutUs'];
+      const fields = ['name', 'phone', 'email', 'postcode', 'blindsType', 'preferredColor', 'message', 'address', 'callTime', 'hearAboutUs'];
       fields.forEach(fieldId => sessionStorage.removeItem(`session_form_${fieldId}`));
 
       // Scroll to form success message
@@ -400,10 +397,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Posts booking form data to /api/notify (a Vercel Serverless Function
-  // in this same deployment — see /api/notify.js), which sends an admin
-  // notification + customer confirmation email via Gmail SMTP /
-  // Nodemailer. Same-origin, so no API base URL or CORS setup needed.
+  // Posts booking form data to /api/notify
   function sendBookingEmailNotification(data, successMessage) {
     fetch('/api/notify', {
       method: 'POST',
@@ -416,6 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
         address: data.address,
         postcode: data.postcode,
         service: data.blindsType,
+        preferredColor: data.preferredColor,
         appointmentTime: data.callTime,
         hearAboutUs: data.hearAboutUs,
         message: data.message
@@ -437,7 +432,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('bookingForm');
     if (!form) return;
 
-    const fields = ['name', 'phone', 'email', 'postcode', 'blindsType', 'message', 'address', 'callTime', 'hearAboutUs'];
+    const fields = ['name', 'phone', 'email', 'postcode', 'blindsType', 'preferredColor', 'message', 'address', 'callTime', 'hearAboutUs'];
     
     // Load from sessionStorage
     fields.forEach(fieldId => {

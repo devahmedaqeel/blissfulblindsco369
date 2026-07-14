@@ -12,6 +12,7 @@ export default function BookingForm() {
     postcode: "",
     address: "",
     blindsType: "",
+    preferredColor: "",
     callTime: "",
     hearAboutUs: "",
     message: "",
@@ -24,7 +25,7 @@ export default function BookingForm() {
 
   // Load from SessionStorage on Mount
   useEffect(() => {
-    const fields = ["name", "phone", "email", "postcode", "address", "blindsType", "callTime", "hearAboutUs", "message"];
+    const fields = ["name", "phone", "email", "postcode", "address", "blindsType", "preferredColor", "callTime", "hearAboutUs", "message"];
     const savedData: Record<string, string> = {};
     fields.forEach((field) => {
       const stored = sessionStorage.getItem(`session_form_${field}`);
@@ -71,7 +72,7 @@ export default function BookingForm() {
     setFallbackNote(false);
 
     // Frontend validation
-    const { name, phone, email, postcode, address, blindsType, callTime, hearAboutUs } = formData;
+    const { name, phone, email, postcode, address, blindsType, preferredColor, callTime, hearAboutUs } = formData;
     if (!name || !phone || !email || !postcode || !address || !blindsType || !callTime || !hearAboutUs) {
       setErrorMsg("Please fill out all required fields.");
       setLoading(false);
@@ -97,6 +98,7 @@ export default function BookingForm() {
           address,
           postcode,
           service: blindsType,
+          preferredColor,
           appointmentTime: callTime,
           hearAboutUs,
           message: formData.message,
@@ -111,7 +113,7 @@ export default function BookingForm() {
       setIsSubmitted(true);
       
       // Clear sessionStorage
-      const fields = ["name", "phone", "email", "postcode", "address", "blindsType", "callTime", "hearAboutUs", "message"];
+      const fields = ["name", "phone", "email", "postcode", "address", "blindsType", "preferredColor", "callTime", "hearAboutUs", "message"];
       fields.forEach((field) => sessionStorage.removeItem(`session_form_${field}`));
     } catch (err) {
       console.error(err);
@@ -275,6 +277,30 @@ export default function BookingForm() {
                   </div>
                 </div>
 
+                {/* Preferred Color */}
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="preferredColor" className="font-nav text-[13px] font-semibold text-text-dark">
+                    Preferred Color / Tone
+                  </label>
+                  <div className="relative">
+                    <select
+                      id="preferredColor"
+                      value={formData.preferredColor}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 border border-border-light rounded-[10px] text-sm focus:outline-none focus:border-brand-primary/30 appearance-none bg-white cursor-pointer text-text-dark"
+                    >
+                      <option value="">Any / Show Swatches</option>
+                      <option value="white">White / Cream / Ivory</option>
+                      <option value="grey">Grey / Anthracite / Charcoal</option>
+                      <option value="black">Black / Dark Slate</option>
+                      <option value="wood">Natural Wood / Grain Stain</option>
+                      <option value="bright">Bright Colors (Red, Blue, etc.)</option>
+                      <option value="pattern">Patterned / Textured Fabric</option>
+                    </select>
+                    <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
+                  </div>
+                </div>
+
                 {/* Preferred Appointment Time */}
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="callTime" className="font-nav text-[13px] font-semibold text-text-dark">
@@ -299,7 +325,7 @@ export default function BookingForm() {
                 </div>
 
                 {/* How Did You Hear About Us */}
-                <div className="flex flex-col gap-1.5 md:col-span-2">
+                <div className="flex flex-col gap-1.5">
                   <label htmlFor="hearAboutUs" className="font-nav text-[13px] font-semibold text-text-dark">
                     How Did You Hear About Us? *
                   </label>

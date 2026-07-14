@@ -182,7 +182,7 @@ function actionButton(href, label, variant) {
 }
 
 /** Internal admin notification email for a form submission (booking or chatbot lead). */
-function adminNotificationEmail({ source, sourceLabel, name, phone, email, address, postcode, service, appointment, hearAboutUs, message, submittedAt }) {
+function adminNotificationEmail({ source, sourceLabel, name, phone, email, address, postcode, service, preferredColor, appointment, hearAboutUs, message, submittedAt }) {
   const isBooking = source === 'booking';
   const badgeText = `${sourceLabel} Received`.toUpperCase();
   const heading = isBooking ? 'New Customer Booking Enquiry' : `New Customer ${sourceLabel}`;
@@ -201,6 +201,7 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
     detailRow('Home Address', address, i++),
     detailRow('Postcode', postcode, i++),
     detailRow('Type of Blinds', service, i++),
+    detailRow('Preferred Color', preferredColor, i++),
     detailRow('Best Time To Call', appointment, i++),
     detailRow('How Did You Hear About Us', hearAboutUs, i++),
     detailRow('Customer Message', message, i++),
