@@ -1,35 +1,51 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Star } from "lucide-react";
+import { Check, Star, ArrowRight } from "lucide-react";
 
 const trustItems = [
   "Free Measuring",
   "Expert Installation",
   "Premium Quality",
-  "5-Star Customer Service",
+  "5-Star Fitting",
 ];
 
-const floatingCards = [
-  { label: "Roller Blinds", x: "4%", y: "22%", delay: 0 },
-  { label: "Roman Blinds", x: "86%", y: "16%", delay: 1.5 },
-  { label: "Venetian Blinds", x: "3%", y: "62%", delay: 0.8 },
-  { label: "Wooden Blinds", x: "88%", y: "65%", delay: 2.2 },
-  { label: "Motorised Blinds", x: "8%", y: "82%", delay: 1.2 },
-  { label: "Vertical Blinds", x: "84%", y: "40%", delay: 0.5 },
+const showcaseImages = [
+  {
+    src: "/images/gallery/10-768x768.jpg.webp",
+    title: "Vertical Blinds Installation",
+    desc: "Precision fit for floor-to-ceiling windows",
+    rotate: -4,
+    x: -30,
+    y: -20,
+    badge: "Peterborough",
+  },
+  {
+    src: "/images/gallery/Venitian-Blind-3-768x768.jpg.webp",
+    title: "Venetian Wood Slats",
+    desc: "Warm organic texture & privacy controls",
+    rotate: 4,
+    x: 40,
+    y: 10,
+    badge: "Leicester",
+  },
+  {
+    src: "/images/gallery/Blinds-ROller-12-768x768.jpg.webp",
+    title: "Premium Roller Blinds",
+    desc: "Minimalist kitchen installation",
+    rotate: -2,
+    x: -10,
+    y: 80,
+    badge: "Luton",
+  },
 ];
 
 export default function HeroSection() {
   return (
-    <section className="relative w-full min-h-screen overflow-hidden flex items-center justify-center bg-black">
+    <section className="relative w-full min-h-screen overflow-hidden flex items-center justify-center bg-[#090D16] pt-24 pb-16 lg:py-0">
       
-      {/* Background Video */}
-      <motion.div
-        initial={{ scale: 1.1, opacity: 0 }}
-        animate={{ scale: 1.0, opacity: 0.7 }}
-        transition={{ duration: 2.5, ease: "easeOut" }}
-        className="absolute inset-0 w-full h-full pointer-events-none z-0"
-      >
+      {/* Background Cinematic Video Layer (Subtle motion background) */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-20">
         <video
           autoPlay
           muted
@@ -37,174 +53,175 @@ export default function HeroSection() {
           playsInline
           className="w-full h-full object-cover"
         >
-          {/* Multiple local video stream fallbacks from Downloads */}
           <source src="/vedio.mp4" type="video/mp4" />
           <source src="/ddb4.mp4" type="video/mp4" />
           <source src="/video_editing.mp4" type="video/mp4" />
-          <source src="/logo_graphic.mp4" type="video/mp4" />
-          <source src="/logo_flyers.mp4" type="video/mp4" />
         </video>
-        {/* Soft dark overlay for premium contrast and readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-black/70" />
-      </motion.div>
-
-      {/* Floating Glass Cards (Only visible on wide screens to prevent overlap) */}
-      <div className="absolute inset-0 pointer-events-none hidden xl:block overflow-hidden z-10">
-        {floatingCards.map((card, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ 
-              opacity: 1, 
-              y: [0, -15, 0],
-            }}
-            transition={{
-              opacity: { duration: 1, delay: card.delay },
-              y: {
-                duration: 5,
-                repeat: Infinity,
-                repeatType: "reverse",
-                ease: "easeInOut",
-                delay: card.delay,
-              }
-            }}
-            style={{ left: card.x, top: card.y }}
-            className="absolute glass-card px-5 py-3 rounded-[12px] flex items-center gap-2"
-          >
-            <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
-            <span className="font-nav text-[13px] font-semibold text-white tracking-wide">
-              {card.label}
-            </span>
-          </motion.div>
-        ))}
+        {/* Dark radial fade to keep focus on text and visual cards */}
+        <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#090D16]/50 to-[#090D16]" />
       </div>
 
-      {/* Main Content Area */}
-      <div className="relative z-20 w-full max-w-[1100px] px-6 py-28 text-center flex flex-col items-center justify-center gap-8">
+      {/* Main Grid Container */}
+      <div className="relative z-10 max-w-7xl w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-8 items-center">
         
-        {/* Premium Tagline Badge */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="glass-badge h-[42px] px-4 flex items-center gap-3 rounded-[12px]"
-        >
-          <span className="h-5 px-2 bg-brand-primary text-white font-btn text-[10px] font-bold rounded-[6px] flex items-center justify-center tracking-wider">
-            NEW
-          </span>
-          <span className="font-btn text-[13px] font-medium text-white tracking-wide">
-            Premium Made-to-Measure Blinds Across the United Kingdom
-          </span>
-        </motion.div>
-
-        {/* Responsive, Elegant, Non-overlapping Heading */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.0, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-          className="font-headline text-[46px] sm:text-[68px] lg:text-[88px] leading-[1.1] text-white max-w-[950px] tracking-tight"
-        >
-          Transform Your Home with <span className="text-brand-primary italic font-light">Beautiful Blinds</span>
-          <span className="block mt-2 font-sans font-extrabold uppercase text-[26px] sm:text-[40px] lg:text-[52px] tracking-widest text-white/95">
-            Designed for <span className="text-brand-primary">Comfort</span>, <span className="text-brand-primary">Privacy</span> &amp; <span className="text-brand-primary">Style</span>
-          </span>
-        </motion.h1>
-
-        {/* Description Paragraph */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.0 }}
-          className="font-sans text-base sm:text-lg text-white/85 max-w-[720px] leading-relaxed mt-2"
-        >
-          BlissfulBlinds provides premium made-to-measure Roller, Roman, Venetian, Vertical, Wooden, Perfect Fit, and Motorised Blinds. From expert consultation to professional installation, we deliver stylish window solutions that enhance every home with comfort, privacy, and elegance.
-        </motion.p>
-
-        {/* Action Buttons (CTAs) */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.2 }}
-          className="flex flex-col sm:flex-row items-center gap-4 mt-4 w-full sm:w-auto z-30"
-        >
-          {/* Primary CTA */}
-          <motion.a
-            href="#booking"
-            whileHover={{ 
-              y: -3, 
-              scale: 1.02, 
-              boxShadow: "0 0 20px rgba(220, 38, 38, 0.5)" 
-            }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full sm:w-auto px-8 py-4 bg-brand-primary text-white font-nav font-semibold text-[15px] rounded-[12px] text-center hover:bg-[#B91C1C] transition-colors duration-300"
+        {/* Left Side: Copy, Badges, CTAs, Trust Checkmarks */}
+        <div className="lg:col-span-6 flex flex-col items-start text-left gap-8">
+          
+          {/* Trust Rating Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="glass-badge px-4 py-2 rounded-full flex items-center gap-2.5"
           >
-            Get Free Quote
-          </motion.a>
-
-          {/* Secondary CTA */}
-          <motion.a
-            href="#blinds"
-            whileHover={{ y: -3, scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full sm:w-auto px-8 py-4 bg-white text-text-dark font-nav font-semibold text-[15px] rounded-[12px] text-center hover:bg-gray-100 transition-colors duration-300"
-          >
-            Browse Our Collection
-          </motion.a>
-        </motion.div>
-
-        {/* Trust & Features Section */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.5 }}
-          className="flex flex-col items-center gap-4 mt-6"
-        >
-          {/* 5 Stars Group */}
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                <Star key={i} className="w-3.5 h-3.5 fill-yellow-400 text-yellow-400" />
               ))}
             </div>
-            <span className="font-nav text-[14px] font-semibold text-white tracking-wide">
-              Trusted by Homeowners Across the UK
+            <span className="font-nav text-[12px] font-bold text-white uppercase tracking-wider">
+              5-Star Rated Service
             </span>
+          </motion.div>
+
+          {/* Premium Headline */}
+          <div className="flex flex-col gap-3">
+            <motion.h1
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="font-headline text-5xl sm:text-6xl xl:text-7xl text-white leading-[1.08] tracking-tight"
+            >
+              Transform Your Home with <br />
+              <span className="text-brand-primary italic font-light">Beautiful Blinds</span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="font-nav text-brand-primary uppercase font-extrabold text-[15px] sm:text-[18px] tracking-widest mt-1"
+            >
+              Designed for Comfort, Privacy &amp; Style
+            </motion.p>
           </div>
 
-          {/* Features Checkmarks Grid */}
-          <div className="grid grid-cols-2 md:flex items-center justify-center gap-x-6 gap-y-3 mt-1">
+          {/* Body Description */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="font-sans text-white/70 text-sm sm:text-base leading-relaxed max-w-lg"
+          >
+            BlissfulBlinds offers premium made-to-measure shutters and window coverings fitted with absolute pride. We bring hundreds of custom swatches straight to your door for a perfect fit, every time.
+          </motion.p>
+
+          {/* Trust Checkmarks Grid */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="grid grid-cols-2 gap-x-6 gap-y-3.5 w-full max-w-md border-t border-white/10 pt-6"
+          >
             {trustItems.map((item, i) => (
               <div key={i} className="flex items-center gap-2 text-white/90">
-                <div className="w-4 h-4 rounded-full bg-brand-primary/20 flex items-center justify-center border border-brand-primary/40">
-                  <Check className="w-2.5 h-2.5 text-brand-primary" />
+                <div className="w-5 h-5 rounded-full bg-brand-primary/20 flex items-center justify-center border border-brand-primary/40 shrink-0">
+                  <Check className="w-3 h-3 text-brand-primary" />
                 </div>
                 <span className="font-sans text-[13px] font-medium tracking-wide">
                   {item}
                 </span>
               </div>
             ))}
-          </div>
-        </motion.div>
+          </motion.div>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
+          >
+            <motion.a
+              href="#booking"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="w-full sm:w-auto px-8 py-4 bg-brand-primary text-white font-nav font-semibold text-[14px] rounded-[12px] text-center hover:bg-[#B91C1C] transition-colors shadow-lg hover:shadow-brand-primary/20"
+            >
+              Book Free Measurement
+            </motion.a>
+
+            <motion.a
+              href="#blinds"
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              className="w-full sm:w-auto px-8 py-4 bg-white/10 hover:bg-white/20 text-white border border-white/15 font-nav font-semibold text-[14px] rounded-[12px] text-center transition-all flex items-center justify-center gap-2"
+            >
+              Browse Blinds
+              <ArrowRight className="w-4 h-4" />
+            </motion.a>
+          </motion.div>
+
+        </div>
+
+        {/* Right Side: Animated Flex/Grid stack of REAL blinds fitting projects */}
+        <div className="lg:col-span-6 relative w-full h-[520px] flex items-center justify-center mt-8 lg:mt-0">
+          
+          {/* Overlapping Project Cards Stack */}
+          {showcaseImages.map((img, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, scale: 0.9, rotate: 0, x: 0, y: 50 }}
+              animate={{ opacity: 1, scale: 1, rotate: img.rotate, x: img.x, y: img.y }}
+              transition={{ duration: 0.8, delay: 0.3 + i * 0.15, ease: "easeOut" }}
+              whileHover={{
+                scale: 1.05,
+                rotate: 0,
+                x: img.x,
+                y: img.y - 15,
+                zIndex: 40,
+                boxShadow: "0 20px 40px rgba(0, 0, 0, 0.4)",
+              }}
+              className="absolute w-[260px] sm:w-[300px] aspect-[4/5] bg-white border border-white/10 rounded-[20px] overflow-hidden shadow-2xl transition-all duration-300 group cursor-pointer z-10 origin-center"
+            >
+              {/* Image element */}
+              <div className="w-full h-full relative overflow-hidden bg-gray-900">
+                <img
+                  src={img.src}
+                  alt={img.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                />
+                
+                {/* Dark gradient mask */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent opacity-90 group-hover:opacity-95 transition-opacity" />
+
+                {/* Location Badge */}
+                <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 shadow-sm border border-gray-200">
+                  <span className="font-btn text-[9px] font-bold text-text-dark tracking-wide uppercase">
+                    {img.badge} Fitting
+                  </span>
+                </div>
+
+                {/* Project Details */}
+                <div className="absolute bottom-5 left-5 right-5 text-left flex flex-col gap-1">
+                  <h3 className="font-nav text-[14px] sm:text-[16px] font-bold text-white leading-tight">
+                    {img.title}
+                  </h3>
+                  <p className="font-sans text-[11px] sm:text-[12px] text-white/70 leading-normal">
+                    {img.desc}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+
+          {/* Underlay glow element */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] bg-brand-primary/10 rounded-full blur-[100px] pointer-events-none -z-10" />
+
+        </div>
+
       </div>
 
-      {/* Bouncing Scroll Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.8 }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 pointer-events-none"
-      >
-        <span className="font-btn text-[9px] uppercase tracking-widest text-white/50">
-          Scroll Down
-        </span>
-        <motion.div
-          animate={{ y: [0, 8, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-          className="w-5 h-8 rounded-full border-2 border-white/40 flex justify-center p-1"
-        >
-          <div className="w-1.5 h-2 bg-white rounded-full" />
-        </motion.div>
-      </motion.div>
     </section>
   );
 }

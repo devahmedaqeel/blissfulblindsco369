@@ -1,0 +1,9 @@
+# review-system is a separate Node.js backend deployed to Render (or
+# similar), not part of this static-site Vercel deployment — it has its
+# own server, database, and admin panel and should never be uploaded/
+# built here.
+review-system/
+
+# Not part of the live site (see README.md) — leftover reference files
+# from the original WordPress scrape this project was built from.
+dev-tools/

@@ -1,41 +1,40 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Node modules
+node_modules/
 
-# dependencies
-/node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+# Review system
+review-system/.env
+review-system/data/*.db
+review-system/data/*.db-journal
+review-system/data/*.db-wal
+review-system/data/*.db-shm
 
-# testing
-/coverage
-
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
+# Logs
+*.log
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# OS / editor junk
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
 
-# vercel
+# Env files
+.env
+.env.local
+.env*.local
+
+# Vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
+# Next.js build output (leftover from migration)
+.next/
 next-env.d.ts
+
+# Backup files from migration
+*.bak
+package.json.nextjs.bak
+package-lock.json.nextjs.bak
+next.config.ts.bak
+
+# Scratch/temp files
+scratch/
