@@ -8,31 +8,37 @@ const steps = [
     title: "Get in Touch",
     desc: "Simply call us or submit our online form. We will coordinate and schedule an in-home consultation at a date and time that fits around your schedule.",
     icon: MessageSquare,
+    img: "/images/how-it-works/step1.png",
   },
   {
     title: "We Come to You",
     desc: "We bring the showroom directly to your home. Our expert advisor will take exact, professional measurements of your windows, eliminating any worry of making mistakes.",
     icon: MapPin,
+    img: "/images/how-it-works/step2.png",
   },
   {
     title: "Choose Your Blinds",
     desc: "Browse through our catalogue featuring hundreds of styles, colors, textures, and fabrics. We will help you select options that suit your specific requirements and budget.",
     icon: Palette,
+    img: "/images/how-it-works/step3.png",
   },
   {
     title: "No-Obligation Quote",
     desc: "Receive a competitive quotation based on your measurements and fabric choices. The quote is valid for 7 days, giving you complete freedom to make your decision.",
     icon: Calculator,
+    img: "/images/how-it-works/step4.png",
   },
   {
     title: "Order Your Blinds",
     desc: "Once you confirm the quote, we place your blinds into manufacturing immediately. We use state-of-the-art techniques and aim to have your custom blinds ready in 7-14 days.",
     icon: Settings,
+    img: "/images/how-it-works/step5.png",
   },
   {
     title: "We Fit Your Blinds",
     desc: "Once manufactured, we'll schedule a fitting appointment. Our qualified professional fitter installs the blinds, conducts a quality safety check, and cleans up completely.",
     icon: CheckCircle2,
+    img: "/images/how-it-works/step6.png",
   },
 ];
 
@@ -75,15 +81,20 @@ export default function HowItWorks() {
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.6 }}
-                      className="bg-white border border-border-light rounded-[16px] p-6 shadow-sm flex flex-col gap-3 text-left inline-block"
+                      className="bg-white border border-border-light rounded-[16px] p-6 shadow-sm flex flex-col sm:flex-row gap-4 items-start sm:items-center text-left"
                     >
-                      <h3 className="font-nav text-lg font-bold text-text-dark flex items-center gap-2">
-                        <Icon className="w-5 h-5 text-brand-primary" />
-                        {step.title}
-                      </h3>
-                      <p className="font-sans text-[14px] text-text-muted leading-relaxed">
-                        {step.desc}
-                      </p>
+                      <div className="flex-1 flex flex-col gap-2">
+                        <h3 className="font-nav text-lg font-bold text-text-dark flex items-center gap-2">
+                          <Icon className="w-5 h-5 text-brand-primary" />
+                          {step.title}
+                        </h3>
+                        <p className="font-sans text-[14px] text-text-muted leading-relaxed">
+                          {step.desc}
+                        </p>
+                      </div>
+                      <div className="w-full sm:w-[90px] h-[100px] sm:h-[90px] rounded-[12px] overflow-hidden border border-border-light flex-shrink-0 shadow-sm">
+                        <img src={step.img} alt={step.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                      </div>
                     </motion.div>
                   )}
                 </div>
@@ -106,15 +117,20 @@ export default function HowItWorks() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6 }}
-                    className="bg-white border border-border-light rounded-[16px] p-6 shadow-sm flex flex-col gap-3 text-left"
+                    className="bg-white border border-border-light rounded-[16px] p-6 shadow-sm flex flex-col sm:flex-row gap-4 items-start sm:items-center text-left"
                   >
-                    <h3 className="font-nav text-lg font-bold text-text-dark flex items-center gap-2">
-                      <Icon className="w-5 h-5 text-brand-primary" />
-                      {step.title}
-                    </h3>
-                    <p className="font-sans text-[14px] text-text-muted leading-relaxed">
-                      {step.desc}
-                    </p>
+                    <div className="flex-1 flex flex-col gap-2">
+                      <h3 className="font-nav text-lg font-bold text-text-dark flex items-center gap-2">
+                        <Icon className="w-5 h-5 text-brand-primary" />
+                        {step.title}
+                      </h3>
+                      <p className="font-sans text-[14px] text-text-muted leading-relaxed">
+                        {step.desc}
+                      </p>
+                    </div>
+                    <div className="w-full sm:w-[90px] h-[100px] sm:h-[90px] rounded-[12px] overflow-hidden border border-border-light flex-shrink-0 shadow-sm">
+                      <img src={step.img} alt={step.title} className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+                    </div>
                   </motion.div>
                 </div>
               </div>

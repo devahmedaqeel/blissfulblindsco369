@@ -1462,6 +1462,48 @@ button, input, select, textarea {
   transition: var(--transition-normal);
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.timeline-card-content {
+  flex: 1;
+}
+
+.timeline-card-image {
+  width: 90px;
+  height: 90px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background-color: var(--bg-light);
+  flex-shrink: 0;
+  box-shadow: var(--shadow-xs);
+}
+
+.timeline-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-normal);
+}
+
+.timeline-card:hover .timeline-card-image img {
+  transform: scale(1.06);
+}
+
+@media (max-width: 576px) {
+  .timeline-card {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 16px;
+    padding: 24px;
+  }
+  .timeline-card-image {
+    width: 100%;
+    height: 130px;
+  }
 }
 
 .timeline-item-left .timeline-card {
