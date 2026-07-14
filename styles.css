@@ -1670,7 +1670,7 @@ button, input, select, textarea {
 }
 
 
-.gallery-item img {
+.gallery-item > img {
   position: absolute;
   top: 0;
   left: 0;
@@ -1699,7 +1699,7 @@ button, input, select, textarea {
   opacity: 1;
 }
 
-.gallery-item:hover img {
+.gallery-item:hover > img {
   transform: scale(1.08);
 }
 
@@ -1755,10 +1755,13 @@ button, input, select, textarea {
 
 .gallery-watermark svg,
 .gallery-watermark img {
-  height: 16px;
-  width: auto;
-  object-fit: contain;
-  flex-shrink: 0;
+  position: static !important;
+  height: 16px !important;
+  width: auto !important;
+  object-fit: contain !important;
+  flex-shrink: 0 !important;
+  transform: none !important;
+  transition: none !important;
 }
 
 @media (max-width: 480px) {
