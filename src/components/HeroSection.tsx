@@ -44,21 +44,18 @@ export default function HeroSection() {
   return (
     <section className="relative w-full min-h-screen overflow-hidden flex items-center justify-center bg-[#090D16] pt-24 pb-16 lg:py-0">
       
-      {/* Background Cinematic Video Layer (Subtle motion background) */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 opacity-20">
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
+      {/* Background: real fitted-blinds interior photo, not stock video —
+          scrim is strong stage-left (behind the copy, for legibility) and
+          fades to a light wash on the right so the room and the red
+          brand accents stay vibrant, per the "very light overlay" brief. */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+        <img
+          src="/images/products/roman-blinds-image.jpg.webp"
+          alt=""
           className="w-full h-full object-cover"
-        >
-          <source src="/vedio.mp4" type="video/mp4" />
-          <source src="/ddb4.mp4" type="video/mp4" />
-          <source src="/video_editing.mp4" type="video/mp4" />
-        </video>
-        {/* Dark radial fade to keep focus on text and visual cards */}
-        <div className="absolute inset-0 bg-radial-gradient from-transparent via-[#090D16]/50 to-[#090D16]" />
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#090D16]/95 via-[#090D16]/75 to-[#090D16]/20" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#090D16]/70 via-transparent to-[#090D16]/30" />
       </div>
 
       {/* Main Grid Container */}
