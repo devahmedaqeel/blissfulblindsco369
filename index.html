@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en-GB">
 <head>
   <meta charset="UTF-8">
@@ -1063,11 +1063,119 @@
           </div>
 
         </div>
+      </d
+
+    <!-- Installations Gallery (NEW: Clickable Lightbox Gallery) --><!-- Real-Time Blind Color Visualizer Section -->
+    <section class="visualizer-section section-padding" id="visualizer">
+      <div class="container">
+        <div class="text-center" style="margin-bottom:40px;">
+          <span class="hero-tagline" style="color:var(--accent);background:rgba(200,16,46,0.1);border:1px solid rgba(200,16,46,0.2);"><i class="fa-solid fa-wand-magic-sparkles"></i> Interactive Sandbox</span>
+          <h2 class="section-title">Design Your Bespoke Blinds</h2>
+          <p class="section-subtitle">See exactly how different styles and colors fit inside a real room. Choose a layout, style, and fabric color below.</p>
+        </div>
+        <div class="visualizer-grid">
+          <div class="visualizer-canvas-card">
+            <div class="visualizer-canvas-wrapper" id="visualizerCanvas">
+              <img id="visualizerRoomImg" src="images/visualizer/living-room.png" alt="Room interior" class="visualizer-canvas-img">
+              <div id="visualizerBlindContainer" class="visualizer-blind-container">
+                <div class="visualizer-headrail"></div>
+                <div id="visualizerBlindFabric" class="visualizer-blind-fabric" style="height:85%;background-color:#FAFAFA;">
+                  <div id="visualizerBlindShader" class="visualizer-blind-shader style-roller"></div>
+                  <div class="visualizer-bottom-bar"></div>
+                </div>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px 0;">
+              <div>
+                <span style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--text-muted);display:block;">Selected Choice</span>
+                <h4 style="font-size:1.1rem;font-weight:700;color:var(--text-primary);margin:0;"><span id="visualizerChoiceStyle">Roller Blinds</span> &mdash; <span id="visualizerChoiceColor" style="color:#475569;">Alabaster White</span></h4>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--text-secondary);background:#f1f5f9;padding:8px 16px;border-radius:99px;"><i class="fa-solid fa-sliders"></i> Height: <span id="visualizerHeightLabel">85</span>%</div>
+            </div>
+          </div>
+          <div class="visualizer-control-card">
+            <div>
+              <span class="visualizer-control-group-title">Select Room Layout</span>
+              <div class="visualizer-tabs">
+                <button class="visualizer-tab-btn active" id="roomTabLiving" onclick="setVisualizerRoom('living-room')"><i class="fa-solid fa-home"></i> Living Room</button>
+                <button class="visualizer-tab-btn" id="roomTabBedroom" onclick="setVisualizerRoom('bedroom')"><i class="fa-solid fa-bed"></i> Bedroom</button>
+              </div>
+            </div>
+            <div>
+              <span class="visualizer-control-group-title">Select Blind Style</span>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;background:#f1f5f9;padding:4px;border-radius:8px;">
+                <button class="visualizer-tab-btn active" id="styleTabRoller" onclick="setVisualizerStyle('roller')">Roller</button>
+                <button class="visualizer-tab-btn" id="styleTabVertical" onclick="setVisualizerStyle('vertical')">Vertical</button>
+                <button class="visualizer-tab-btn" id="styleTabVenetian" onclick="setVisualizerStyle('venetian')">Venetian</button>
+                <button class="visualizer-tab-btn" id="styleTabRoman" onclick="setVisualizerStyle('roman')">Roman</button>
+                <button class="visualizer-tab-btn" id="styleTabVision" onclick="setVisualizerStyle('vision')">Vision</button>
+                <button class="visualizer-tab-btn" id="styleTabPleated" onclick="setVisualizerStyle('pleated')">Pleated</button>
+                <button class="visualizer-tab-btn" id="styleTabShutters" onclick="setVisualizerStyle('shutters')" style="grid-column:span 3;font-size:12px;">Shutters (Wood Panels)</button>
+              </div>
+            </div>
+            <div>
+              <span class="visualizer-control-group-title">Choose Fabric Color</span>
+              <div style="display:flex;flex-direction:column;gap:18px;">
+                <div class="swatch-collection">
+                  <span class="swatch-collection-title">Classic Whites &amp; Creams</span>
+                  <div class="swatch-row">
+                    <button class="swatch-item light-swatch active" style="background:#FAFAFA;" title="Alabaster White" onclick="setVisualizerColor('white','Alabaster White','#FAFAFA',true,'A clean bright white reflecting light beautifully.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                    <button class="swatch-item light-swatch" style="background:#F6EEDF;" title="Cream Butter" onclick="setVisualizerColor('cream','Cream Butter','#F6EEDF',true,'A warm buttery cream that softens sunlight.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                    <button class="swatch-item light-swatch" style="background:#E3DAC9;" title="Warm Beige" onclick="setVisualizerColor('beige','Warm Beige','#E3DAC9',true,'Organic beige bringing natural linen tones.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                    <button class="swatch-item light-swatch" style="background:#F0E6D3;" title="Linen Sand" onclick="setVisualizerColor('linen','Linen Sand','#F0E6D3',true,'A soft sandy linen tone for coastal interiors.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                  </div>
+                </div>
+                <div class="swatch-collection">
+                  <span class="swatch-collection-title">Modern Slate &amp; Grey</span>
+                  <div class="swatch-row">
+                    <button class="swatch-item light-swatch" style="background:#C5C8CC;" title="Light Grey" onclick="setVisualizerColor('lgrey','Light Grey','#C5C8CC',true,'A soft silver-grey blending with any decor.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                    <button class="swatch-item" style="background:#7E8082;" title="Slate Grey" onclick="setVisualizerColor('grey','Slate Grey','#7E8082',false,'A neutral mid-grey for modern rooms.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                    <button class="swatch-item" style="background:#323335;" title="Charcoal Dark" onclick="setVisualizerColor('charcoal','Charcoal Dark','#323335',false,'Deep charcoal for excellent shading.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                    <button class="swatch-item" style="background:#1C1C1C;" title="Matte Black" onclick="setVisualizerColor('black','Matte Black','#1C1C1C',false,'Strong blackout tone for bedrooms.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                  </div>
+                </div>
+                <div class="swatch-collection">
+                  <span class="swatch-collection-title">Warm &amp; Natural Tones</span>
+                  <div class="swatch-row">
+                    <button class="swatch-item" style="background:#8B6F47;" title="Warm Oak" onclick="setVisualizerColor('oak','Warm Oak','#8B6F47',false,'Rich warm oak for natural interiors.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                    <button class="swatch-item" style="background:#6B4F2F;" title="Dark Walnut" onclick="setVisualizerColor('walnut','Dark Walnut','#6B4F2F',false,'Deep walnut for a sophisticated feel.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                    <button class="swatch-item" style="background:#D1A153;" title="Ochre Mustard" onclick="setVisualizerColor('mustard','Ochre Mustard','#D1A153',false,'A vibrant golden accent adding warmth.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                    <button class="swatch-item" style="background:#C17F4A;" title="Terracotta" onclick="setVisualizerColor('terra','Terracotta','#C17F4A',false,'Earthy terracotta bringing warmth.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                  </div>
+                </div>
+                <div class="swatch-collection">
+                  <span class="swatch-collection-title">Sage, Blue &amp; Accent</span>
+                  <div class="swatch-row">
+                    <button class="swatch-item" style="background:#5E6D62;" title="Forest Sage" onclick="setVisualizerColor('sage','Forest Sage','#5E6D62',false,'Soothing botanical green.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                    <button class="swatch-item" style="background:#475B62;" title="Coastal Blue" onclick="setVisualizerColor('blue','Coastal Blue','#475B62',false,'Rich ocean-slate with coastal vibes.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                    <button class="swatch-item" style="background:#3D5A80;" title="Deep Navy" onclick="setVisualizerColor('navy','Deep Navy','#3D5A80',false,'Classic deep navy for bold styling.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                    <button class="swatch-item" style="background:#7B6B8A;" title="Dusty Mauve" onclick="setVisualizerColor('mauve','Dusty Mauve','#7B6B8A',false,'Soft romantic mauve for bedroom styling.')"><i class="fa-solid fa-check swatch-item-check"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <span class="visualizer-control-group-title">Adjust Height / Position</span>
+              <div class="visualizer-slider-wrap">
+                <i class="fa-solid fa-sun" style="font-size:13px;color:var(--text-muted);"></i>
+                <input type="range" id="visualizerSlider" min="0" max="100" value="85" class="visualizer-slider" oninput="adjustVisualizerHeight(this.value)" aria-label="Adjust Blind Height">
+                <i class="fa-solid fa-eye" style="font-size:13px;color:var(--accent);"></i>
+              </div>
+            </div>
+            <div class="visualizer-material-card">
+              <span id="visualizerMaterialTitle" class="visualizer-material-name" style="display:flex;align-items:center;gap:8px;"><span id="visualizerMaterialBadge" style="width:14px;height:14px;border-radius:50%;display:inline-block;border:1px solid rgba(0,0,0,0.1);background:#FAFAFA;"></span>Alabaster White Fabric</span>
+              <p class="visualizer-material-desc" id="visualizerMaterialDesc">A clean bright white that reflects light beautifully, expanding small rooms.</p>
+              <div class="visualizer-specs">
+                <div class="visualizer-spec-badge"><i class="fa-solid fa-shield-halved"></i> Premium Grade</div>
+                <div class="visualizer-spec-badge"><i class="fa-solid fa-circle-check"></i> Flame Retardant</div>
+              </div>
+            </div>
+            <button class="btn btn-primary" style="width:100%;text-align:center;border:none;cursor:pointer;padding:16px 24px;border-radius:12px;font-weight:700;" onclick="applyVisualizerToBooking()">Order Consultation in this Style</button>
+          </div>
+        </div>
       </div>
     </section>
-
-    <!-- Installations Gallery (NEW: Clickable Lightbox Gallery) -->
-    <section class="gallery section-padding" id="installations">
+<section class="gallery section-padding" id="installations">
       <div class="container">
         <div class="text-center">
           <h2 class="section-title">Our Recent Installations</h2>
