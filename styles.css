@@ -1731,23 +1731,26 @@ button, input, select, textarea {
    thus stays legible) even when the hover overlay is showing. */
 .gallery-watermark {
   position: absolute;
-  bottom: 8px;
-  left: 8px;
+  bottom: 10px;
+  left: 10px;
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 4px;
-  padding: 3px 8px 3px 5px;
+  gap: 6px;
+  padding: 4px 10px 4px 6px;
   border-radius: 999px;
-  background: rgba(15, 23, 42, 0.55);
-  backdrop-filter: blur(2px);
-  color: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  color: #0f172a;
   font-family: var(--font-heading);
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   font-weight: 600;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
   white-space: nowrap;
   pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .gallery-watermark svg,
@@ -1760,8 +1763,10 @@ button, input, select, textarea {
 
 @media (max-width: 480px) {
   .gallery-watermark {
-    font-size: 0.5625rem;
-    padding: 2px 6px 2px 4px;
+    font-size: 0.625rem;
+    padding: 3px 8px 3px 5px;
+    bottom: 8px;
+    left: 8px;
   }
 
   .gallery-watermark svg,
