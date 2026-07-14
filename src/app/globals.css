@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-nav: var(--font-manrope);
+  --font-btn: var(--font-cabin);
+  --font-headline: var(--font-instrument-serif);
+  --font-sans: var(--font-inter);
+  
+  --color-brand-primary: #DC2626;
+  --color-brand-secondary: #991B1B;
+  --color-brand-accent: #FEE2E2;
+  --color-bg-light: #F8FAFC;
+  --color-text-dark: #111827;
+  --color-text-muted: #6B7280;
+  --color-border-light: #E5E7EB;
+}
+
+:root {
+  --background: #FFFFFF;
+  --foreground: #111827;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism helpers */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.30);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.15);
+}
+
+.glass-badge {
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.30);
+}
