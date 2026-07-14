@@ -1,4 +1,49 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Hero Carousel Slider (Homepage Only)
+  const heroFrontImg = document.querySelector('.hero-image-card img');
+  const heroSection = document.querySelector('.hero');
+  if (heroFrontImg && heroSection && !document.querySelector('.breadcrumbs-container')) {
+    const heroImages = [
+      "images/products/luxury_hero_blinds.jpg",
+      "images/products/faux-wood-blinds.jpg",
+      "images/products/motorised-blinds.jpg",
+      "images/products/commercial-blinds.jpg",
+      "images/products/roller-blinds-image-1024x1024.jpg.webp",
+      "images/products/vertical-blinds-hero.jpg.webp",
+      "images/products/roman-blinds-image.jpg.webp",
+      "images/products/skylight-blinds-image.jpg.webp"
+    ];
+    let currentHeroIndex = 0;
+    
+    // Preload images for seamless transitions
+    heroImages.forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+
+    setInterval(() => {
+      currentHeroIndex = (currentHeroIndex + 1) % heroImages.length;
+      const nextImg = heroImages[currentHeroIndex];
+      
+      // Start fade out
+      heroFrontImg.classList.add('fade-out');
+      
+      setTimeout(() => {
+        // Change src and backdrop background
+        heroFrontImg.src = nextImg;
+        heroSection.style.backgroundImage = `linear-gradient(135deg, rgba(11, 17, 32, 0.93) 0%, rgba(40, 10, 18, 0.75) 55%, rgba(11, 17, 32, 0.88) 100%), url('${nextImg}')`;
+        
+        // Remove fade out once loaded
+        heroFrontImg.onload = () => {
+          heroFrontImg.classList.remove('fade-out');
+        };
+        setTimeout(() => {
+          heroFrontImg.classList.remove('fade-out');
+        }, 100);
+      }, 600); // matches CSS transition duration
+    }, 4500); // Change image every 4.5 seconds
+  }
+
   // 1 & 2. Scroll Progress Bar + Sticky Header
   // Merged into a single rAF-throttled scroll listener so both reads/writes
   // happen once per animation frame instead of on every raw scroll event
