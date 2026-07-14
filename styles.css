@@ -549,8 +549,9 @@ button, input, select, textarea {
 
 
 .logo-icon {
-  width: clamp(1.625rem, 1.4rem + 0.9vw, 2.3125rem);
   height: clamp(1.625rem, 1.4rem + 0.9vw, 2.3125rem);
+  width: auto;
+  object-fit: contain;
   transition: transform var(--transition-fast) var(--transition-ease);
   flex-shrink: 0;
 }
