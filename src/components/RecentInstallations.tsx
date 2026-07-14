@@ -76,9 +76,9 @@ export default function RecentInstallations() {
               {/* Watermark Overlay Badge (Premium glass capsule) */}
               <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm border border-gray-200/50 pointer-events-none">
                 <img
-                  src="/images/logo.png"
+                  src="/images/logo-dark.png"
                   alt="BB logo"
-                  className="h-[14px] w-[14px] rounded-full object-cover border border-[#c8102e]/30 flex-shrink-0"
+                  className="h-[14px] w-auto object-contain flex-shrink-0"
                 />
                 <span className="font-nav text-[9px] font-bold text-[#1e293b] uppercase tracking-wider">
                   Blissful Blinds
@@ -143,9 +143,9 @@ export default function RecentInstallations() {
               {/* Watermark overlay inside Lightbox too! */}
               <div className="absolute bottom-4 left-4 bg-white/95 backdrop-blur-md px-3.5 py-1.5 rounded-full flex items-center gap-1.5 shadow-sm border border-gray-200/50">
                 <img
-                  src="/images/logo.png"
+                  src="/images/logo-dark.png"
                   alt="BB logo"
-                  className="h-[14px] w-[14px] rounded-full object-cover border border-[#c8102e]/30 flex-shrink-0"
+                  className="h-[14px] w-auto object-contain flex-shrink-0"
                 />
                 <span className="font-nav text-[9px] font-bold text-[#1e293b] uppercase tracking-wider">
                   Blissful Blinds

@@ -595,14 +595,11 @@ button, input, select, textarea {
 
 
 .logo-icon {
-  height: clamp(2rem, 1.6rem + 1vw, 2.75rem);
-  width: clamp(2rem, 1.6rem + 1vw, 2.75rem);
-  border-radius: 50%;
-  object-fit: cover;
+  height: clamp(1.625rem, 1.4rem + 0.9vw, 2.3125rem);
+  width: auto;
+  object-fit: contain;
   transition: transform var(--transition-fast) var(--transition-ease);
   flex-shrink: 0;
-  border: 2px solid var(--accent);
-  box-shadow: var(--shadow-xs);
 }
 
 .logo-container:hover .logo-icon {
