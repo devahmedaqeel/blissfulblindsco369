@@ -10,10 +10,11 @@
 
 const BRAND = {
   navy: '#0f172a',
-  navyLight: '#1c2c4c',
-  accent: '#d97706',
-  accentHover: '#b45309',
-  accentLight: '#fef3c7',
+  navyLight: '#1e293b',
+  accent: '#c8102e',       // Brand Red
+  accentHover: '#a60d26',
+  accentLight: '#fef2f2',  // Light red background for badges
+  gold: '#c9a84c',        // Brand Gold
   text: '#0f172a',
   textSecondary: '#475569',
   textMuted: '#94a3b8',
@@ -41,9 +42,7 @@ function escapeHtml(value) {
 
 /**
  * Shared chrome (header + footer) every email is wrapped in. Table-based,
- * fixed 600px card that shrinks to the viewport on small screens — the
- * standard responsive-email pattern, since real CSS media queries inside
- * <style> are stripped by several major clients (notably Gmail's app).
+ * fixed 600px card that shrinks to the viewport on small screens.
  */
 function wrapEmailLayout({ title, previewText, bodyHtml }) {
   const year = new Date().getFullYear();
@@ -71,20 +70,26 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
 
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:100%; background-color:${BRAND.white}; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(15,23,42,0.08);">
 
-          <!-- Header: navy background, brand wordmark + subtitle, orange accent line — matches the site's top header exactly.
-               Text-based wordmark rather than an <img> logo: it's a guaranteed-render, zero-network-request match for the
-               site header's own brand-name/brand-tagline typography, with no risk of a blocked/broken remote image. -->
+          <!-- Header: navy background, brand logo + subtitle, red accent line -->
           <tr>
-            <td style="background-color:${BRAND.navy}; background:linear-gradient(120deg, ${BRAND.navy} 0%, ${BRAND.navyLight} 50%, ${BRAND.navy} 100%); padding:30px 32px 26px;" align="center">
-              <div style="font-family:Arial,Helvetica,sans-serif; font-size:24px; font-weight:800; letter-spacing:0.02em; color:${BRAND.white};">
-                Blissful Blinds
-              </div>
-              <div style="font-family:Arial,Helvetica,sans-serif; font-size:12px; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:${BRAND.accent}; margin:2px 0 12px;">
-                Co. 369
-              </div>
-              <div style="font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:rgba(255,255,255,0.55);">
-                Professional Window Blinds Specialists
-              </div>
+            <td style="background-color:${BRAND.navy}; background:linear-gradient(120deg, ${BRAND.navy} 0%, ${BRAND.navyLight} 50%, ${BRAND.navy} 100%); padding:32px 32px 28px;" align="center">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding-bottom:12px;" align="center">
+                    <img src="https://blissfulblindsco369.vercel.app/images/logo-light.png" alt="Blissful Blinds" style="height:48px; width:auto; border:0; display:block;">
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center">
+                    <div style="font-family:Arial,Helvetica,sans-serif; font-size:16px; font-weight:800; letter-spacing:0.05em; color:${BRAND.white}; text-transform:uppercase;">
+                      Blissful Blinds
+                    </div>
+                    <div style="font-family:Arial,Helvetica,sans-serif; font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:${BRAND.gold}; margin-top:4px;">
+                      Style. Privacy. Comfort.
+                    </div>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
           <tr>
@@ -97,13 +102,13 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
             </td>
           </tr>
 
-          <!-- Footer: same brand chrome as the site footer — business details, WhatsApp/website links, copyright, automated-email disclaimer. -->
+          <!-- Footer: business details, WhatsApp/website links, copyright, automated-email disclaimer. -->
           <tr>
             <td style="background-color:${BRAND.navy}; padding:28px 32px; font-family:Arial,Helvetica,sans-serif;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td style="color:${BRAND.white}; font-size:14px; font-weight:700; padding-bottom:6px;">
-                    Blissful Blinds Co 369
+                    Blissful Blinds
                   </td>
                 </tr>
                 <tr>
@@ -123,8 +128,8 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
                 </tr>
                 <tr>
                   <td style="border-top:1px solid rgba(255,255,255,0.12); padding-top:14px; color:rgba(255,255,255,0.45); font-size:11px; line-height:1.6;">
-                    &copy; ${year} Blissful Blinds Co 369. All rights reserved.<br>
-                    This is an automated notification generated by the Blissful Blinds Co website.
+                    &copy; ${year} Blissful Blinds. All rights reserved.<br>
+                    This is an automated notification generated by the Blissful Blinds website.
                   </td>
                 </tr>
               </table>
@@ -140,11 +145,7 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
 </html>`;
 }
 
-/** One label/value row in the customer-details table, with alternating
- *  row shading (set inline per-row rather than via CSS, since Outlook
- *  desktop ignores :nth-child entirely). Skips rendering when the value
- *  is empty, so fields that don't apply to a given form (e.g. the
- *  chatbot lead form has no "address" field) simply don't appear. */
+/** One label/value row in the customer-details table */
 function detailRow(label, value, index) {
   if (!value) return '';
   const bg = index % 2 === 0 ? BRAND.white : BRAND.rowAlt;
@@ -162,8 +163,8 @@ function detailRow(label, value, index) {
 /** One large pill action button, in the site's gradient CTA style. */
 function actionButton(href, label, variant) {
   const styles = {
-    dark: `background-color:${BRAND.navy}; background:linear-gradient(135deg, ${BRAND.navy}, ${BRAND.navyLight});`,
-    accent: `background-color:${BRAND.accent}; background:linear-gradient(135deg, ${BRAND.accent}, ${BRAND.accentHover});`,
+    dark: `background-color:${BRAND.accent}; background:linear-gradient(135deg, ${BRAND.accent}, ${BRAND.accentHover}); color:#ffffff !important;`,
+    accent: `background-color:${BRAND.gold}; background:linear-gradient(135deg, ${BRAND.gold}, #b2923b); color:#ffffff !important;`,
     outline: `background-color:${BRAND.white}; border:2px solid ${BRAND.accent}; color:${BRAND.accent} !important;`
   };
   const color = variant === 'outline' ? BRAND.accent : '#ffffff';
@@ -179,7 +180,7 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
   const badgeText = `${sourceLabel} Received`.toUpperCase();
   const heading = isBooking ? 'New Customer Booking Enquiry' : `New Customer ${sourceLabel}`;
 
-  const subject = `🔔 New ${sourceLabel} | Blissful Blinds Co`;
+  const subject = `🔔 New ${sourceLabel} | Blissful Blinds`;
   const tel = phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : null;
   const mailto = email ? `mailto:${email}` : null;
   const fullAddress = [address, postcode].filter(Boolean).join(', ');
@@ -210,7 +211,7 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:18px;">
       <tr>
         <td align="center">
-          <span style="display:inline-block; padding:6px 16px; border-radius:999px; background-color:${BRAND.accentLight}; color:#92400e; font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em;">
+          <span style="display:inline-block; padding:6px 16px; border-radius:999px; background-color:${BRAND.accentLight}; color:#991b1b; font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em;">
             ${escapeHtml(badgeText)}
           </span>
         </td>
@@ -220,7 +221,7 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
     <h1 style="margin:0 0 8px; font-family:Arial,Helvetica,sans-serif; font-size:21px; font-weight:800; color:${BRAND.text}; text-align:center;">${escapeHtml(heading)}</h1>
     <p style="margin:0 0 26px; font-family:Arial,Helvetica,sans-serif; font-size:14px; color:${BRAND.textSecondary}; text-align:center;">A customer just submitted this on the website. Full details are below.</p>
 
-    <!-- Rounded, bordered card wrapping the details table — same "rounded card" language as the site. -->
+    <!-- Rounded, bordered card wrapping the details table -->
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid ${BRAND.border}; border-radius:14px; overflow:hidden; margin-bottom:26px;">
       ${rows}
     </table>
@@ -239,7 +240,7 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
   });
 
   const text = [
-    `${heading} — Blissful Blinds Co`,
+    `${heading} — Blissful Blinds`,
     '',
     name ? `Customer Name: ${name}` : null,
     phone ? `Phone Number: ${phone}` : null,
@@ -259,7 +260,7 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
 
 /** Customer-facing confirmation email, sent automatically after any form submission. */
 function customerConfirmationEmail({ name }) {
-  const subject = 'Thank You for Contacting Blissful Blinds Co';
+  const subject = 'Thank You for Contacting Blissful Blinds';
   const firstName = (name || '').trim().split(/\s+/)[0] || 'there';
 
   const bodyHtml = `
@@ -271,13 +272,13 @@ function customerConfirmationEmail({ name }) {
       </tr>
     </table>
 
-    <h1 style="margin:0 0 16px; font-size:20px; font-weight:700; color:${BRAND.text}; text-align:center;">Thank You for Contacting Blissful Blinds Co</h1>
+    <h1 style="margin:0 0 16px; font-size:20px; font-weight:700; color:${BRAND.text}; text-align:center;">Thank You for Contacting Blissful Blinds</h1>
 
     <p style="margin:0 0 16px; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">
       Hello ${escapeHtml(name || firstName)},
     </p>
     <p style="margin:0 0 16px; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">
-      Thank you for contacting Blissful Blinds Co. We have successfully received your enquiry.
+      Thank you for contacting Blissful Blinds. We have successfully received your enquiry.
     </p>
     <p style="margin:0 0 24px; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">
       Our team will contact you as soon as possible. If your enquiry is urgent, please call us.
@@ -306,7 +307,7 @@ function customerConfirmationEmail({ name }) {
 
     <p style="margin:24px 0 0; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">
       Thank you.<br>
-      <strong style="color:${BRAND.text};">Blissful Blinds Co</strong>
+      <strong style="color:${BRAND.text};">Blissful Blinds</strong>
     </p>
   `;
 
@@ -319,7 +320,7 @@ function customerConfirmationEmail({ name }) {
   const text = [
     `Hello ${name || firstName},`,
     '',
-    'Thank you for contacting Blissful Blinds Co.',
+    'Thank you for contacting Blissful Blinds.',
     '',
     'We have successfully received your enquiry.',
     '',
@@ -331,7 +332,7 @@ function customerConfirmationEmail({ name }) {
     `Email: ${EMAIL}`,
     '',
     'Thank you.',
-    'Blissful Blinds Co'
+    'Blissful Blinds'
   ].join('\n');
 
   return { subject, html, text };
