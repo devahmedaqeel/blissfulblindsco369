@@ -8,21 +8,25 @@ const cards = [
     title: "Our Quality",
     desc: "Whether your style is classic or contemporary, we have something to match! We partner with industry-leading suppliers to bring you durable, premium materials and fabrics manufactured to a high standard.",
     icon: Award,
+    image: "/images/why-us/quality.png"
   },
   {
     title: "Our Approach",
     desc: "Every customer is different. Our advisors take the time to understand your needs and suggest the best solution for your space, with honest advice and absolutely no pressure or pushy sales tactics.",
     icon: Handshake,
+    image: "/images/why-us/approach.png"
   },
   {
     title: "Our Price",
     desc: "Our price promise means you'll always get the best deal. If you find the same blinds (size, spec, and fitting service included) at a lower price, we promise to match and try to beat it.",
     icon: Tag,
+    image: "/images/why-us/price.png"
   },
   {
     title: "Our Care",
     desc: "We take the hassle out of DIY. Our experts measure your windows and install your new blinds with precision. Plus, all our blinds are backed by a comprehensive one-year product guarantee.",
     icon: Wrench,
+    image: "/images/why-us/care.png"
   },
 ];
 
@@ -96,17 +100,26 @@ export default function WhyChooseUs() {
                 key={index}
                 variants={cardVariants}
                 whileHover={{ y: -6 }}
-                className="bg-white border border-border-light rounded-[16px] p-8 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col gap-4 text-left"
+                className="group bg-white border border-border-light rounded-[20px] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col text-left"
               >
-                <div className="w-12 h-12 rounded-[12px] bg-brand-accent flex items-center justify-center">
-                  <Icon className="w-6 h-6 text-brand-primary" />
+                <div className="w-full h-[160px] overflow-hidden relative border-b border-border-light">
+                  <img 
+                    src={card.image} 
+                    alt={card.title} 
+                    className="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-106"
+                  />
                 </div>
-                <h3 className="font-nav text-lg font-bold text-text-dark">
-                  {card.title}
-                </h3>
-                <p className="font-sans text-[14px] text-text-muted leading-relaxed">
-                  {card.desc}
-                </p>
+                <div className="p-6 flex flex-col gap-3 flex-grow">
+                  <div className="w-10 h-10 rounded-[10px] bg-brand-accent flex items-center justify-center">
+                    <Icon className="w-5 h-5 text-brand-primary" />
+                  </div>
+                  <h3 className="font-nav text-lg font-bold text-text-dark">
+                    {card.title}
+                  </h3>
+                  <p className="font-sans text-[14px] text-text-muted leading-relaxed">
+                    {card.desc}
+                  </p>
+                </div>
               </motion.div>
             );
           })}
