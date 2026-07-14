@@ -3820,3 +3820,13 @@ textarea.new-form-control {
     text-align: center !important;
   }
 }
+
+/* Custom styling for the second dropdown ("Areas Covered") to be a single-column layout on desktop */
+@media (min-width: 1025px) {
+  .nav-item-dropdown:nth-of-type(2) .dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+    gap: 4px;
+  }
+}
