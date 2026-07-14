@@ -29,9 +29,9 @@ export default function Navbar() {
         {/* Brand Logo */}
         <a href="#home" className="flex items-center gap-3">
           <img
-            src="/images/logo-light.png?v=3.0"
+            src="/images/logo.png?v=4.0"
             alt="BlissfulBlinds Logo"
-            className="h-[40px] w-auto object-contain"
+            className="h-[40px] w-[40px] rounded-full object-cover border-2 border-brand-primary"
           />
           <div className="flex flex-col text-left text-white">
             <span className="font-nav text-lg font-bold leading-tight tracking-wide">

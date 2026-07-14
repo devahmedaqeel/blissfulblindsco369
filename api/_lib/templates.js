@@ -76,7 +76,7 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
               <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td style="vertical-align:middle; padding-right:12px;">
-                    <img src="https://blissfulblindsco369.vercel.app/images/logo-dark.png" alt="Blissful Blinds Logo" style="height:44px; width:auto; border:0; display:block;">
+                    <img src="https://blissfulblindsco369.vercel.app/images/logo.png" alt="Blissful Blinds Logo" style="height:44px; width:44px; border-radius:50%; border:2px solid #c8102e; object-fit:cover; display:block;">
                   </td>
                   <td style="vertical-align:middle; text-align:left;">
                     <div style="font-family:Arial,Helvetica,sans-serif; font-size:18px; font-weight:800; letter-spacing:0.02em; color:${BRAND.text}; line-height:1.2;">
@@ -109,7 +109,7 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="vertical-align:middle; padding-right:8px;">
-                          <img src="https://blissfulblindsco369.vercel.app/images/logo-dark.png" alt="Blissful Blinds" style="height:28px; width:auto; border:0; display:block;">
+                          <img src="https://blissfulblindsco369.vercel.app/images/logo.png" alt="Blissful Blinds" style="height:28px; width:28px; border-radius:50%; border:2px solid #c8102e; object-fit:cover; display:block;">
                         </td>
                         <td style="vertical-align:middle;">
                           <strong style="color:${BRAND.text}; font-size:15px; font-weight:800; letter-spacing:0.02em;">Blissful Blinds</strong>

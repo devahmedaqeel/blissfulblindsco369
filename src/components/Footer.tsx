@@ -13,9 +13,9 @@ export default function Footer() {
         <div className="flex flex-col gap-4 text-left">
           <a href="#home" className="flex items-center gap-3">
             <img
-              src="/images/logo-light.png?v=3.0"
+              src="/images/logo.png?v=4.0"
               alt="BlissfulBlinds Logo"
-              className="h-[36px] w-auto object-contain"
+              className="h-[36px] w-[36px] rounded-full object-cover border-2 border-brand-primary"
             />
             <span className="font-nav text-lg font-bold tracking-wide">
               BlissfulBlinds
