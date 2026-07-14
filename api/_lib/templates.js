@@ -68,23 +68,21 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
     <tr>
       <td align="center" style="padding:28px 16px;">
 
-        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:100%; background-color:${BRAND.white}; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(15,23,42,0.08);">
+        <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:100%; background-color:${BRAND.white}; border-radius:16px; overflow:hidden; box-shadow:0 4px 24px rgba(15,23,42,0.06); border:1px solid ${BRAND.border};">
 
-          <!-- Header: navy background, brand logo + subtitle, red accent line -->
+          <!-- Header: White background, brand logo + subtitle, red accent line -->
           <tr>
-            <td style="background-color:${BRAND.navy}; background:linear-gradient(120deg, ${BRAND.navy} 0%, ${BRAND.navyLight} 50%, ${BRAND.navy} 100%); padding:32px 32px 28px;" align="center">
+            <td style="background-color:${BRAND.white}; padding:28px 32px 24px;" align="center">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td style="padding-bottom:12px;" align="center">
-                    <img src="https://blissfulblindsco369.vercel.app/images/logo-light.png" alt="Blissful Blinds" style="height:48px; width:auto; border:0; display:block;">
+                  <td style="vertical-align:middle; padding-right:12px;">
+                    <img src="https://blissfulblindsco369.vercel.app/images/logo-dark.png" alt="Blissful Blinds Logo" style="height:44px; width:auto; border:0; display:block;">
                   </td>
-                </tr>
-                <tr>
-                  <td align="center">
-                    <div style="font-family:Arial,Helvetica,sans-serif; font-size:16px; font-weight:800; letter-spacing:0.05em; color:${BRAND.white}; text-transform:uppercase;">
+                  <td style="vertical-align:middle; text-align:left;">
+                    <div style="font-family:Arial,Helvetica,sans-serif; font-size:18px; font-weight:800; letter-spacing:0.02em; color:${BRAND.text}; line-height:1.2;">
                       Blissful Blinds
                     </div>
-                    <div style="font-family:Arial,Helvetica,sans-serif; font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:${BRAND.gold}; margin-top:4px;">
+                    <div style="font-family:Arial,Helvetica,sans-serif; font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:${BRAND.accent}; margin-top:2px;">
                       Style. Privacy. Comfort.
                     </div>
                   </td>
@@ -93,7 +91,7 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
             </td>
           </tr>
           <tr>
-            <td style="background-color:${BRAND.accent}; height:4px; line-height:4px; font-size:0;">&nbsp;</td>
+            <td style="background-color:${BRAND.accent}; height:3px; line-height:3px; font-size:0;">&nbsp;</td>
           </tr>
 
           <tr>
@@ -102,32 +100,41 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
             </td>
           </tr>
 
-          <!-- Footer: business details, WhatsApp/website links, copyright, automated-email disclaimer. -->
+          <!-- Footer: Light background, matches the website footer style -->
           <tr>
-            <td style="background-color:${BRAND.navy}; padding:28px 32px; font-family:Arial,Helvetica,sans-serif;">
+            <td style="background-color:${BRAND.bg}; border-top:1px solid ${BRAND.border}; padding:28px 32px; font-family:Arial,Helvetica,sans-serif;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td style="color:${BRAND.white}; font-size:14px; font-weight:700; padding-bottom:6px;">
-                    Blissful Blinds
+                  <td style="vertical-align:middle; padding-bottom:10px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+                      <tr>
+                        <td style="vertical-align:middle; padding-right:8px;">
+                          <img src="https://blissfulblindsco369.vercel.app/images/logo-dark.png" alt="Blissful Blinds" style="height:28px; width:auto; border:0; display:block;">
+                        </td>
+                        <td style="vertical-align:middle;">
+                          <strong style="color:${BRAND.text}; font-size:15px; font-weight:800; letter-spacing:0.02em;">Blissful Blinds</strong>
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
                 <tr>
-                  <td style="color:rgba(255,255,255,0.65); font-size:12px; line-height:1.7; padding-bottom:16px;">
+                  <td style="color:${BRAND.textSecondary}; font-size:12px; line-height:1.7; padding-bottom:16px;">
                     ${BUSINESS_ADDRESS}<br>
-                    &#128222; <a href="tel:${PHONE_TEL}" style="color:rgba(255,255,255,0.85); text-decoration:none;">${PHONE_DISPLAY}</a>
+                    &#128222; <a href="tel:${PHONE_TEL}" style="color:${BRAND.accent}; text-decoration:none; font-weight:600;">${PHONE_DISPLAY}</a>
                     &nbsp;&middot;&nbsp;
-                    &#9993; <a href="mailto:${EMAIL}" style="color:rgba(255,255,255,0.85); text-decoration:none;">${EMAIL}</a>
+                    &#9993; <a href="mailto:${EMAIL}" style="color:${BRAND.accent}; text-decoration:none; font-weight:600;">${EMAIL}</a>
                     &nbsp;&middot;&nbsp;
-                    <a href="${SITE_URL}" style="color:rgba(255,255,255,0.85); text-decoration:none;">blissfulblindsco369.com</a>
+                    <a href="${SITE_URL}" style="color:${BRAND.accent}; text-decoration:none; font-weight:600;">blissfulblindsco369.com</a>
                   </td>
                 </tr>
                 <tr>
                   <td style="padding-bottom:16px;">
-                    <a href="${WHATSAPP_URL}" style="display:inline-block; padding:7px 16px; border-radius:999px; background-color:#25d366; color:#ffffff; font-size:11px; font-weight:700; text-decoration:none;">&#128172; WhatsApp Us</a>
+                    <a href="${WHATSAPP_URL}" style="display:inline-block; padding:8px 18px; border-radius:999px; background-color:#25d366; color:#ffffff; font-size:12px; font-weight:700; text-decoration:none; box-shadow:0 2px 5px rgba(37,211,102,0.15);">&#128172; WhatsApp Us</a>
                   </td>
                 </tr>
                 <tr>
-                  <td style="border-top:1px solid rgba(255,255,255,0.12); padding-top:14px; color:rgba(255,255,255,0.45); font-size:11px; line-height:1.6;">
+                  <td style="border-top:1px solid ${BRAND.border}; padding-top:14px; color:${BRAND.textMuted}; font-size:11px; line-height:1.6;">
                     &copy; ${year} Blissful Blinds. All rights reserved.<br>
                     This is an automated notification generated by the Blissful Blinds website.
                   </td>
