@@ -17,10 +17,17 @@
   --border-color: #e4e8f0;
   --border-light: rgba(228, 232, 240, 0.6);
 
-  /* === PREMIUM TYPOGRAPHY === */
-  --font-display: 'Cormorant Garamond', Georgia, serif;
-  --font-heading: 'Outfit', sans-serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
+  /* === TYPOGRAPHY ===
+     One typeface (Inter — the standard choice for polished software
+     products: GitHub, Stripe, Linear, Vercel) differentiated by weight
+     and size instead of mixing a decorative serif display face with
+     two different sans-serifs. Variables kept distinct (rather than
+     collapsed into one) since many rules already reference them by
+     role and that's worth preserving even though they now share a
+     family. */
+  --font-display: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-heading: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
 
   /* === ELEVATED SHADOWS === */
   --shadow-xs: 0 1px 3px rgba(11, 17, 32, 0.04), 0 1px 2px rgba(11, 17, 32, 0.03);
@@ -4138,6 +4145,7 @@ textarea.new-form-control {
   background: linear-gradient(160deg, #060d1a 0%, #0f172a 40%, #14082a 100%) !important;
   position: relative;
   overflow: hidden;
+  padding: 0 !important; /* Fix double padding */
 }
 
 .site-footer::before {
@@ -4164,25 +4172,26 @@ textarea.new-form-control {
 .footer-grid {
   position: relative;
   z-index: 1;
-  padding-top: 80px !important;
-  padding-bottom: 60px !important;
+  padding-top: 60px !important;
+  padding-bottom: 50px !important;
   display: grid !important;
   grid-template-columns: 1.4fr 0.8fr 1.8fr !important;
-  gap: 80px !important;
+  gap: 60px !important;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .footer-grid {
     grid-template-columns: 1fr 1fr !important;
-    gap: 50px 40px !important;
+    gap: 50px !important;
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   .footer-grid {
     grid-template-columns: 1fr !important;
     gap: 40px !important;
-    padding-top: 50px !important;
+    padding-top: 40px !important;
+    padding-bottom: 30px !important;
   }
 }
 
@@ -4220,20 +4229,25 @@ textarea.new-form-control {
 }
 
 .footer-social-btn {
-  width: 42px !important;
-  height: 42px !important;
+  width: 48px !important;
+  height: 48px !important;
   border-radius: 50% !important;
-  border: 1px solid rgba(255,255,255,0.12) !important;
-  background: rgba(255,255,255,0.05) !important;
-  color: rgba(255,255,255,0.65) !important;
-  transition: all var(--transition-fast) !important;
+  border: 1px solid rgba(255,255,255,0.15) !important;
+  background: rgba(255,255,255,0.03) !important;
+  color: rgba(255,255,255,0.7) !important;
+  font-size: 1.15rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all var(--transition-normal) !important;
 }
 
 .footer-social-btn:hover {
-  border-color: rgba(200, 16, 46, 0.5) !important;
-  background: rgba(200, 16, 46, 0.12) !important;
+  border-color: rgba(200, 16, 46, 0.6) !important;
+  background: rgba(200, 16, 46, 0.15) !important;
   color: white !important;
-  transform: translateY(-3px) !important;
+  transform: translateY(-4px) scale(1.05) !important;
+  box-shadow: 0 8px 24px rgba(200, 16, 46, 0.25) !important;
 }
 
 .footer-region-name {
