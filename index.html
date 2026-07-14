@@ -151,6 +151,13 @@
   <link rel="preload" href="chatbot.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link rel="stylesheet" href="chatbot.css"></noscript>
 
+  <!-- Google Fonts — preconnected + loaded as a real <link> instead of
+       a CSS @import in styles.css, which is render-blocking and was
+       delaying the whole stylesheet behind an extra round trip. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Outfit:wght@300;400;500;600;700;800&display=swap">
+
   <!-- Font Awesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <!-- Performance Preconnect Resource Hints -->
@@ -284,45 +291,10 @@
           </div>
         </div>
 
-        <!-- Real installation photos ("our work"), not stock imagery — an
-             overlapping flex stack with a staggered entrance and a gentle
-             continuous float, echoed by the "Our Recent Installations"
-             gallery further down the page. -->
-        <div class="hero-showcase">
-          <div class="hero-showcase-card hero-showcase-card--1">
-            <div class="hero-showcase-float">
-              <img fetchpriority="high" decoding="async" src="images/gallery/10-768x768.jpg.webp" alt="Vertical blinds installation by Blissful Blinds Co 369">
-              <div class="hero-showcase-overlay"></div>
-              <span class="hero-showcase-badge">Peterborough</span>
-              <div class="hero-showcase-caption">
-                <h3>Vertical Blinds</h3>
-                <p>Precision fit for floor-to-ceiling windows</p>
-              </div>
-            </div>
+        <div class="hero-image-container">
+          <div class="hero-image-card">
+            <img fetchpriority="high" decoding="async" src="images/products/window-blind-installation.jpg.webp" alt="Beautiful blinds installation by Blissful Blinds">
           </div>
-          <div class="hero-showcase-card hero-showcase-card--2">
-            <div class="hero-showcase-float">
-              <img loading="lazy" decoding="async" src="images/gallery/Venitian-Blind-3-768x768.jpg.webp" alt="Venetian blinds installation by Blissful Blinds Co 369">
-              <div class="hero-showcase-overlay"></div>
-              <span class="hero-showcase-badge">Leicester</span>
-              <div class="hero-showcase-caption">
-                <h3>Venetian Blinds</h3>
-                <p>Warm, natural slats with full light control</p>
-              </div>
-            </div>
-          </div>
-          <div class="hero-showcase-card hero-showcase-card--3">
-            <div class="hero-showcase-float">
-              <img loading="lazy" decoding="async" src="images/gallery/Blinds-ROller-12-768x768.jpg.webp" alt="Roller blind installation by Blissful Blinds Co 369">
-              <div class="hero-showcase-overlay"></div>
-              <span class="hero-showcase-badge">Luton</span>
-              <div class="hero-showcase-caption">
-                <h3>Roller Blinds</h3>
-                <p>Sleek blackout fit for a modern bedroom</p>
-              </div>
-            </div>
-          </div>
-          <div class="hero-showcase-glow" aria-hidden="true"></div>
         </div>
       </div>
     </section>
