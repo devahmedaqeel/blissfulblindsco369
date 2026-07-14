@@ -1755,8 +1755,8 @@ button, input, select, textarea {
 
 .gallery-watermark svg,
 .gallery-watermark img {
-  width: 13px;
-  height: 13px;
+  height: 16px;
+  width: auto;
   object-fit: contain;
   flex-shrink: 0;
 }
@@ -1771,8 +1771,8 @@ button, input, select, textarea {
 
   .gallery-watermark svg,
   .gallery-watermark img {
-    width: 11px;
-    height: 11px;
+    height: 13px;
+    width: auto;
     object-fit: contain;
   }
 }
