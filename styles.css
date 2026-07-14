@@ -4874,21 +4874,9 @@ textarea.new-form-control {
 }
 
 .swatch-item-check {
-  color: var(--white);
-  font-size: 0.75rem;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  pointer-events: none;
+  display: none;
 }
 
-.swatch-item.active .swatch-item-check {
-  opacity: 1;
-}
-
-/* Light swatches have a black checkmark */
-.swatch-item.light-swatch.active .swatch-item-check {
-  color: #1e293b;
-}
 
 /* Height Slider styling */
 .visualizer-slider-wrap {
