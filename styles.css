@@ -4298,9 +4298,13 @@ textarea.new-form-control {
 
 /* Areas covered box in footer */
 .areas-covered-box {
-  background: transparent !important;
-  border: none !important;
-  padding: 0 !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: 24px 24px 32px 24px !important; /* Added extra bottom padding to prevent overflow */
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.03) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 .areas-covered-title {
