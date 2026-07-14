@@ -13,8 +13,6 @@
   --accent-dark: #7d0a1c;
   --accent-soft: rgba(200, 16, 46, 0.07);
   --accent-light: #fde8ec;
-  --gold: #c9a84c;
-  --gold-light: #f5e6b8;
   --white: #ffffff;
   --dark: #0b1120;
   --dark-card: #111827;
@@ -34,7 +32,6 @@
   --shadow-xl: 0 40px 80px -20px rgba(11, 17, 32, 0.18), 0 16px 32px -16px rgba(11, 17, 32, 0.08);
   --shadow-accent: 0 8px 30px -4px rgba(200, 16, 46, 0.35);
   --shadow-accent-lg: 0 16px 48px -8px rgba(200, 16, 46, 0.45);
-  --shadow-gold: 0 8px 24px -4px rgba(201, 168, 76, 0.3);
 
   /* === BORDER RADIUS === */
   --radius-xs: 6px;
@@ -332,7 +329,7 @@ button, input, select, textarea {
   color: var(--white);
 }
 
-/* Phone number — primary CTA, so it gets extra weight/size and a gold glow */
+/* Phone number — primary CTA, so it gets extra weight/size and a red glow */
 .tb-phone .tb-value {
   font-size: var(--tb-phone-font);
   font-weight: 700;
@@ -951,7 +948,7 @@ button, input, select, textarea {
       rgba(11, 17, 32, 0.93) 0%,
       rgba(40, 10, 18, 0.75) 55%,
       rgba(11, 17, 32, 0.88) 100%),
-    url('https://blindsworldltd.com/wp-content/uploads/2022/03/window-blind-installation.jpg.webp')
+    url('images/products/window-blind-installation.jpg.webp')
     no-repeat center center / cover;
   min-height: 92vh;
   display: flex;
@@ -967,8 +964,8 @@ button, input, select, textarea {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 60% 80% at 65% 50%, rgba(200, 16, 46, 0.12) 0%, transparent 70%),
-    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(201, 168, 76, 0.06) 0%, transparent 60%);
+    radial-gradient(ellipse 60% 80% at 65% 50%, rgba(200, 16, 46, 0.14) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(200, 16, 46, 0.05) 0%, transparent 60%);
   pointer-events: none;
   z-index: 1;
 }
@@ -1015,11 +1012,11 @@ button, input, select, textarea {
   font-weight: 700;
   letter-spacing: 0.14em;
   font-size: 0.72rem;
-  color: var(--gold);
+  color: var(--accent-light);
   margin-bottom: 20px;
   padding: 7px 16px;
-  background: rgba(201, 168, 76, 0.12);
-  border: 1px solid rgba(201, 168, 76, 0.3);
+  background: rgba(200, 16, 46, 0.18);
+  border: 1px solid rgba(200, 16, 46, 0.4);
   border-radius: var(--radius-pill);
   backdrop-filter: blur(8px);
 }
@@ -1104,51 +1101,148 @@ button, input, select, textarea {
   color: var(--text-muted);
 }
 
-.hero-image-container {
+/* Hero photo showcase — real installation photos in an overlapping flex
+   stack. Each card's resting position/rotation lives on `translate`/
+   `rotate` (not the `transform` shorthand) specifically so the hover
+   state and the continuous float below can each animate independently
+   without fighting over one shared property. */
+.hero-showcase {
   position: relative;
-  opacity: 0;
-  transform: scale(0.95);
-  animation: fadeIn 1s forwards ease-out 0.4s, floatCard 6s ease-in-out infinite 1.4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 480px;
 }
 
-.hero-image-card {
-  background-color: rgba(255, 255, 255, 0.05);
+.hero-showcase-card {
+  position: absolute;
+  width: 260px;
+  aspect-ratio: 4 / 5;
+  opacity: 0;
+  scale: 0.9;
+  animation: heroCardIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transition: scale 0.4s cubic-bezier(0.16, 1, 0.3, 1), rotate 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.hero-showcase-card--1 { translate: -70px -30px; rotate: -5deg; animation-delay: 0.3s;  z-index: 1; }
+.hero-showcase-card--2 { translate: 60px 10px;   rotate: 4deg;  animation-delay: 0.45s; z-index: 2; }
+.hero-showcase-card--3 { translate: -10px 110px; rotate: -2deg; animation-delay: 0.6s;  z-index: 3; }
+
+.hero-showcase-card:hover {
+  rotate: 0deg;
+  scale: 1.06;
+  z-index: 10;
+}
+
+@keyframes heroCardIn {
+  from { opacity: 0; scale: 0.9; }
+  to   { opacity: 1; scale: 1; }
+}
+
+.hero-showcase-float {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 24px;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
-              box-shadow 0.5s ease, 
-              border-color 0.5s ease,
-              background-color 0.5s ease;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+  animation: heroCardFloat 6s ease-in-out infinite;
+  transition: box-shadow 0.4s ease;
 }
 
-.hero-image-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  border-color: rgba(225, 29, 72, 0.35);
-  background-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 20px 40px rgba(225, 29, 72, 0.15);
+/* Stagger the float so the three cards don't bob in lockstep */
+.hero-showcase-card--2 .hero-showcase-float { animation-delay: 1.4s; }
+.hero-showcase-card--3 .hero-showcase-float { animation-delay: 2.6s; }
+
+.hero-showcase-card:hover .hero-showcase-float {
+  box-shadow: 0 28px 56px rgba(225, 29, 72, 0.3);
 }
 
-.hero-image-card img {
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+@keyframes heroCardFloat {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
 }
 
-.hero-image-card:hover img {
-  transform: scale(1.02);
+.hero-showcase-float img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes floatCard {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+.hero-showcase-card:hover .hero-showcase-float img {
+  transform: scale(1.06);
+}
+
+.hero-showcase-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(11, 17, 32, 0.88) 0%, rgba(11, 17, 32, 0.15) 55%, transparent 75%);
+}
+
+.hero-showcase-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+}
+
+.hero-showcase-caption {
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 16px;
+  color: var(--white);
+}
+
+.hero-showcase-caption h3 {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.hero-showcase-caption p {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.4;
+}
+
+.hero-showcase-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 340px;
+  height: 340px;
+  border-radius: 50%;
+  background: rgba(225, 29, 72, 0.14);
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (max-width: 640px) {
+  .hero-showcase { height: 380px; }
+  .hero-showcase-card { width: 190px; }
+  .hero-showcase-card--1 { translate: -50px -20px; }
+  .hero-showcase-card--2 { translate: 45px 5px; }
+  .hero-showcase-card--3 { translate: -8px 85px; }
 }
 
 /* Trust bar */
@@ -1191,7 +1285,7 @@ button, input, select, textarea {
 }
 
 .trust-item .fa-circle-check {
-  color: var(--gold) !important;
+  color: var(--accent) !important;
   font-size: 1.1rem;
 }
 
@@ -1273,7 +1367,7 @@ button, input, select, textarea {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--gold));
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
   opacity: 0;
   transition: opacity var(--transition-normal);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
@@ -4030,21 +4124,6 @@ textarea.new-form-control {
   color: rgba(255,255,255,0.5);
 }
 
-/* Hero image card - glassmorphism upgrade */
-.hero-image-card {
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: var(--radius-xl);
-  padding: 20px;
-  box-shadow: 0 32px 64px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
-}
-
-.hero-image-card img {
-  border-radius: var(--radius-lg);
-}
-
 /* --- SECTION BACKGROUND ALTERNATION --- */
 .why-us {
   background: linear-gradient(180deg, #f8f9fb 0%, #ffffff 100%);
@@ -4167,7 +4246,7 @@ textarea.new-form-control {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, var(--gold) 25%, rgba(200,16,46,0.7) 50%, var(--gold) 75%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, var(--accent) 25%, rgba(200,16,46,0.7) 50%, var(--accent) 75%, transparent 100%);
 }
 
 .site-footer::after {
@@ -4219,10 +4298,10 @@ textarea.new-form-control {
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.14em !important;
-  color: var(--gold) !important;
+  color: var(--accent) !important;
   margin-bottom: 20px !important;
   padding-bottom: 12px !important;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.2) !important;
+  border-bottom: 1px solid rgba(200, 16, 46, 0.25) !important;
 }
 
 .footer-links a {
@@ -4260,7 +4339,7 @@ textarea.new-form-control {
   font-size: 0.7rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.12em !important;
-  color: var(--gold) !important;
+  color: var(--accent) !important;
   font-weight: 700 !important;
   font-family: var(--font-heading) !important;
 }
@@ -4314,10 +4393,10 @@ textarea.new-form-control {
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.14em !important;
-  color: var(--gold) !important;
+  color: var(--accent) !important;
   margin-bottom: 20px !important;
   padding-bottom: 12px !important;
-  border-bottom: 1px solid rgba(201, 168, 76, 0.2) !important;
+  border-bottom: 1px solid rgba(200, 16, 46, 0.25) !important;
 }
 
 /* Office info block in footer */
@@ -4425,7 +4504,7 @@ textarea.new-form-control {
 .section-divider {
   width: 60px;
   height: 3px;
-  background: linear-gradient(90deg, var(--accent), var(--gold));
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
   border-radius: var(--radius-pill);
   margin: 20px auto 0;
 }
@@ -4441,7 +4520,7 @@ textarea.new-form-control {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, var(--accent), var(--gold));
+  background: linear-gradient(180deg, var(--accent), var(--accent-hover));
   border-radius: 3px;
 }
 
