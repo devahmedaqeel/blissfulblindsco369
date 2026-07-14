@@ -1038,6 +1038,169 @@ document.addEventListener('DOMContentLoaded', () => {
 
   initScrollReveal();
 
+  // --- BLIND COLOR VISUALIZER STATE ---
+  let activeRoom = 'living-room';
+  let activeStyle = 'roller';
+  let activeColorName = 'Alabaster White';
+  let activeColorHex = '#FAFAFA';
+  let activeColorId = 'white';
+  let activeHeight = 85;
+
+  window.setVisualizerRoom = function(room) {
+    activeRoom = room;
+    const roomImg = document.getElementById('visualizerRoomImg');
+    const container = document.getElementById('visualizerBlindContainer');
+    const tabLiving = document.getElementById('roomTabLiving');
+    const tabBedroom = document.getElementById('roomTabBedroom');
+
+    if (!roomImg || !container || !tabLiving || !tabBedroom) return;
+
+    // Transition effect
+    roomImg.style.opacity = 0;
+    setTimeout(() => {
+      if (room === 'living-room') {
+        roomImg.src = 'images/visualizer/living-room.png';
+        container.classList.remove('room-bedroom');
+        tabLiving.classList.add('active');
+        tabBedroom.classList.remove('active');
+      } else {
+        roomImg.src = 'images/visualizer/bedroom.png';
+        container.classList.add('room-bedroom');
+        tabLiving.classList.remove('active');
+        tabBedroom.classList.add('active');
+      }
+      roomImg.style.opacity = 1;
+    }, 200);
+  };
+
+  window.setVisualizerStyle = function(style) {
+    activeStyle = style;
+    const shader = document.getElementById('visualizerBlindShader');
+    const choiceStyle = document.getElementById('visualizerChoiceStyle');
+    const tabRoller = document.getElementById('styleTabRoller');
+    const tabVertical = document.getElementById('styleTabVertical');
+    const tabRoman = document.getElementById('styleTabRoman');
+
+    if (!shader || !choiceStyle || !tabRoller || !tabVertical || !tabRoman) return;
+
+    // Reset styles
+    shader.className = 'visualizer-blind-shader style-' + style;
+    
+    // Update labels
+    if (style === 'roller') {
+      choiceStyle.textContent = 'Roller Blinds';
+      tabRoller.classList.add('active');
+      tabVertical.classList.remove('active');
+      tabRoman.classList.remove('active');
+    } else if (style === 'vertical') {
+      choiceStyle.textContent = 'Vertical Blinds';
+      tabRoller.classList.remove('active');
+      tabVertical.classList.add('active');
+      tabRoman.classList.remove('active');
+    } else if (style === 'roman') {
+      choiceStyle.textContent = 'Roman Blinds';
+      tabRoller.classList.remove('active');
+      tabVertical.classList.remove('active');
+      tabRoman.classList.add('active');
+    }
+  };
+
+  window.setVisualizerColor = function(colorId, colorName, colorHex, isLight, colorDesc) {
+    activeColorId = colorId;
+    activeColorName = colorName;
+    activeColorHex = colorHex;
+
+    const fabric = document.getElementById('visualizerBlindFabric');
+    const choiceColor = document.getElementById('visualizerChoiceColor');
+    const matTitle = document.getElementById('visualizerMaterialTitle');
+    const matBadge = document.getElementById('visualizerMaterialBadge');
+    const matDesc = document.getElementById('visualizerMaterialDesc');
+
+    if (!fabric || !choiceColor || !matTitle || !matBadge || !matDesc) return;
+
+    // Recolor fabric
+    fabric.style.backgroundColor = colorHex;
+    
+    // Update labels
+    choiceColor.textContent = colorName;
+    choiceColor.style.color = (colorId === 'white') ? '#475569' : colorHex;
+    
+    matTitle.innerHTML = `<span style="width:14px; height:14px; border-radius:50%; display:inline-block; border:1px solid rgba(0,0,0,0.1); background-color:${colorHex}; font-size:12px; margin-right:8px;"></span> ${colorName} Fabric`;
+    matDesc.textContent = colorDesc;
+
+    // Update active swatch button border
+    const swatches = document.querySelectorAll('.swatch-item');
+    swatches.forEach(btn => btn.classList.remove('active'));
+    
+    // Find the swatch button that was clicked and activate it
+    const event = window.event;
+    if (event && event.currentTarget) {
+      event.currentTarget.classList.add('active');
+    } else {
+      // Fallback search by title
+      swatches.forEach(btn => {
+        if (btn.getAttribute('title') === colorName) {
+          btn.classList.add('active');
+        }
+      });
+    }
+  };
+
+  window.adjustVisualizerHeight = function(height) {
+    activeHeight = height;
+    const fabric = document.getElementById('visualizerBlindFabric');
+    const heightLabel = document.getElementById('visualizerHeightLabel');
+    if (fabric && heightLabel) {
+      fabric.style.height = height + '%';
+      heightLabel.textContent = height;
+    }
+  };
+
+  window.applyVisualizerToBooking = function() {
+    const blindsSelect = document.getElementById('blindsType');
+    const colorSelect = document.getElementById('preferredColor');
+    const messageTextarea = document.getElementById('message');
+    const bookingSection = document.getElementById('booking');
+
+    if (!blindsSelect || !colorSelect || !bookingSection) return;
+
+    // Map style to option values
+    let blindsValue = 'Roller Blinds';
+    if (activeStyle === 'roller') blindsValue = 'Roller Blinds';
+    else if (activeStyle === 'vertical') blindsValue = 'Vertical Blinds';
+    else if (activeStyle === 'roman') blindsValue = 'Roman Blinds';
+
+    blindsSelect.value = blindsValue;
+
+    // Map color to clean values
+    let colorValue = '';
+    const nameLower = activeColorName.toLowerCase();
+    if (nameLower.includes('white')) colorValue = 'White';
+    else if (nameLower.includes('cream')) colorValue = 'Cream';
+    else if (nameLower.includes('grey')) colorValue = 'Grey';
+    else if (nameLower.includes('charcoal')) colorValue = 'Charcoal';
+    else if (nameLower.includes('black')) colorValue = 'Black';
+    else if (nameLower.includes('wood')) colorValue = 'Natural Wood';
+    else if (nameLower.includes('sage')) colorValue = 'Patterned / Textured';
+    else if (nameLower.includes('blue')) colorValue = 'Patterned / Textured';
+    else if (nameLower.includes('mustard')) colorValue = 'Bright Colors';
+
+    colorSelect.value = colorValue;
+
+    // Trigger change/input events for storage persistence
+    blindsSelect.dispatchEvent(new Event('change'));
+    colorSelect.dispatchEvent(new Event('change'));
+
+    // Optional message
+    if (messageTextarea) {
+      messageTextarea.value = `I configured my blinds in the Color Visualizer! I prefer: ${activeStyle.toUpperCase()} Blinds in "${activeColorName}" (Hex: ${activeColorHex}) set to ${activeHeight}% height.`;
+      messageTextarea.dispatchEvent(new Event('input'));
+    }
+
+    // Scroll smoothly
+    bookingSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  };
+
   makeFreelyDraggable(document.getElementById('waChatWidget'), 'bb_wa_widget_pos');
 });
 

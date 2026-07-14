@@ -4,6 +4,7 @@ import WhyChooseUs from "@/components/WhyChooseUs";
 import Offers from "@/components/Offers";
 import HowItWorks from "@/components/HowItWorks";
 import ProductRange from "@/components/ProductRange";
+import ColorVisualizer from "@/components/ColorVisualizer";
 import RecentInstallations from "@/components/RecentInstallations";
 import Reviews from "@/components/Reviews";
 import Commercial from "@/components/Commercial";
@@ -35,6 +36,9 @@ export default function Home() {
 
         {/* Product Catalogue Ranges */}
         <ProductRange />
+
+        {/* Real-time Blind Visualizer */}
+        <ColorVisualizer />
 
         {/* installations Portfolio Gallery */}
         <RecentInstallations />
