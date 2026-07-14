@@ -660,11 +660,11 @@ button, input, select, textarea {
 
 
 .site-footer .logo-container {
-  color: var(--white);
+  color: var(--text-primary);
   margin-bottom: 24px;
 }
 .site-footer .brand-name {
-  color: var(--white);
+  color: var(--text-primary);
 }
 
 .nav-menu {
@@ -4142,10 +4142,11 @@ textarea.new-form-control {
 
 /* --- FOOTER PREMIUM UPGRADE --- */
 .site-footer {
-  background: linear-gradient(160deg, #060d1a 0%, #0f172a 40%, #14082a 100%) !important;
+  background: #f7f9fc !important; /* Soft premium off-white/light-grey */
   position: relative;
   overflow: hidden;
   padding: 0 !important; /* Fix double padding */
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
 }
 
 .site-footer::before {
@@ -4154,8 +4155,8 @@ textarea.new-form-control {
   top: 0;
   left: 0;
   right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent 0%, var(--accent) 25%, rgba(200,16,46,0.7) 50%, var(--accent) 75%, transparent 100%);
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--accent) 25%, var(--gold) 50%, var(--accent) 75%, transparent 100%);
 }
 
 .site-footer::after {
@@ -4165,7 +4166,7 @@ textarea.new-form-control {
   right: -100px;
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(200, 16, 46, 0.05) 0%, transparent 65%);
+  background: radial-gradient(circle, rgba(200, 16, 46, 0.02) 0%, transparent 65%);
   pointer-events: none;
 }
 
@@ -4197,9 +4198,9 @@ textarea.new-form-control {
 
 .footer-desc {
   font-size: 0.9375rem !important;
-  color: rgba(255,255,255,0.52) !important;
+  color: var(--text-secondary) !important;
   line-height: 1.75 !important;
-  font-weight: 300 !important;
+  font-weight: 400 !important;
 }
 
 .footer-title {
@@ -4208,14 +4209,14 @@ textarea.new-form-control {
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.14em !important;
-  color: var(--accent) !important;
+  color: var(--text-primary) !important;
   margin-bottom: 20px !important;
   padding-bottom: 12px !important;
-  border-bottom: 1px solid rgba(200, 16, 46, 0.25) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
 }
 
 .footer-links a {
-  color: rgba(255,255,255,0.58) !important;
+  color: var(--text-secondary) !important;
   font-size: 0.9375rem !important;
   font-weight: 400 !important;
   transition: color var(--transition-fast), padding-left var(--transition-fast) !important;
@@ -4224,7 +4225,7 @@ textarea.new-form-control {
 }
 
 .footer-links a:hover {
-  color: white !important;
+  color: var(--accent) !important;
   padding-left: 6px !important;
 }
 
@@ -4232,9 +4233,9 @@ textarea.new-form-control {
   width: 48px !important;
   height: 48px !important;
   border-radius: 50% !important;
-  border: 1px solid rgba(255,255,255,0.15) !important;
-  background: rgba(255,255,255,0.03) !important;
-  color: rgba(255,255,255,0.7) !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  background: rgba(0, 0, 0, 0.02) !important;
+  color: var(--text-secondary) !important;
   font-size: 1.15rem !important;
   display: flex !important;
   align-items: center !important;
@@ -4243,11 +4244,11 @@ textarea.new-form-control {
 }
 
 .footer-social-btn:hover {
-  border-color: rgba(200, 16, 46, 0.6) !important;
-  background: rgba(200, 16, 46, 0.15) !important;
+  border-color: var(--accent) !important;
+  background: var(--accent) !important;
   color: white !important;
   transform: translateY(-4px) scale(1.05) !important;
-  box-shadow: 0 8px 24px rgba(200, 16, 46, 0.25) !important;
+  box-shadow: 0 8px 24px rgba(200, 16, 46, 0.2) !important;
 }
 
 .footer-region-name {
@@ -4260,9 +4261,9 @@ textarea.new-form-control {
 }
 
 .footer-city-tags span {
-  background: rgba(255,255,255,0.06) !important;
-  border: 1px solid rgba(255,255,255,0.1) !important;
-  color: rgba(255,255,255,0.6) !important;
+  background: rgba(0, 0, 0, 0.03) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  color: var(--text-secondary) !important;
   border-radius: var(--radius-xs) !important;
   font-size: 0.75rem !important;
   padding: 3px 10px !important;
@@ -4270,29 +4271,29 @@ textarea.new-form-control {
 }
 
 .footer-city-tags span:hover {
-  background: rgba(200, 16, 46, 0.15) !important;
-  border-color: rgba(200, 16, 46, 0.35) !important;
-  color: white !important;
+  background: rgba(200, 16, 46, 0.08) !important;
+  border-color: rgba(200, 16, 46, 0.25) !important;
+  color: var(--accent) !important;
 }
 
 .footer-bottom {
-  border-top: 1px solid rgba(255,255,255,0.07) !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
   padding-top: 24px !important;
   padding-bottom: 24px !important;
 }
 
 .footer-bottom p {
-  color: rgba(255,255,255,0.35) !important;
+  color: var(--text-muted) !important;
   font-size: 0.8125rem !important;
 }
 
 .footer-bottom-links a {
-  color: rgba(255,255,255,0.45) !important;
+  color: var(--text-muted) !important;
   font-size: 0.8125rem !important;
 }
 
 .footer-bottom-links a:hover {
-  color: rgba(255,255,255,0.85) !important;
+  color: var(--accent) !important;
 }
 
 /* Areas covered box in footer */
@@ -4308,10 +4309,55 @@ textarea.new-form-control {
   font-weight: 700 !important;
   text-transform: uppercase !important;
   letter-spacing: 0.14em !important;
-  color: var(--accent) !important;
+  color: var(--text-primary) !important;
   margin-bottom: 20px !important;
   padding-bottom: 12px !important;
-  border-bottom: 1px solid rgba(200, 16, 46, 0.25) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Elegant office classes */
+.footer-office-elegant {
+  margin-bottom: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.footer-office-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.footer-office-item i {
+  color: var(--gold);
+  font-size: 1.1rem;
+  margin-top: 4px;
+}
+.footer-office-title {
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  display: block;
+}
+.footer-office-text {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.footer-office-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  transition: color var(--transition-fast) var(--transition-ease);
+}
+.footer-office-link:hover {
+  color: var(--accent-hover);
 }
 
 /* Office info block in footer */
