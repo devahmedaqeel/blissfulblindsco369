@@ -290,12 +290,14 @@ export default function BookingForm() {
                       className="w-full px-4 py-3 border border-border-light rounded-[10px] text-sm focus:outline-none focus:border-brand-primary/30 appearance-none bg-white cursor-pointer text-text-dark"
                     >
                       <option value="">Any / Show Swatches</option>
-                      <option value="white">White / Cream / Ivory</option>
-                      <option value="grey">Grey / Anthracite / Charcoal</option>
-                      <option value="black">Black / Dark Slate</option>
-                      <option value="wood">Natural Wood / Grain Stain</option>
-                      <option value="bright">Bright Colors (Red, Blue, etc.)</option>
-                      <option value="pattern">Patterned / Textured Fabric</option>
+                      <option value="white">White</option>
+                      <option value="cream">Cream</option>
+                      <option value="grey">Grey</option>
+                      <option value="charcoal">Charcoal</option>
+                      <option value="black">Black</option>
+                      <option value="wood">Natural Wood</option>
+                      <option value="pattern">Patterned / Textured</option>
+                      <option value="bright">Bright Colors</option>
                     </select>
                     <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
                   </div>
