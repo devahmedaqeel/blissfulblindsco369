@@ -22,7 +22,7 @@ const SEED_REVIEWS = [
     name: 'Claire Germain',
     email: 'legacy-import+claire@blissfulblindsco369.com',
     rating: 5,
-    review: 'Fantastic prices and excellent customer care. We had quotes from other companies but Blissful Blinds Co 369 beat them easily. The wooden venetians look amazing. Will definitely use them again!',
+    review: 'Fantastic prices and excellent customer care. We had quotes from other companies but Blissful Blinds Ltd beat them easily. The wooden venetians look amazing. Will definitely use them again!',
     submittedAt: '2026-05-06 14:30:00'
   },
   {

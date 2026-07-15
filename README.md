@@ -1,11 +1,11 @@
-# Blissful Blinds Co 369 — Website
+# Blissful Blinds — Website
 
-Official Blissful Blinds Co 369 website – responsive, SEO-optimized,
+Official Blissful Blinds website – responsive, SEO-optimized,
 high-performance business website.
 
 Static HTML/CSS/JS site. No build step, no framework — every page is served as-is.
 
-Project folder: `Blissful Blinds Co 369`. Nothing in the code references
+Project folder: `Blissful Blinds`. Nothing in the code references
 this folder's name or path — every link is relative, and all schema/canonical
 URLs point at the production domain (`blissfulblindsco369.com`), not the
 local path — so the folder can be renamed or moved freely without breaking

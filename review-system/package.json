@@ -2,7 +2,7 @@
   "name": "blissful-blinds-review-system",
   "version": "1.0.0",
   "private": true,
-  "description": "Standalone backend for the Blissful Blinds Co 369 review system (API + admin panel) and site-wide email notifications (Nodemailer). Does not affect the main static site.",
+  "description": "Standalone backend for the Blissful Blinds Ltd review system (API + admin panel) and site-wide email notifications (Nodemailer). Does not affect the main static site.",
   "main": "server.js",
   "type": "commonjs",
   "engines": {

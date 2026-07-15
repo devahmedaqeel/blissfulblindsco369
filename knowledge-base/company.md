@@ -3,9 +3,9 @@ title: Company
 source: index.html (hero, why-us, suppliers, reviews sections)
 ---
 
-## About Blissful Blinds Co 369
+## About Blissful Blinds
 
-Blissful Blinds Co 369 supplies and fits made-to-measure window blinds, shutters, and
+Blissful Blinds supplies and fits made-to-measure window blinds, shutters, and
 window coverings. The company brings the showroom directly to the customer's home,
 measures with precision, and fits the finished product — all with a price promise.
 
@@ -20,7 +20,7 @@ Head office: 75 Ringwood Bretton, Peterborough, PE3 9SR, United Kingdom.
   each customer's needs and suggest the best solution for their space, with honest
   advice and no pressure or pushy sales tactics.
 - **Our Price** — Price promise: if a customer finds the same blinds (same size, spec,
-  and fitting service included) at a lower price elsewhere, Blissful Blinds Co 369
+  and fitting service included) at a lower price elsewhere, Blissful Blinds
   promises to match and try to beat it.
 - **Our Care** — Experts measure windows and install new blinds with precision, taking
   the hassle out of DIY. All blinds are backed by a comprehensive one-year product
@@ -46,6 +46,6 @@ Alutrade, Urban Shutters.
 
 ## Commercial & landlord clients
 
-Blissful Blinds Co 369 also serves offices, boardrooms, rental properties, and
+Blissful Blinds also serves offices, boardrooms, rental properties, and
 landlords with commercial-grade, heavy-duty window solutions — see `services.md` for
 details.

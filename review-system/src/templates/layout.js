@@ -72,8 +72,7 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td style="font-family:Arial,Helvetica,sans-serif; color:${BRAND.white};">
-                    <span style="font-size:20px; font-weight:700; letter-spacing:0.02em;">Blissful Blinds Co</span><br>
-                    <span style="font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:${BRAND.accent};">369</span>
+                    <span style="font-size:20px; font-weight:700; letter-spacing:0.02em;">Blissful Blinds Ltd</span>
                   </td>
                 </tr>
               </table>
@@ -97,7 +96,7 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td style="color:${BRAND.white}; font-size:14px; font-weight:700; padding-bottom:6px;">
-                    Blissful Blinds Co 369
+                    Blissful Blinds Ltd
                   </td>
                 </tr>
                 <tr>

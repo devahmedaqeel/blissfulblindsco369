@@ -6,7 +6,7 @@ const { wrapEmailLayout, escapeHtml, BRAND, PHONE_DISPLAY, PHONE_TEL, EMAIL } = 
  * call you back" — it's "thanks, it's awaiting moderation."
  */
 function reviewConfirmationEmail({ name, rating }) {
-  const subject = 'Thank You for Your Review — Blissful Blinds Co';
+  const subject = 'Thank You for Your Review — Blissful Blinds Ltd';
   const stars = '&#9733;'.repeat(Math.max(1, Math.min(5, Number(rating) || 5)));
 
   const bodyHtml = `
@@ -25,7 +25,7 @@ function reviewConfirmationEmail({ name, rating }) {
       Hello ${escapeHtml(name || 'there')},
     </p>
     <p style="margin:0 0 16px; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">
-      Thank you for taking the time to leave a review for Blissful Blinds Co 369. We've received it and it's now awaiting a quick check from our team before it goes live on the site.
+      Thank you for taking the time to leave a review for Blissful Blinds Ltd. We've received it and it's now awaiting a quick check from our team before it goes live on the site.
     </p>
     <p style="margin:0 0 24px; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">
       We really appreciate the feedback — it helps other homeowners choose with confidence.
@@ -54,7 +54,7 @@ function reviewConfirmationEmail({ name, rating }) {
 
     <p style="margin:24px 0 0; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">
       Thank you.<br>
-      <strong style="color:${BRAND.text};">Blissful Blinds Co</strong>
+      <strong style="color:${BRAND.text};">Blissful Blinds Ltd</strong>
     </p>
   `;
 
@@ -67,14 +67,14 @@ function reviewConfirmationEmail({ name, rating }) {
   const text = [
     `Hello ${name || 'there'},`,
     '',
-    'Thank you for taking the time to leave a review for Blissful Blinds Co 369.',
+    'Thank you for taking the time to leave a review for Blissful Blinds Ltd.',
     "We've received it and it's now awaiting a quick check from our team before it goes live on the site.",
     '',
     `Phone: ${PHONE_DISPLAY}`,
     `Email: ${EMAIL}`,
     '',
     'Thank you.',
-    'Blissful Blinds Co'
+    'Blissful Blinds Ltd'
   ].join('\n');
 
   return { subject, html, text };
