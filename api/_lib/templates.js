@@ -31,7 +31,7 @@ const PHONE_TEL = '+441733853037';
 const EMAIL = process.env.MAIL_TO || 'info@blissfulblindsltd.co.uk';
 const BUSINESS_ADDRESS = '75 Ringwood Bretton, Peterborough, PE3 9SR, United Kingdom';
 const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=+447341645339';
-const FACEBOOK_URL = 'https://www.facebook.com/blindsworldltd/';
+const FACEBOOK_URL = 'https://www.facebook.com/share/198UbT36kZ/?mibextid=wwXIfr';
 
 function escapeHtml(value) {
   return String(value == null ? '' : value)
