@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Enquiries — Blissful Blinds Admin</title>
+<link rel="icon" href="../images/logo-dark.png">
+<link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+
+  <!-- ================= LOGIN SCREEN ================= -->
+  <div id="loginScreen" class="login-screen">
+    <form id="loginForm" class="login-card" autocomplete="on">
+      <img src="../images/logo-dark.png" alt="Blissful Blinds" class="login-logo">
+      <h1>Enquiries Dashboard</h1>
+      <p class="login-sub">Sign in with your admin account</p>
+
+      <label for="loginEmail">Email</label>
+      <input type="email" id="loginEmail" name="email" autocomplete="username" required>
+
+      <label for="loginPassword">Password</label>
+      <input type="password" id="loginPassword" name="password" autocomplete="current-password" required>
+
+      <button type="submit" id="loginSubmit">Sign In</button>
+      <p id="loginError" class="login-error" hidden></p>
+    </form>
+  </div>
+
+  <!-- ================= DASHBOARD ================= -->
+  <div id="dashboard" class="dashboard" hidden>
+
+    <header class="topbar">
+      <div class="topbar-brand">
+        <img src="../images/logo-dark.png" alt="" class="topbar-logo">
+        <div>
+          <h1>Enquiries</h1>
+          <span id="connectionStatus" class="conn-status conn-connecting">Connecting&hellip;</span>
+        </div>
+      </div>
+
+      <div class="topbar-stats">
+        <div class="stat-pill" title="Unread enquiries">
+          <span id="unreadCount">0</span>
+          <label>Unread</label>
+        </div>
+        <div class="stat-pill" title="Total enquiries loaded">
+          <span id="totalCount">0</span>
+          <label>Total</label>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <button id="enablePushBtn" class="icon-btn" type="button" title="Enable browser notifications">&#128276;</button>
+        <button id="soundSettingsBtn" class="icon-btn" type="button" title="Sound settings">&#128266;</button>
+        <button id="exportBtn" class="icon-btn" type="button" title="Export CSV">&#11015;</button>
+        <button id="logoutBtn" class="icon-btn" type="button" title="Sign out">&#10162;</button>
+        <button id="menuToggle" class="icon-btn menu-toggle" type="button" title="Menu" aria-label="Toggle filters">&#9776;</button>
+      </div>
+    </header>
+
+    <div id="filterBar" class="filter-bar">
+      <input type="search" id="searchInput" placeholder="Search name, phone, email, message&hellip;" aria-label="Search enquiries">
+
+      <select id="statusFilter" aria-label="Filter by status">
+        <option value="all">All statuses</option>
+        <option value="unread">Unread only</option>
+        <option value="read">Read only</option>
+      </select>
+
+      <select id="sourceFilter" aria-label="Filter by form">
+        <option value="all">All forms</option>
+        <option value="booking">Booking form</option>
+        <option value="chatbot-lead">Chatbot lead</option>
+      </select>
+
+      <select id="dateFilter" aria-label="Filter by date">
+        <option value="all">All time</option>
+        <option value="today">Today</option>
+        <option value="7d">Last 7 days</option>
+        <option value="30d">Last 30 days</option>
+      </select>
+
+      <button id="markAllReadBtn" class="text-btn" type="button">Mark all read</button>
+    </div>
+
+    <main id="enquiryList" class="enquiry-list" aria-live="polite"></main>
+
+    <p id="emptyState" class="empty-state" hidden>No enquiries match your filters yet.</p>
+    <button id="loadMoreBtn" class="load-more-btn" type="button" hidden>Load older enquiries</button>
+  </div>
+
+  <!-- ================= ENQUIRY DETAIL PANEL ================= -->
+  <div id="detailOverlay" class="detail-overlay" hidden>
+    <div id="detailPanel" class="detail-panel" role="dialog" aria-modal="true" aria-labelledby="detailName">
+      <button id="detailClose" class="detail-close" type="button" aria-label="Close">&times;</button>
+      <div id="detailContent"></div>
+    </div>
+  </div>
+
+  <!-- ================= SOUND SETTINGS PANEL ================= -->
+  <div id="soundOverlay" class="detail-overlay" hidden>
+    <div class="detail-panel sound-panel" role="dialog" aria-modal="true">
+      <button id="soundClose" class="detail-close" type="button" aria-label="Close">&times;</button>
+      <h2>Notification Sound</h2>
+
+      <label class="sound-row">
+        <input type="checkbox" id="soundMute">
+        Mute notification sound
+      </label>
+
+      <label class="sound-row sound-volume-row">
+        Volume
+        <input type="range" id="soundVolume" min="0" max="1" step="0.05">
+      </label>
+
+      <label class="sound-row">
+        Custom sound (optional)
+        <input type="file" id="soundUpload" accept="audio/*">
+      </label>
+
+      <div class="sound-actions">
+        <button id="soundTestBtn" class="text-btn" type="button">Test sound</button>
+        <button id="soundResetBtn" class="text-btn" type="button">Reset to default</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast container for in-page popups on new enquiries -->
+  <div id="toastContainer" class="toast-container" aria-live="assertive"></div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

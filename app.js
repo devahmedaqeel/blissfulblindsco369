@@ -424,7 +424,9 @@ document.addEventListener('DOMContentLoaded', () => {
         hearAboutUs: data.hearAboutUs,
         message: data.message,
         website: data.website,
-        renderedAt: data.renderedAt
+        renderedAt: data.renderedAt,
+        pageUrl: window.location.href,
+        referrer: document.referrer || ''
       })
     }).then(function (res) {
       if (!res.ok) throw new Error('notify request failed');

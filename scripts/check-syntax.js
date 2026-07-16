@@ -35,11 +35,13 @@ const root = path.join(__dirname, '..');
 const targets = globSync([
   path.join(root, 'api'),
   path.join(root, 'scripts'),
+  path.join(root, 'admin'),
   path.join(root, 'review-system', 'src')
 ]).concat([
   path.join(root, 'app.js'),
   path.join(root, 'chatbot.js'),
-  path.join(root, 'chatbot-kb.js')
+  path.join(root, 'chatbot-kb.js'),
+  path.join(root, 'sw.js')
 ].filter((f) => require('fs').existsSync(f)));
 
 let failed = 0;

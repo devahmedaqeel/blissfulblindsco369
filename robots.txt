@@ -3,5 +3,6 @@ Allow: /
 Disallow: /knowledge-base/
 Disallow: /old-static-html/
 Disallow: /api/
+Disallow: /admin/
 
 Sitemap: https://blissfulblindsltd.co.uk/sitemap.xml

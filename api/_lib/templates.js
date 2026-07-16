@@ -31,6 +31,7 @@ const PHONE_TEL = '+441733853037';
 const EMAIL = process.env.MAIL_TO || 'info@blissfulblindsltd.co.uk';
 const BUSINESS_ADDRESS = '75 Ringwood Bretton, Peterborough, PE3 9SR, United Kingdom';
 const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=+447341645339';
+const FACEBOOK_URL = 'https://www.facebook.com/blindsworldltd/';
 
 function escapeHtml(value) {
   return String(value == null ? '' : value)
@@ -137,7 +138,8 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
                 </tr>
                 <tr>
                   <td style="padding-bottom:16px;">
-                    <a href="${WHATSAPP_URL}" style="display:inline-block; padding:8px 18px; border-radius:999px; background-color:#25d366; color:#ffffff; font-size:12px; font-weight:700; text-decoration:none; box-shadow:0 2px 5px rgba(37,211,102,0.15);">&#128172; WhatsApp Us</a>
+                    <a href="${WHATSAPP_URL}" style="display:inline-block; margin-right:8px; padding:8px 18px; border-radius:999px; background-color:#25d366; color:#ffffff; font-size:12px; font-weight:700; text-decoration:none; box-shadow:0 2px 5px rgba(37,211,102,0.15);">&#128172; WhatsApp Us</a>
+                    <a href="${FACEBOOK_URL}" style="display:inline-block; padding:8px 18px; border-radius:999px; background-color:#1877f2; color:#ffffff; font-size:12px; font-weight:700; text-decoration:none; box-shadow:0 2px 5px rgba(24,119,242,0.15);">Facebook</a>
                   </td>
                 </tr>
                 <tr>
@@ -200,8 +202,14 @@ function actionButton(href, label, variant) {
     </td>`;
 }
 
+/** Compact, muted technical-context line — shown small since it's diagnostic info, not customer-facing content. */
+function techRow(label, value) {
+  if (!value) return '';
+  return `<tr><td style="padding:3px 0; font-family:ui-monospace,Consolas,monospace; font-size:11px; color:${BRAND.textMuted};"><strong style="color:${BRAND.textMuted};">${escapeHtml(label)}:</strong> ${escapeHtml(value)}</td></tr>`;
+}
+
 /** Internal admin notification email for a form submission (booking or chatbot lead). */
-function adminNotificationEmail({ source, sourceLabel, name, phone, email, address, postcode, service, preferredColor, appointment, hearAboutUs, message, submittedAt }) {
+function adminNotificationEmail({ source, sourceLabel, name, phone, email, address, postcode, service, preferredColor, appointment, hearAboutUs, message, submittedAt, ip, userAgent, pageUrl, referrer }) {
   const isBooking = source === 'booking';
   const badgeText = `${sourceLabel} Received`.toUpperCase();
   const heading = isBooking ? 'New Customer Booking Enquiry' : `New Customer ${sourceLabel}`;
@@ -245,6 +253,17 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
       </tr>
     </table>` : '';
 
+  const techLines = [
+    techRow('IP Address', ip),
+    techRow('User Agent', userAgent),
+    techRow('Page URL', pageUrl),
+    techRow('Referrer', referrer)
+  ].join('');
+  const techBlock = techLines ? `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:20px 0 0; border-top:1px dashed ${BRAND.border}; padding-top:14px;">
+      ${techLines}
+    </table>` : '';
+
   const bodyHtml = `
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:16px;">
       <tr>
@@ -277,6 +296,7 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
         ${buttons}
       </tr>
     </table>
+    ${techBlock}
   `;
 
   const html = wrapEmailLayout({
@@ -298,7 +318,11 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
     hearAboutUs ? `How Did You Hear About Us: ${hearAboutUs}` : null,
     message ? `Customer Message: ${message}` : null,
     submittedAt ? `Submitted Date & Time: ${submittedAt}` : null,
-    `Source Form: ${sourceLabel}`
+    `Source Form: ${sourceLabel}`,
+    ip ? `IP Address: ${ip}` : null,
+    userAgent ? `User Agent: ${userAgent}` : null,
+    pageUrl ? `Page URL: ${pageUrl}` : null,
+    referrer ? `Referrer: ${referrer}` : null
   ].filter(Boolean).join('\n');
 
   return { subject, html, text };
@@ -308,6 +332,7 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
 function customerConfirmationEmail({ name }) {
   const subject = 'Thank You for Contacting Blissful Blinds';
   const firstName = (name || '').trim().split(/\s+/)[0] || 'there';
+  const EXPECTED_RESPONSE = 'within 1 business day (often much sooner)';
 
   const bodyHtml = `
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
@@ -329,6 +354,16 @@ function customerConfirmationEmail({ name }) {
     <p style="margin:0 0 24px; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">
       Our team will contact you as soon as possible. If your enquiry is urgent, please call us.
     </p>
+
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:20px;">
+      <tr>
+        <td align="center">
+          <span style="display:inline-block; padding:6px 16px; border-radius:999px; background-color:${BRAND.accentLight}; color:#991b1b; font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em;">
+            &#9200; Expected reply: ${escapeHtml(EXPECTED_RESPONSE)}
+          </span>
+        </td>
+      </tr>
+    </table>
 
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${BRAND.bg}; border-radius:10px; margin-bottom:8px;">
       <tr>
@@ -374,8 +409,13 @@ function customerConfirmationEmail({ name }) {
     '',
     'If your enquiry is urgent, please call us.',
     '',
+    `Expected reply: ${EXPECTED_RESPONSE}`,
+    '',
     `Phone: ${PHONE_DISPLAY}`,
     `Email: ${EMAIL}`,
+    `Website: ${SITE_URL}`,
+    `WhatsApp: ${WHATSAPP_URL}`,
+    `Facebook: ${FACEBOOK_URL}`,
     '',
     'Thank you.',
     'Blissful Blinds'

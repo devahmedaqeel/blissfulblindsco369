@@ -85,6 +85,13 @@ function validateLeadSubmission(body) {
     return { valid: false, errors: { _spam: true } };
   }
 
+  // Context fields for the admin dashboard/email — not user-facing form
+  // inputs, so no validation errors are ever raised for these, only
+  // sanitization/length-capping. A malformed pageUrl/referrer just means
+  // the dashboard shows less context, never a rejected enquiry.
+  const pageUrl = collapseWhitespace(stripTags(body.pageUrl || '')).slice(0, 500);
+  const referrer = collapseWhitespace(stripTags(body.referrer || '')).slice(0, 500);
+
   if (Object.keys(errors).length > 0) {
     return { valid: false, errors };
   }
@@ -94,7 +101,8 @@ function validateLeadSubmission(body) {
     data: {
       source: sourceKey,
       sourceLabel: KNOWN_SOURCES[sourceKey],
-      name, email, phone, address, postcode, service, preferredColor, appointmentDate, appointmentTime, hearAboutUs, message
+      name, email, phone, address, postcode, service, preferredColor, appointmentDate, appointmentTime, hearAboutUs, message,
+      pageUrl, referrer
     }
   };
 }

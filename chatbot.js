@@ -504,7 +504,9 @@
         appointmentTime: data.time,
         message: data.message,
         website: data.website,
-        renderedAt: data.renderedAt
+        renderedAt: data.renderedAt,
+        pageUrl: window.location.href,
+        referrer: document.referrer || ''
       })
     }).then(function (res) { return res.ok; }).catch(function () { return false; });
   }

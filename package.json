@@ -5,9 +5,13 @@
   "scripts": {
     "verify-smtp": "node scripts/verify-smtp.js",
     "test:email": "node scripts/test-email-flows.js",
+    "test:realtime": "node scripts/test-realtime-flow.js",
+    "test": "npm run check && npm run test:email && npm run test:realtime",
     "check": "node scripts/check-syntax.js"
   },
   "dependencies": {
-    "nodemailer": "^6.9.7"
+    "@supabase/supabase-js": "^2.110.7",
+    "nodemailer": "^9.0.3",
+    "web-push": "^3.6.7"
   }
 }
