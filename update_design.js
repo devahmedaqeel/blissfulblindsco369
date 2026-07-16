@@ -71,31 +71,65 @@ function walkDir(currentDir) {
       if (!excludeDirs.includes(file)) {
         walkDir(filePath);
       }
-    } else if (file.endsWith('.html')) {
+    } else {
       const relPath = path.relative(targetDir, filePath).replace(/\\/g, '/');
-      let content = fs.readFileSync(filePath, 'utf8');
       
-      let selectedFooter;
-      if (relPath === 'index.html') {
-        selectedFooter = rootFooter;
-      } else if (relPath === 'privacy-policy/index.html') {
-        selectedFooter = privacyFooter;
-      } else if (relPath === 'terms-conditions/index.html') {
-        selectedFooter = termsFooter;
-      } else {
-        selectedFooter = subfolderFooter;
-      }
-      
-      const newFooterBlock = selectedFooter + '\n  </footer>';
-      if (footerRegex.test(content)) {
-        footerRegex.lastIndex = 0; // reset regex index
-        content = content.replace(footerRegex, newFooterBlock);
-        fs.writeFileSync(filePath, content, 'utf8');
-        console.log(`Updated HTML: ${relPath}`);
+      // Update files that are HTML, JS, TS, or Markdown
+      if (file.endsWith('.html') || file.endsWith('.js') || file.endsWith('.md') || file.endsWith('.ts')) {
+        let content = fs.readFileSync(filePath, 'utf8');
+        let hasChanges = false;
+        
+        // 1. Replace display phone numbers
+        if (content.includes('07341 645339')) {
+          content = content.replace(/07341 645339/g, '01733 853037');
+          hasChanges = true;
+        }
+        
+        // 2. Replace tel: protocol links
+        if (content.includes('tel:+447341645339')) {
+          content = content.replace(/tel:\+447341645339/g, 'tel:+441733853037');
+          hasChanges = true;
+        }
+        if (content.includes('tel:07341645339')) {
+          content = content.replace(/tel:07341645339/g, 'tel:01733853037');
+          hasChanges = true;
+        }
+
+        // 3. Replace PHONE_TEL JS/TS declarations (keep whatsapp as mobile)
+        const phoneTelRegex = /PHONE_TEL\s*=\s*['"]\+447341645339['"]/g;
+        if (phoneTelRegex.test(content)) {
+          phoneTelRegex.lastIndex = 0;
+          content = content.replace(phoneTelRegex, "PHONE_TEL = '+441733853037'");
+          hasChanges = true;
+        }
+
+        // 4. Restructure HTML footer design
+        if (file.endsWith('.html') && footerRegex.test(content)) {
+          let selectedFooter;
+          if (relPath === 'index.html') {
+            selectedFooter = rootFooter;
+          } else if (relPath === 'privacy-policy/index.html') {
+            selectedFooter = privacyFooter;
+          } else if (relPath === 'terms-conditions/index.html') {
+            selectedFooter = termsFooter;
+          } else {
+            selectedFooter = subfolderFooter;
+          }
+          
+          const newFooterBlock = selectedFooter + '\n  </footer>';
+          footerRegex.lastIndex = 0; // reset regex index
+          content = content.replace(footerRegex, newFooterBlock);
+          hasChanges = true;
+        }
+
+        if (hasChanges) {
+          fs.writeFileSync(filePath, content, 'utf8');
+          console.log(`Updated: ${relPath}`);
+        }
       }
     }
   }
 }
 
 walkDir(targetDir);
-console.log('Design update completed successfully!');
+console.log('Design and phone updates completed successfully!');
