@@ -5,7 +5,7 @@ source: index.html #how-it-works, FAQ, hero copy
 
 ## Who measures the windows
 
-Blissful Blinds Co 369 measures every window itself, in the customer's home, as part
+Blissful Blinds measures every window itself, in the customer's home, as part
 of the in-home consultation — the site's own copy explicitly says customers don't need
 to measure their own windows ("eliminating any worry of making mistakes").
 

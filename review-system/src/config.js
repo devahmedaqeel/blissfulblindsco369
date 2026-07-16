@@ -26,7 +26,7 @@ const config = {
   emailUser: process.env.EMAIL_USER || '',
   emailPass: process.env.EMAIL_PASS || '',
   emailAdminTo: process.env.EMAIL_ADMIN_TO || process.env.EMAIL_USER || '',
-  emailFromName: process.env.EMAIL_FROM_NAME || 'Blissful Blinds Co'
+  emailFromName: process.env.EMAIL_FROM_NAME || 'Blissful Blinds'
 };
 
 if (config.isProduction && (!config.jwtSecret || config.jwtSecret.length < 32)) {

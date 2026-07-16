@@ -1,4 +1,4 @@
-# Blissful Blinds Co 369 — Review System & Email Notifications
+# Blissful Blinds — Review System & Email Notifications
 
 A standalone backend (API + database + admin panel) that powers two
 things on the main site: the review widget on the homepage
@@ -128,7 +128,7 @@ emails via Nodemailer over Gmail SMTP:
    your inbox goes straight to them.
 2. **Customer confirmation** → the address they submitted. Matches the
    business's exact requested copy ("Thank You for Contacting Blissful
-   Blinds Co…"); review submissions get a slightly different
+   Blinds…"); review submissions get a slightly different
    "awaiting approval" version instead, since that's factually what
    happens to a review.
 

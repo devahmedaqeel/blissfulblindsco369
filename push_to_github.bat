@@ -7,7 +7,7 @@ echo === Staging all changes ===
 git add -A
 echo.
 echo === Committing ===
-git commit -m "Fix booking form, add privacy policy & terms pages, fix footer links"
+git commit -m "Update company registration details and legal disclosures for UK compliance"
 echo.
 echo === Pushing to blissfulblindsltd (ltd) ===
 git push ltd main

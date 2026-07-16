@@ -31,7 +31,7 @@ function adminNotificationEmail({
   submittedAt,
   ip
 }) {
-  const subject = `${sourceEmoji} New ${sourceLabel} | Blissful Blinds Co`;
+  const subject = `${sourceEmoji} New ${sourceLabel} | Blissful Blinds`;
 
   const tel = phone ? `tel:${phone.replace(/[^\d+]/g, '')}` : null;
   const mailto = email ? `mailto:${email}` : null;
@@ -82,7 +82,7 @@ function adminNotificationEmail({
   });
 
   const text = [
-    `New ${sourceLabel} — Blissful Blinds Co`,
+    `New ${sourceLabel} — Blissful Blinds`,
     '',
     name ? `Customer Name: ${name}` : null,
     phone ? `Phone Number: ${phone}` : null,

@@ -25,7 +25,7 @@ const WHATSAPP_URL = "https://wa.me/447341645339";
 const EMAIL_USER = process.env.EMAIL_USER || "";
 const EMAIL_PASS = process.env.EMAIL_PASS || "";
 const EMAIL_ADMIN_TO = process.env.EMAIL_ADMIN_TO || EMAIL_USER;
-const EMAIL_FROM_NAME = process.env.EMAIL_FROM_NAME || "Blissful Blinds Co";
+const EMAIL_FROM_NAME = process.env.EMAIL_FROM_NAME || "Blissful Blinds";
 
 let transporterPromise: Promise<nodemailer.Transporter> | null = null;
 let usingEthereal = false;
@@ -111,7 +111,7 @@ function wrapEmailLayout(title: string, previewText: string, bodyHtml: string) {
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td style="color:${BRAND.white}; font-size:14px; font-weight:700; padding-bottom:6px;">
-                    Blissful Blinds Co
+                    Blissful Blinds
                   </td>
                 </tr>
                 <tr>
@@ -129,7 +129,7 @@ function wrapEmailLayout(title: string, previewText: string, bodyHtml: string) {
                 </tr>
                 <tr>
                   <td style="border-top:1px solid rgba(255,255,255,0.12); padding-top:14px; color:rgba(255,255,255,0.45); font-size:11px; line-height:1.6;">
-                    &copy; ${year} Blissful Blinds Co. All rights reserved.
+                    &copy; ${year} Blissful Blinds. All rights reserved.
                   </td>
                 </tr>
               </table>
@@ -198,10 +198,10 @@ export async function POST(req: NextRequest) {
 
     // 2. Customer Email
     const customerHtml = wrapEmailLayout(
-      "Thank You for Contacting Blissful Blinds Co",
+      "Thank You for Contacting Blissful Blinds",
       "We have received your enquiry",
       `
-      <h1 style="margin:0 0 16px; font-size:20px; font-weight:700; color:${BRAND.text};">Thank You for Contacting Blissful Blinds Co</h1>
+      <h1 style="margin:0 0 16px; font-size:20px; font-weight:700; color:${BRAND.text};">Thank You for Contacting Blissful Blinds</h1>
       <p style="margin:0 0 16px; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">Hello ${escapeHtml(name)},</p>
       <p style="margin:0 0 16px; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">Thank you for requesting a home consultation. We have successfully received your details.</p>
       <p style="margin:0 0 24px; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">Our design advisor will contact you shortly to coordinate your consultation date slot.</p>
@@ -213,14 +213,14 @@ export async function POST(req: NextRequest) {
       transporter.sendMail({
         from: `"${EMAIL_FROM_NAME}" <${EMAIL_USER || "no-reply@example.com"}>`,
         to: EMAIL_ADMIN_TO || EMAIL_GMAIL,
-        subject: `🔔 New Lead: ${name} | Blissful Blinds Co`,
+        subject: `🔔 New Lead: ${name} | Blissful Blinds`,
         html: adminHtml,
         replyTo: email,
       }),
       transporter.sendMail({
         from: `"${EMAIL_FROM_NAME}" <${EMAIL_USER || "no-reply@example.com"}>`,
         to: email,
-        subject: `Enquiry Confirmation | Blissful Blinds Co`,
+        subject: `Enquiry Confirmation | Blissful Blinds`,
         html: customerHtml,
       }),
     ]);

@@ -41,7 +41,7 @@ services:
       - key: EMAIL_ADMIN_TO
         value: blissfulblindsco369@gmail.com
       - key: EMAIL_FROM_NAME
-        value: Blissful Blinds Co
+        value: Blissful Blinds
       - key: REVIEW_SUBMIT_RATE_LIMIT
         value: 5
       - key: REVIEW_SUBMIT_RATE_WINDOW_MINUTES

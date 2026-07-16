@@ -18,7 +18,7 @@ source: index.html (commercial section, structured data makesOffer), all product
 
 ## Commercial blinds & shutters
 
-Blissful Blinds Co 369 supplies commercial-grade, heavy-duty window solutions for
+Blissful Blinds supplies commercial-grade, heavy-duty window solutions for
 offices, boardrooms, and rental/landlord properties:
 
 - Over 50 premium fire-retardant (FR) fabrics in a specialised commercial collection

@@ -6,7 +6,7 @@ const { wrapEmailLayout, escapeHtml, BRAND, PHONE_DISPLAY, PHONE_TEL, EMAIL } = 
  * requested wording.
  */
 function customerConfirmationEmail({ name }) {
-  const subject = 'Thank You for Contacting Blissful Blinds Co';
+  const subject = 'Thank You for Contacting Blissful Blinds';
   const firstName = (name || '').trim().split(/\s+/)[0] || 'there';
 
   const bodyHtml = `
@@ -18,13 +18,13 @@ function customerConfirmationEmail({ name }) {
       </tr>
     </table>
 
-    <h1 style="margin:0 0 16px; font-size:20px; font-weight:700; color:${BRAND.text}; text-align:center;">Thank You for Contacting Blissful Blinds Co</h1>
+    <h1 style="margin:0 0 16px; font-size:20px; font-weight:700; color:${BRAND.text}; text-align:center;">Thank You for Contacting Blissful Blinds</h1>
 
     <p style="margin:0 0 16px; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">
       Hello ${escapeHtml(name || firstName)},
     </p>
     <p style="margin:0 0 16px; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">
-      Thank you for contacting Blissful Blinds Co. We have successfully received your enquiry.
+      Thank you for contacting Blissful Blinds. We have successfully received your enquiry.
     </p>
     <p style="margin:0 0 24px; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">
       Our team will contact you as soon as possible. If your enquiry is urgent, please call us.
@@ -53,7 +53,7 @@ function customerConfirmationEmail({ name }) {
 
     <p style="margin:24px 0 0; font-size:15px; line-height:1.7; color:${BRAND.textSecondary};">
       Thank you.<br>
-      <strong style="color:${BRAND.text};">Blissful Blinds Co</strong>
+      <strong style="color:${BRAND.text};">Blissful Blinds</strong>
     </p>
   `;
 
@@ -66,7 +66,7 @@ function customerConfirmationEmail({ name }) {
   const text = [
     `Hello ${name || firstName},`,
     '',
-    'Thank you for contacting Blissful Blinds Co.',
+    'Thank you for contacting Blissful Blinds.',
     '',
     'We have successfully received your enquiry.',
     '',
@@ -78,7 +78,7 @@ function customerConfirmationEmail({ name }) {
     `Email: ${EMAIL}`,
     '',
     'Thank you.',
-    'Blissful Blinds Co'
+    'Blissful Blinds'
   ].join('\n');
 
   return { subject, html, text };

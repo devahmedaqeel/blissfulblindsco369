@@ -1,5 +1,5 @@
 /*
- * Blissful Blinds Co 369 — AI Sales & Support Assistant.
+ * Blissful Blinds — AI Sales & Support Assistant.
  *
  * Self-contained widget: builds its own DOM inside #bb-chatbot-root, loads
  * its own CSS/knowledge base, and never touches any selector, id, or global
@@ -40,7 +40,7 @@
   // ---------------------------------------------------------------------
   root.innerHTML =
     '<div class="bb-chat-widget" id="bb-chat-widget">' +
-      '<button type="button" class="bb-chat-toggle" id="bb-chat-toggle" aria-haspopup="dialog" aria-expanded="false" aria-controls="bb-chat-panel" aria-label="Chat with Blissful Blinds Co 369">' +
+      '<button type="button" class="bb-chat-toggle" id="bb-chat-toggle" aria-haspopup="dialog" aria-expanded="false" aria-controls="bb-chat-panel" aria-label="Chat with Blissful Blinds">' +
         '<svg class="bb-icon-chat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>' +
         '<svg class="bb-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>' +
         '<span class="bb-chat-badge" id="bb-chat-badge">1</span>' +
@@ -529,7 +529,7 @@
     }
     if (RE.greeting.test(text) && text.length < 30) {
       return {
-        html: 'Hello! I\'m the Blissful Blinds Co 369 assistant. I can help you choose a blind, answer questions about our products and service areas, or get you booked in with the team. What would you like to know?',
+        html: 'Hello! I\'m the Blissful Blinds assistant. I can help you choose a blind, answer questions about our products and service areas, or get you booked in with the team. What would you like to know?',
         suggestions: DEFAULT_SUGGESTIONS
       };
     }
@@ -624,7 +624,7 @@
       return;
     }
     addMessage('bot',
-      'Hi, welcome to Blissful Blinds Co 369! &#128075; I can help you find the right blind, ' +
+      'Hi, welcome to Blissful Blinds! &#128075; I can help you find the right blind, ' +
       'check pricing &amp; service areas, or get you booked in for a no-cost home visit.<br><br>' +
       'What can I help you with today?'
     );

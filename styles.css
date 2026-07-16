@@ -1359,10 +1359,60 @@ button, input, select, textarea {
 .why-text {
   color: var(--text-secondary);
   font-size: 0.9375rem;
-  line-height: 1.5;
+  line-height: 1.7;
+}
+
+/* =============================================
+   Subpage Feature Cards — icon-only variant
+   (no .why-card-image / .why-card-body wrapper)
+   ============================================= */
+.why-card.glass-card {
+  overflow: visible;
+  padding: 0;
+  background: var(--white);
+}
+
+.why-card.glass-card .why-card-img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  display: block;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.why-card.glass-card:hover .why-card-img {
+  transform: scale(1.04);
+}
+
+.why-card.glass-card .why-card-inner {
+  padding: 28px 28px 32px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.why-card.glass-card .why-icon {
+  margin-bottom: 18px;
+  width: 52px;
+  height: 52px;
+  font-size: 1.3rem;
+}
+
+.why-card.glass-card .why-title {
+  font-size: 1.15rem;
+  margin-bottom: 10px;
+  color: var(--text-primary);
+}
+
+.why-card.glass-card .why-text {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
 }
 
 /* How It Works Section */
+
 .how-it-works {
   background-color: var(--white);
   position: relative;

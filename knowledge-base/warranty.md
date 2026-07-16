@@ -17,7 +17,7 @@ applies specifically to the plantation shutters product line.
 ## Price promise (not a warranty, but a related guarantee)
 
 If a customer finds the same blinds (same size, spec, and fitting service included) at
-a lower price elsewhere, Blissful Blinds Co 369 promises to match and try to beat it.
+a lower price elsewhere, Blissful Blinds promises to match and try to beat it.
 
 ## What is NOT confirmed
 
