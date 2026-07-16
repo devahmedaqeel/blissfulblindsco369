@@ -60,7 +60,7 @@ router.post('/', reviewSubmitLimiter, async (req, res) => {
   const customer = reviewConfirmationEmail({ name: result.data.name, rating: result.data.rating });
 
   Promise.all([
-    sendMail({ to: config.emailAdminTo, subject: admin.subject, html: admin.html, text: admin.text, replyTo: result.data.email }),
+    sendMail({ to: config.mailTo, subject: admin.subject, html: admin.html, text: admin.text, replyTo: result.data.email }),
     sendMail({ to: result.data.email, subject: customer.subject, html: customer.html, text: customer.text })
   ]).catch((err) => console.error('[reviews] Unexpected email error:', err.message));
 

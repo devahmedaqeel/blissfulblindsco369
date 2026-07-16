@@ -21,13 +21,35 @@ function collapseWhitespace(str) {
   return String(str).replace(/\s+/g, ' ').trim();
 }
 
+// Crude but effective spam signal: legitimate messages almost never
+// contain multiple links, while link-drop spam almost always does.
+const URL_RE = /https?:\/\/|www\./gi;
+function hasExcessiveLinks(str) {
+  const matches = String(str || '').match(URL_RE);
+  return !!matches && matches.length > 1;
+}
+
+// Minimum time between the form rendering and the submission landing here.
+// A human needs at least a couple of seconds to fill in name/email/phone;
+// scripted bots that fill every field programmatically and submit
+// instantly land well under this.
+const MIN_FILL_TIME_MS = 1500;
+
 function validateLeadSubmission(body) {
   const errors = {};
   body = body || {};
 
-  // Honeypot — a hidden field real users never fill in.
+  // Honeypot — a hidden field real users never see or fill in.
   if (body.website) {
     return { valid: false, errors: { _spam: true } };
+  }
+
+  const renderedAt = Number(body.renderedAt);
+  if (Number.isFinite(renderedAt) && renderedAt > 0) {
+    const elapsed = Date.now() - renderedAt;
+    if (elapsed >= 0 && elapsed < MIN_FILL_TIME_MS) {
+      return { valid: false, errors: { _spam: true } };
+    }
   }
 
   const sourceKey = String(body.source || '').trim();
@@ -59,6 +81,8 @@ function validateLeadSubmission(body) {
   const message = collapseWhitespace(stripTags(body.message || ''));
   if (message.length > 2000) {
     errors.message = 'Message must be under 2000 characters.';
+  } else if (hasExcessiveLinks(message)) {
+    return { valid: false, errors: { _spam: true } };
   }
 
   if (Object.keys(errors).length > 0) {

@@ -23,10 +23,13 @@ const config = {
   notifySubmitRateLimit: int('NOTIFY_SUBMIT_RATE_LIMIT', 5),
   notifySubmitRateWindowMinutes: int('NOTIFY_SUBMIT_RATE_WINDOW_MINUTES', 15),
 
-  emailUser: process.env.EMAIL_USER || '',
-  emailPass: process.env.EMAIL_PASS || '',
-  emailAdminTo: process.env.EMAIL_ADMIN_TO || process.env.EMAIL_USER || '',
-  emailFromName: process.env.EMAIL_FROM_NAME || 'Blissful Blinds'
+  smtpHost: process.env.SMTP_HOST || 'smtp.hostinger.com',
+  smtpPort: int('SMTP_PORT', 465),
+  smtpSecure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE !== 'false' : true,
+  smtpUser: process.env.SMTP_USER || '',
+  smtpPass: process.env.SMTP_PASS || '',
+  mailFrom: process.env.MAIL_FROM || (process.env.SMTP_USER ? `Blissful Blinds Ltd <${process.env.SMTP_USER}>` : 'Blissful Blinds Ltd <no-reply@blissfulblindsltd.co.uk>'),
+  mailTo: process.env.MAIL_TO || process.env.SMTP_USER || 'info@blissfulblindsltd.co.uk'
 };
 
 if (config.isProduction && (!config.jwtSecret || config.jwtSecret.length < 32)) {
@@ -41,12 +44,16 @@ if (config.isProduction && !config.turnstileSecretKey) {
   );
 }
 
-if (!config.emailPass) {
+if (config.isProduction && (!config.smtpUser || !config.smtpPass)) {
+  throw new Error('SMTP_USER and SMTP_PASS must be set (Hostinger SMTP credentials) in production. See .env.example.');
+}
+
+if (!config.smtpPass) {
   // eslint-disable-next-line no-console
   console.warn(
-    '\n⚠️  WARNING: EMAIL_PASS is not set (Gmail App Password). Emails will be sent ' +
-    'through a temporary Ethereal test inbox instead of real Gmail — fine for ' +
-    'development, but no real email will reach anyone. Set EMAIL_PASS before deploying.\n'
+    '\n⚠️  WARNING: SMTP_PASS is not set (Hostinger mailbox password). Emails will be sent ' +
+    'through a temporary Ethereal test inbox instead of real Hostinger SMTP — fine for ' +
+    'development, but no real email will reach anyone. Set SMTP_USER/SMTP_PASS before deploying.\n'
   );
 }
 

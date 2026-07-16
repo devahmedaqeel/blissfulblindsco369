@@ -80,7 +80,7 @@ router.post('/', notifySubmitLimiter, async (req, res) => {
   const customer = customerConfirmationEmail({ name });
 
   const [adminResult, customerResult] = await Promise.all([
-    sendMail({ to: config.emailAdminTo, subject: admin.subject, html: admin.html, text: admin.text, replyTo: email }),
+    sendMail({ to: config.mailTo, subject: admin.subject, html: admin.html, text: admin.text, replyTo: email }),
     sendMail({ to: email, subject: customer.subject, html: customer.html, text: customer.text })
   ]);
 

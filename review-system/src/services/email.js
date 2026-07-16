@@ -7,15 +7,20 @@ const config = require('../config');
 let transporterPromise = null;
 let usingEthereal = false;
 
+const SMTP_TIMEOUT_MS = 8000;
+
 function createRealTransport() {
   return nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    host: config.smtpHost,
+    port: config.smtpPort,
+    secure: config.smtpSecure, // true for port 465 (implicit TLS), false for 587 (STARTTLS)
     auth: {
-      user: config.emailUser,
-      pass: config.emailPass
-    }
+      user: config.smtpUser,
+      pass: config.smtpPass
+    },
+    connectionTimeout: SMTP_TIMEOUT_MS,
+    greetingTimeout: SMTP_TIMEOUT_MS,
+    socketTimeout: SMTP_TIMEOUT_MS
   });
 }
 
@@ -23,9 +28,9 @@ async function createEtherealTransport() {
   const testAccount = await nodemailer.createTestAccount();
   usingEthereal = true;
   console.warn(
-    '[email] Using Ethereal test SMTP (no EMAIL_PASS configured). ' +
+    '[email] SMTP_PASS is not set — using Ethereal test SMTP instead of Hostinger. ' +
     'Preview links for each sent message will be logged below instead of ' +
-    'real delivery.'
+    'real delivery. This must never happen in production.'
   );
   return nodemailer.createTransport({
     host: testAccount.smtp.host,
@@ -37,9 +42,31 @@ async function createEtherealTransport() {
 
 function getTransporter() {
   if (!transporterPromise) {
-    transporterPromise = config.emailPass ? Promise.resolve(createRealTransport()) : createEtherealTransport();
+    if (config.smtpUser && config.smtpPass) {
+      transporterPromise = Promise.resolve(createRealTransport());
+    } else if (config.isProduction) {
+      transporterPromise = Promise.reject(
+        new Error('SMTP_USER / SMTP_PASS are not configured.')
+      );
+    } else {
+      transporterPromise = createEtherealTransport();
+    }
   }
   return transporterPromise;
+}
+
+/** Verifies the SMTP connection/credentials without sending a message. */
+async function verifyConnection() {
+  const transporter = await getTransporter();
+  await transporter.verify();
+  return { ok: true, host: config.smtpHost, port: config.smtpPort, secure: config.smtpSecure, user: config.smtpUser, ethereal: usingEthereal };
+}
+
+// Defense in depth against header/email injection via user-supplied
+// name/email fields — nodemailer already rejects raw CR/LF in headers,
+// but stripping here means malformed input never reaches that check.
+function sanitizeHeaderValue(value) {
+  return String(value == null ? '' : value).replace(/[\r\n]+/g, ' ').trim();
 }
 
 /**
@@ -50,14 +77,17 @@ function getTransporter() {
  */
 async function sendMail({ to, subject, html, text, replyTo }) {
   try {
+    if (!config.mailFrom) {
+      throw new Error('MAIL_FROM is not configured.');
+    }
     const transporter = await getTransporter();
     const info = await transporter.sendMail({
-      from: `"${config.emailFromName}" <${config.emailUser || 'no-reply@example.com'}>`,
-      to,
-      subject,
+      from: config.mailFrom,
+      to: sanitizeHeaderValue(to),
+      subject: sanitizeHeaderValue(subject),
       html,
       text,
-      replyTo
+      replyTo: replyTo ? sanitizeHeaderValue(replyTo) : undefined
     });
 
     const result = { success: true, messageId: info.messageId };
@@ -73,4 +103,4 @@ async function sendMail({ to, subject, html, text, replyTo }) {
   }
 }
 
-module.exports = { sendMail, getTransporter };
+module.exports = { sendMail, getTransporter, verifyConnection };

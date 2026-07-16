@@ -3,7 +3,7 @@
 A standalone backend (API + database + admin panel) that powers two
 things on the main site: the review widget on the homepage
 (`#customer-reviews` section, `reviews-widget.js`/`reviews-widget.css`),
-and site-wide email notifications (Nodemailer over Gmail SMTP) for every
+and site-wide email notifications (Nodemailer over Hostinger SMTP) for every
 form on the site — booking, the AI chatbot's lead form, and review
 submissions.
 
@@ -72,7 +72,7 @@ The server prints the admin panel URL on startup (`/admin/`).
 | Variable | What it's for |
 |---|---|
 | `PORT` | Port the API listens on (default `4000`). |
-| `CORS_ORIGINS` | Comma-separated list of origins allowed to call `/api/reviews` from a browser. Must include your real site domain, e.g. `https://blissfulblindsco369.com`. |
+| `CORS_ORIGINS` | Comma-separated list of origins allowed to call `/api/reviews` from a browser. Must include your real site domain, e.g. `https://blissfulblindsltd.co.uk`. |
 | `JWT_SECRET` | Long random string signing admin sessions. Generate one with `node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"`. The server refuses to start in production without this set to something long. |
 | `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile secret key — see below. Leave blank locally; the server will warn loudly and skip bot verification rather than block you during development. |
 
@@ -85,7 +85,7 @@ In `index.html`, right before `reviews-widget.js` loads:
 ```
 
 **Change this to wherever you deploy this backend** (e.g.
-`https://reviews-api.blissfulblindsco369.com/api`). Also add that same
+`https://reviews-api.blissfulblindsltd.co.uk/api`). Also add that same
 static site domain to `CORS_ORIGINS` in the backend's `.env`, or the
 browser will block the requests.
 
@@ -119,10 +119,10 @@ get a gold ribbon).
 
 Every form submission on the site — the booking form (all 9 pages), the
 AI chatbot's lead-capture form, and review submissions — triggers two
-emails via Nodemailer over Gmail SMTP:
+emails via Nodemailer over Hostinger SMTP:
 
-1. **Admin notification** → `EMAIL_ADMIN_TO` (defaults to
-   `blissfulblindsco369@gmail.com`). Branded HTML email with a data table
+1. **Admin notification** → `MAIL_TO` (defaults to
+   `info@blissfulblindsltd.co.uk`). Branded HTML email with a data table
    of everything submitted, plus "Call Customer" / "Reply by Email"
    buttons, and `Reply-To` set to the customer's address so replying in
    your inbox goes straight to them.
@@ -132,26 +132,32 @@ emails via Nodemailer over Gmail SMTP:
    "awaiting approval" version instead, since that's factually what
    happens to a review.
 
-### Setting up real Gmail delivery
+### Setting up real Hostinger delivery
 
-1. Turn on 2-Step Verification: https://myaccount.google.com/security
-2. Generate an App Password (NOT your normal Gmail password): https://myaccount.google.com/apppasswords
-3. Set in `.env`:
+1. Create/confirm the mailbox in hPanel: hpanel.hostinger.com -> Emails -> `info@blissfulblindsltd.co.uk`.
+2. Set in `.env`:
    ```
-   EMAIL_USER=blissfulblindsco369@gmail.com
-   EMAIL_PASS=<the 16-character app password>
+   SMTP_HOST=smtp.hostinger.com
+   SMTP_PORT=465
+   SMTP_SECURE=true
+   SMTP_USER=info@blissfulblindsltd.co.uk
+   SMTP_PASS=<the real mailbox password>
+   MAIL_FROM=Blissful Blinds Ltd <info@blissfulblindsltd.co.uk>
+   MAIL_TO=info@blissfulblindsltd.co.uk
    ```
 
-Until `EMAIL_PASS` is set, the server automatically falls back to
+Until `SMTP_PASS` is set, the server automatically falls back to
 Nodemailer's Ethereal test SMTP service (a real, free, temporary inbox
 built for exactly this) and logs a preview URL for every email it sends
 — the whole pipeline works and is fully testable before you have real
-Gmail credentials, it just doesn't reach a real inbox yet.
+Hostinger credentials, it just doesn't reach a real inbox yet. In
+production (`NODE_ENV=production`), the server refuses to start at all
+without `SMTP_USER`/`SMTP_PASS` set, rather than silently falling back.
 
 ### What's saved regardless of email outcome
 
 Every booking/chatbot-lead submission is saved to the `leads` table
-*before* any email is attempted, so a Gmail/SMTP hiccup never means a
+*before* any email is attempted, so an SMTP hiccup never means a
 submission is lost — `admin_email_sent`/`customer_email_sent` columns
 record whether each one actually went out, for troubleshooting.
 
@@ -202,9 +208,9 @@ any static host) separately. This is just the API + admin panel.
    directory to `review-system` if it asks.
 3. Render will prompt for the secrets marked `sync: false` in the
    blueprint — fill in:
-   - `CORS_ORIGINS` — your real Vercel domain(s), e.g.
-     `https://blissfulblindsco369.vercel.app,https://blissfulblindsco369.com`
-   - `EMAIL_PASS` — your Gmail App Password (see "Email notifications" above)
+   - `CORS_ORIGINS` — your real domain(s), e.g.
+     `https://blissfulblindsltd.co.uk`
+   - `SMTP_PASS` — your Hostinger mailbox password (see "Email notifications" above)
    - `TURNSTILE_SECRET_KEY` — once you've set up Turnstile
 4. `JWT_SECRET` is auto-generated by Render (`generateValue: true`) — you
    don't need to set it.
@@ -218,7 +224,7 @@ any static host) separately. This is just the API + admin panel.
    node src/db/createAdmin.js <username> <a-strong-password>
    ```
 7. Update `window.BB_REVIEWS_API_BASE` on all 9 site pages to your
-   Render service's URL (e.g. `https://blissfulblindsco369-api.onrender.com/api`),
+   Render service's URL (e.g. `https://blissfulblinds-reviews-api.onrender.com/api`),
    then redeploy the static site.
 
 ## Security measures implemented

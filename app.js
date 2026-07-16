@@ -354,6 +354,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const successMessage = document.getElementById('formSuccess');
   
   if (bookingForm && successMessage) {
+    // Timestamp the form's render time into a hidden field so the server
+    // can reject submissions that arrive implausibly fast (a bot filling
+    // every field and submitting instantly), without adding any friction
+    // for real visitors.
+    const renderedAtField = document.getElementById('formRenderedAt');
+    if (renderedAtField) renderedAtField.value = String(Date.now());
+
     bookingForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
@@ -368,6 +375,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const callTime = document.getElementById('callTime') ? document.getElementById('callTime').value.trim() : '';
       const hearAboutUs = document.getElementById('hearAboutUs') ? document.getElementById('hearAboutUs').value.trim() : '';
       const message = document.getElementById('message') ? document.getElementById('message').value.trim() : '';
+      const website = document.getElementById('website') ? document.getElementById('website').value.trim() : '';
+      const renderedAt = renderedAtField ? renderedAtField.value : '';
 
       if (!name || !email || !phone || !postcode || !address || !blindsType || !callTime || !hearAboutUs) {
         alert('Please fill out all required fields.');
@@ -382,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       // Send an email notification
-      sendBookingEmailNotification({ name, email, phone, postcode, address, blindsType, preferredColor, callTime, hearAboutUs, message }, successMessage);
+      sendBookingEmailNotification({ name, email, phone, postcode, address, blindsType, preferredColor, callTime, hearAboutUs, message, website, renderedAt }, successMessage);
 
       // Successful state
       bookingForm.style.display = 'none';
@@ -413,7 +422,9 @@ document.addEventListener('DOMContentLoaded', () => {
         preferredColor: data.preferredColor,
         appointmentTime: data.callTime,
         hearAboutUs: data.hearAboutUs,
-        message: data.message
+        message: data.message,
+        website: data.website,
+        renderedAt: data.renderedAt
       })
     }).then(function (res) {
       if (!res.ok) throw new Error('notify request failed');

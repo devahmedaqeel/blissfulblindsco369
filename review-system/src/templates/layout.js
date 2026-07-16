@@ -20,10 +20,10 @@ const BRAND = {
   white: '#ffffff'
 };
 
-const SITE_URL = 'https://blissfulblindsco369.com';
+const SITE_URL = 'https://blissfulblindsltd.co.uk';
 const PHONE_DISPLAY = '01733 853037';
 const PHONE_TEL = '+441733853037';
-const EMAIL = 'blissfulblindsco369@gmail.com';
+const EMAIL = process.env.MAIL_TO || 'info@blissfulblindsltd.co.uk';
 const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=+447341645339';
 const FACEBOOK_URL = 'https://www.facebook.com/blindsworldltd/';
 
@@ -116,7 +116,7 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
                 </tr>
                 <tr>
                   <td style="color:rgba(255,255,255,0.4); font-size:10px; padding-top:16px;">
-                    This is an automated message from blissfulblindsco369.com. Please do not reply directly to this address unless invited to.
+                    This is an automated message from blissfulblindsltd.co.uk. Please do not reply directly to this address unless invited to.
                   </td>
                 </tr>
               </table>

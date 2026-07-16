@@ -34,14 +34,20 @@ services:
         value: 8h
       - key: TURNSTILE_SECRET_KEY
         sync: false
-      - key: EMAIL_USER
-        value: blissfulblindsco369@gmail.com
-      - key: EMAIL_PASS
+      - key: SMTP_HOST
+        value: smtp.hostinger.com
+      - key: SMTP_PORT
+        value: 465
+      - key: SMTP_SECURE
+        value: true
+      - key: SMTP_USER
+        value: info@blissfulblindsltd.co.uk
+      - key: SMTP_PASS
         sync: false
-      - key: EMAIL_ADMIN_TO
-        value: blissfulblindsco369@gmail.com
-      - key: EMAIL_FROM_NAME
-        value: Blissful Blinds
+      - key: MAIL_FROM
+        value: "Blissful Blinds Ltd <info@blissfulblindsltd.co.uk>"
+      - key: MAIL_TO
+        value: info@blissfulblindsltd.co.uk
       - key: REVIEW_SUBMIT_RATE_LIMIT
         value: 5
       - key: REVIEW_SUBMIT_RATE_WINDOW_MINUTES

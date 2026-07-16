@@ -24,10 +24,11 @@ const BRAND = {
   white: '#ffffff'
 };
 
-const SITE_URL = 'https://blissfulblindsco369.vercel.app';
+const SITE_URL = 'https://blissfulblindsltd.co.uk';
+const SITE_DISPLAY = 'blissfulblindsltd.co.uk';
 const PHONE_DISPLAY = '01733 853037';
 const PHONE_TEL = '+441733853037';
-const EMAIL = 'blissfulblindsco369@gmail.com';
+const EMAIL = process.env.MAIL_TO || 'info@blissfulblindsltd.co.uk';
 const BUSINESS_ADDRESS = '75 Ringwood Bretton, Peterborough, PE3 9SR, United Kingdom';
 const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=+447341645339';
 
@@ -76,7 +77,7 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
               <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                 <tr>
                   <td style="vertical-align:middle; padding-right:12px;">
-                    <img src="https://blissfulblindsco369.vercel.app/images/logo-dark.png" alt="Blissful Blinds Logo" style="height:44px; width:auto; border:0; display:block;">
+                    <img src="${SITE_URL}/images/logo-dark.png" alt="Blissful Blinds Logo" style="height:44px; width:auto; border:0; display:block;">
                   </td>
                   <td style="vertical-align:middle; text-align:left;">
                     <div style="font-family:Arial,Helvetica,sans-serif; font-size:18px; font-weight:800; letter-spacing:0.02em; color:${BRAND.text}; line-height:1.2;">
@@ -109,7 +110,7 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                       <tr>
                         <td style="vertical-align:middle; padding-right:8px;">
-                          <img src="https://blissfulblindsco369.vercel.app/images/logo-dark.png" alt="Blissful Blinds" style="height:28px; width:auto; border:0; display:block;">
+                          <img src="${SITE_URL}/images/logo-dark.png" alt="Blissful Blinds" style="height:28px; width:auto; border:0; display:block;">
                         </td>
                         <td style="vertical-align:middle;">
                           <strong style="color:${BRAND.text}; font-size:15px; font-weight:800; letter-spacing:0.02em;">Blissful Blinds</strong>
@@ -125,7 +126,7 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
                     &nbsp;&middot;&nbsp;
                     &#9993; <a href="mailto:${EMAIL}" style="color:${BRAND.accent}; text-decoration:none; font-weight:600;">${EMAIL}</a>
                     &nbsp;&middot;&nbsp;
-                    <a href="${SITE_URL}" style="color:${BRAND.accent}; text-decoration:none; font-weight:600;">blissfulblindsco369.com</a>
+                    <a href="${SITE_URL}" style="color:${BRAND.accent}; text-decoration:none; font-weight:600;">${SITE_DISPLAY}</a>
                   </td>
                 </tr>
                 <tr>

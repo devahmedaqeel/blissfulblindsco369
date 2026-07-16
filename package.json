@@ -2,6 +2,11 @@
   "name": "blissful-blinds-static",
   "version": "1.0.0",
   "private": true,
+  "scripts": {
+    "verify-smtp": "node scripts/verify-smtp.js",
+    "test:email": "node scripts/test-email-flows.js",
+    "check": "node scripts/check-syntax.js"
+  },
   "dependencies": {
     "nodemailer": "^6.9.7"
   }

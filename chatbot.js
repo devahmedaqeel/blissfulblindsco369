@@ -437,9 +437,17 @@
           '<option value="">Select&hellip;</option><option>Morning</option><option>Afternoon</option><option>Evening</option>' +
         '</select></div>' +
         '<div><label for="' + id + '-message">Message</label><textarea id="' + id + '-message" rows="2"></textarea></div>' +
+        // Honeypot — hidden from real visitors via inline styles + off-screen
+        // position; a real user never sees or fills this field, so any
+        // request that arrives with it populated is a bot.
+        '<div style="position:absolute;left:-9999px;top:-9999px;height:0;width:0;overflow:hidden;" aria-hidden="true">' +
+          '<label for="' + id + '-website">Leave this field empty</label>' +
+          '<input type="text" id="' + id + '-website" tabindex="-1" autocomplete="off">' +
+        '</div>' +
         '<button type="submit" class="bb-lead-submit">Send Request</button>' +
       '</form>';
 
+    var renderedAt = Date.now();
     var wrap = addMessage('bot', formHtml, { skipSave: true });
     var formNode = document.getElementById(id);
     formNode.addEventListener('submit', function (e) {
@@ -451,6 +459,7 @@
       var date = document.getElementById(id + '-date').value;
       var time = document.getElementById(id + '-time').value;
       var message = document.getElementById(id + '-message').value.trim();
+      var website = document.getElementById(id + '-website').value.trim();
       if (!name || !phone || !email || !postcode) {
         formNode.querySelectorAll('input[required]').forEach(function (inp) {
           if (!inp.value.trim()) inp.style.borderColor = '#ef4444';
@@ -462,7 +471,7 @@
       submitBtn.disabled = true;
       submitBtn.textContent = 'Sending…';
 
-      sendChatLeadNotification({ name: name, phone: phone, email: email, postcode: postcode, date: date, time: time, message: message })
+      sendChatLeadNotification({ name: name, phone: phone, email: email, postcode: postcode, date: date, time: time, message: message, website: website, renderedAt: renderedAt })
         .then(function (ok) {
           var resultHtml = ok
             ? '<div class="bb-lead-success">&#9989; Thanks, ' + escapeHtml(name) + '! Your request has been sent — our team will contact you shortly on ' + escapeHtml(phone) + '.</div>'
@@ -493,7 +502,9 @@
         postcode: data.postcode,
         appointmentDate: data.date,
         appointmentTime: data.time,
-        message: data.message
+        message: data.message,
+        website: data.website,
+        renderedAt: data.renderedAt
       })
     }).then(function (res) { return res.ok; }).catch(function () { return false; });
   }
