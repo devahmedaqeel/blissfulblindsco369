@@ -58,7 +58,7 @@ dev-tools/                 NOT part of the live site — nothing here is
 ## Business info baked into the code
 
 - Domain: `blissfulblindsco369.com`
-- Phone: `07341 645339` / Email: `blissfulblindsco369@gmail.com`
+- Phone: `01733 853037` / Email: `blissfulblindsco369@gmail.com`
 - Address: 75 Ringwood Bretton, Peterborough, PE3 9SR
 - Hours: Mon–Sat 09:00–18:00, Sun closed
 - Primary service areas: Peterborough, Leicester, Luton (Luton's coverage

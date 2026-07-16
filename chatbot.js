@@ -21,8 +21,8 @@
   var scriptEl = document.currentScript;
 
   function boot() {
-  var PHONE_DISPLAY = '07341 645339';
-  var PHONE_TEL = '+447341645339';
+  var PHONE_DISPLAY = '01733 853037';
+  var PHONE_TEL = '+441733853037';
   var WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=+447341645339';
   var HISTORY_KEY = 'bb_chat_history_v1';
   var OPENED_BEFORE_KEY = 'bb_chat_opened_before';

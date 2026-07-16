@@ -80,18 +80,18 @@ function walkDir(currentDir) {
         let hasChanges = false;
         
         // 1. Replace display phone numbers
-        if (content.includes('07341 645339')) {
-          content = content.replace(/07341 645339/g, '01733 853037');
+        if (content.includes('01733 853037')) {
+          content = content.replace(/01733 853037/g, '01733 853037');
           hasChanges = true;
         }
         
         // 2. Replace tel: protocol links
-        if (content.includes('tel:+447341645339')) {
+        if (content.includes('tel:+441733853037')) {
           content = content.replace(/tel:\+447341645339/g, 'tel:+441733853037');
           hasChanges = true;
         }
-        if (content.includes('tel:07341645339')) {
-          content = content.replace(/tel:07341645339/g, 'tel:01733853037');
+        if (content.includes('tel:01733853037')) {
+          content = content.replace(/tel:01733853037/g, 'tel:01733853037');
           hasChanges = true;
         }
 

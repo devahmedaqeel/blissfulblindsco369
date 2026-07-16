@@ -42,7 +42,7 @@ charge. There are no hidden fees added to your product pricing.
 
 **Do you offer evening or weekend appointments?**
 Yes, we offer consultations after 6 PM and on weekends upon customer request (available
-in selected locations). Please fill out the booking form or call us on 07341 645339 to
+in selected locations). Please fill out the booking form or call us on 01733 853037 to
 coordinate a slot.
 
 ## Window Blinds

@@ -16,8 +16,8 @@ const BRAND = {
   white: "#ffffff",
 };
 
-const PHONE_DISPLAY = "07341 645339";
-const PHONE_TEL = "+447341645339";
+const PHONE_DISPLAY = "01733 853037";
+const PHONE_TEL = '+441733853037';
 const EMAIL_GMAIL = "blissfulblindsco369@gmail.com";
 const BUSINESS_ADDRESS = "75 Ringwood Bretton, Peterborough, PE3 9SR, United Kingdom";
 const WHATSAPP_URL = "https://wa.me/447341645339";

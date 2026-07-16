@@ -21,8 +21,8 @@ const BRAND = {
 };
 
 const SITE_URL = 'https://blissfulblindsco369.com';
-const PHONE_DISPLAY = '07341 645339';
-const PHONE_TEL = '+447341645339';
+const PHONE_DISPLAY = '01733 853037';
+const PHONE_TEL = '+441733853037';
 const EMAIL = 'blissfulblindsco369@gmail.com';
 const WHATSAPP_URL = 'https://api.whatsapp.com/send?phone=+447341645339';
 const FACEBOOK_URL = 'https://www.facebook.com/blindsworldltd/';
