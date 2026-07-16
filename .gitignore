@@ -38,3 +38,6 @@ next.config.ts.bak
 
 # Scratch/temp files
 scratch/
+
+.vercel
+.env*.local

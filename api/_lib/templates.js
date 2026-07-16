@@ -71,20 +71,26 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
 
         <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px; max-width:100%; background-color:${BRAND.white}; border-radius:16px; overflow:hidden; box-shadow:0 4px 24px rgba(15,23,42,0.06); border:1px solid ${BRAND.border};">
 
-          <!-- Header: White background, brand logo + subtitle, red accent line -->
+          <!-- Header: White background, brand logo + subtitle, gradient accent line -->
           <tr>
-            <td style="background-color:${BRAND.white}; padding:28px 32px 24px;" align="center">
+            <td style="background-color:${BRAND.white}; padding:32px 32px 26px;" align="center">
               <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                 <tr>
-                  <td style="vertical-align:middle; padding-right:12px;">
-                    <img src="${SITE_URL}/images/logo-dark.png" alt="Blissful Blinds Logo" style="height:44px; width:auto; border:0; display:block;">
+                  <td style="vertical-align:middle; padding-right:14px;">
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="background-color:${BRAND.bg}; border-radius:14px;">
+                      <tr>
+                        <td style="padding:8px;">
+                          <img src="${SITE_URL}/images/logo-dark.png" alt="Blissful Blinds Logo" width="56" height="44" style="height:44px; width:56px; border:0; display:block;">
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                   <td style="vertical-align:middle; text-align:left;">
-                    <div style="font-family:Arial,Helvetica,sans-serif; font-size:18px; font-weight:800; letter-spacing:0.02em; color:${BRAND.text}; line-height:1.2;">
+                    <div style="font-family:Arial,Helvetica,sans-serif; font-size:21px; font-weight:800; letter-spacing:0.01em; color:${BRAND.text}; line-height:1.2;">
                       Blissful Blinds
                     </div>
-                    <div style="font-family:Arial,Helvetica,sans-serif; font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:${BRAND.accent}; margin-top:2px;">
-                      Style. Privacy. Comfort.
+                    <div style="font-family:Arial,Helvetica,sans-serif; font-size:10.5px; font-weight:700; letter-spacing:0.14em; text-transform:uppercase; color:${BRAND.accent}; margin-top:3px;">
+                      Style &middot; Privacy &middot; Comfort
                     </div>
                   </td>
                 </tr>
@@ -92,7 +98,7 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
             </td>
           </tr>
           <tr>
-            <td style="background-color:${BRAND.accent}; height:3px; line-height:3px; font-size:0;">&nbsp;</td>
+            <td style="background-color:${BRAND.accent}; background:linear-gradient(90deg, ${BRAND.accent}, ${BRAND.gold}); height:4px; line-height:4px; font-size:0;">&nbsp;</td>
           </tr>
 
           <tr>
@@ -109,11 +115,11 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
                   <td style="vertical-align:middle; padding-bottom:10px;">
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
                       <tr>
-                        <td style="vertical-align:middle; padding-right:8px;">
-                          <img src="${SITE_URL}/images/logo-dark.png" alt="Blissful Blinds" style="height:28px; width:auto; border:0; display:block;">
+                        <td style="vertical-align:middle; padding-right:10px;">
+                          <img src="${SITE_URL}/images/logo-dark.png" alt="Blissful Blinds" width="34" height="27" style="height:27px; width:34px; border:0; display:block;">
                         </td>
                         <td style="vertical-align:middle;">
-                          <strong style="color:${BRAND.text}; font-size:15px; font-weight:800; letter-spacing:0.02em;">Blissful Blinds</strong>
+                          <strong style="color:${BRAND.text}; font-size:15px; font-weight:800; letter-spacing:0.02em;">Blissful Blinds Ltd</strong>
                         </td>
                       </tr>
                     </table>
@@ -153,19 +159,31 @@ function wrapEmailLayout({ title, previewText, bodyHtml }) {
 </html>`;
 }
 
-/** One label/value row in the customer-details table */
-function detailRow(label, value, index) {
+/** One icon/label/value row in a grouped details card. */
+function detailRow(icon, label, value, index) {
   if (!value) return '';
   const bg = index % 2 === 0 ? BRAND.white : BRAND.rowAlt;
   return `
     <tr>
-      <td style="background-color:${bg}; padding:13px 18px; font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:700; color:${BRAND.textMuted}; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap; vertical-align:top; width:170px; border-bottom:1px solid ${BRAND.border};">
-        ${escapeHtml(label)}
+      <td style="background-color:${bg}; padding:12px 16px; font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:700; color:${BRAND.textMuted}; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap; vertical-align:top; width:150px; border-bottom:1px solid ${BRAND.border};">
+        <span style="margin-right:6px;">${icon}</span>${escapeHtml(label)}
       </td>
-      <td style="background-color:${bg}; padding:13px 18px; font-family:Arial,Helvetica,sans-serif; font-size:14px; font-weight:600; color:${BRAND.text}; border-bottom:1px solid ${BRAND.border};">
+      <td style="background-color:${bg}; padding:12px 16px; font-family:Arial,Helvetica,sans-serif; font-size:14px; font-weight:600; color:${BRAND.text}; border-bottom:1px solid ${BRAND.border};">
         ${escapeHtml(value)}
       </td>
     </tr>`;
+}
+
+/** Small-caps section label (e.g. "Contact Details") above a grouped card. */
+function sectionLabel(icon, text) {
+  return `
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 8px;">
+      <tr>
+        <td style="font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:800; letter-spacing:0.08em; text-transform:uppercase; color:${BRAND.accent};">
+          <span style="margin-right:6px;">${icon}</span>${escapeHtml(text)}
+        </td>
+      </tr>
+    </table>`;
 }
 
 /** One large pill action button, in the site's gradient CTA style. */
@@ -194,20 +212,21 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
   const fullAddress = [address, postcode].filter(Boolean).join(', ');
   const mapsUrl = fullAddress ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}` : null;
 
-  let i = 0;
-  const rows = [
-    detailRow('Customer Name', name, i++),
-    detailRow('Phone Number', phone, i++),
-    detailRow('Email Address', email, i++),
-    detailRow('Home Address', address, i++),
-    detailRow('Postcode', postcode, i++),
-    detailRow('Type of Blinds', service, i++),
-    detailRow('Preferred Color', preferredColor, i++),
-    detailRow('Best Time To Call', appointment, i++),
-    detailRow('How Did You Hear About Us', hearAboutUs, i++),
-    detailRow('Customer Message', message, i++),
-    detailRow('Submitted Date & Time', submittedAt, i++),
-    detailRow('Source Form', sourceLabel, i++)
+  let ci = 0;
+  const contactRows = [
+    detailRow('&#128100;', 'Customer Name', name, ci++),
+    detailRow('&#128222;', 'Phone Number', phone, ci++),
+    detailRow('&#9993;', 'Email Address', email, ci++)
+  ].join('');
+
+  let ji = 0;
+  const jobRows = [
+    detailRow('&#127968;', 'Home Address', address, ji++),
+    detailRow('&#128205;', 'Postcode', postcode, ji++),
+    detailRow('&#129754;', 'Type of Blinds', service, ji++),
+    detailRow('&#127912;', 'Preferred Color', preferredColor, ji++),
+    detailRow('&#9200;', 'Best Time To Call', appointment, ji++),
+    detailRow('&#128269;', 'How Did You Hear About Us', hearAboutUs, ji++)
   ].join('');
 
   const buttons = [
@@ -216,8 +235,18 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
     mapsUrl ? actionButton(mapsUrl, '&#128205; View Address on Maps', 'outline') : ''
   ].join('');
 
+  const messageBlock = message ? `
+    ${sectionLabel('&#128172;', 'Customer Message')}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${BRAND.accentLight}; border-left:4px solid ${BRAND.accent}; border-radius:0 10px 10px 0; margin-bottom:24px;">
+      <tr>
+        <td style="padding:16px 18px; font-family:Arial,Helvetica,sans-serif; font-size:14.5px; line-height:1.6; color:${BRAND.text}; font-style:italic;">
+          &ldquo;${escapeHtml(message)}&rdquo;
+        </td>
+      </tr>
+    </table>` : '';
+
   const bodyHtml = `
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:18px;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:16px;">
       <tr>
         <td align="center">
           <span style="display:inline-block; padding:6px 16px; border-radius:999px; background-color:${BRAND.accentLight}; color:#991b1b; font-family:Arial,Helvetica,sans-serif; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.08em;">
@@ -227,13 +256,21 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
       </tr>
     </table>
 
-    <h1 style="margin:0 0 8px; font-family:Arial,Helvetica,sans-serif; font-size:21px; font-weight:800; color:${BRAND.text}; text-align:center;">${escapeHtml(heading)}</h1>
-    <p style="margin:0 0 26px; font-family:Arial,Helvetica,sans-serif; font-size:14px; color:${BRAND.textSecondary}; text-align:center;">A customer just submitted this on the website. Full details are below.</p>
+    <h1 style="margin:0 0 6px; font-family:Arial,Helvetica,sans-serif; font-size:21px; font-weight:800; color:${BRAND.text}; text-align:center;">${escapeHtml(heading)}</h1>
+    <p style="margin:0 0 4px; font-family:Arial,Helvetica,sans-serif; font-size:24px; font-weight:800; color:${BRAND.accent}; text-align:center;">${escapeHtml(name || 'A customer')}</p>
+    <p style="margin:0 0 28px; font-family:Arial,Helvetica,sans-serif; font-size:13px; color:${BRAND.textMuted}; text-align:center;">Submitted ${escapeHtml(submittedAt)} &middot; ${escapeHtml(sourceLabel)}</p>
 
-    <!-- Rounded, bordered card wrapping the details table -->
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid ${BRAND.border}; border-radius:14px; overflow:hidden; margin-bottom:26px;">
-      ${rows}
+    ${sectionLabel('&#128100;', 'Contact Details')}
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid ${BRAND.border}; border-radius:14px; overflow:hidden; margin-bottom:22px;">
+      ${contactRows}
     </table>
+
+    ${jobRows ? sectionLabel('&#128203;', 'Enquiry Details') : ''}
+    ${jobRows ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border:1px solid ${BRAND.border}; border-radius:14px; overflow:hidden; margin-bottom:22px;">
+      ${jobRows}
+    </table>` : ''}
+
+    ${messageBlock}
 
     <table role="presentation" cellpadding="0" cellspacing="0" border="0">
       <tr>
