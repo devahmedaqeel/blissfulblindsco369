@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /knowledge-base/
+Disallow: /old-static-html/
+Disallow: /api/
 
-Sitemap: https://blissfulblindsco369.com/sitemap.xml
-
-
+Sitemap: https://blissfulblindsltd.co.uk/sitemap.xml

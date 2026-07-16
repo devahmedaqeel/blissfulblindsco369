@@ -17,3 +17,12 @@ postcss.config.mjs
 next-env.d.ts
 *.bak
 
+# Internal sales/pricing/business docs — not meant to be publicly
+# fetchable (was previously deployed live at /knowledge-base/*.md).
+knowledge-base/
+
+# Stale full duplicate of the live site kept only as a local reference —
+# was previously deployed live at /old-static-html/, creating duplicate
+# content and canonical confusion with the real pages.
+old-static-html/
+
