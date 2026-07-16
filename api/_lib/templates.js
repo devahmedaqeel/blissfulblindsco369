@@ -202,14 +202,8 @@ function actionButton(href, label, variant) {
     </td>`;
 }
 
-/** Compact, muted technical-context line — shown small since it's diagnostic info, not customer-facing content. */
-function techRow(label, value) {
-  if (!value) return '';
-  return `<tr><td style="padding:3px 0; font-family:ui-monospace,Consolas,monospace; font-size:11px; color:${BRAND.textMuted};"><strong style="color:${BRAND.textMuted};">${escapeHtml(label)}:</strong> ${escapeHtml(value)}</td></tr>`;
-}
-
 /** Internal admin notification email for a form submission (booking or chatbot lead). */
-function adminNotificationEmail({ source, sourceLabel, name, phone, email, address, postcode, service, preferredColor, appointment, hearAboutUs, message, submittedAt, ip, userAgent, pageUrl, referrer }) {
+function adminNotificationEmail({ source, sourceLabel, name, phone, email, address, postcode, service, preferredColor, appointment, hearAboutUs, message, submittedAt }) {
   const isBooking = source === 'booking';
   const badgeText = `${sourceLabel} Received`.toUpperCase();
   const heading = isBooking ? 'New Customer Booking Enquiry' : `New Customer ${sourceLabel}`;
@@ -253,17 +247,6 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
       </tr>
     </table>` : '';
 
-  const techLines = [
-    techRow('IP Address', ip),
-    techRow('User Agent', userAgent),
-    techRow('Page URL', pageUrl),
-    techRow('Referrer', referrer)
-  ].join('');
-  const techBlock = techLines ? `
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:20px 0 0; border-top:1px dashed ${BRAND.border}; padding-top:14px;">
-      ${techLines}
-    </table>` : '';
-
   const bodyHtml = `
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:16px;">
       <tr>
@@ -296,7 +279,6 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
         ${buttons}
       </tr>
     </table>
-    ${techBlock}
   `;
 
   const html = wrapEmailLayout({
@@ -318,11 +300,7 @@ function adminNotificationEmail({ source, sourceLabel, name, phone, email, addre
     hearAboutUs ? `How Did You Hear About Us: ${hearAboutUs}` : null,
     message ? `Customer Message: ${message}` : null,
     submittedAt ? `Submitted Date & Time: ${submittedAt}` : null,
-    `Source Form: ${sourceLabel}`,
-    ip ? `IP Address: ${ip}` : null,
-    userAgent ? `User Agent: ${userAgent}` : null,
-    pageUrl ? `Page URL: ${pageUrl}` : null,
-    referrer ? `Referrer: ${referrer}` : null
+    `Source Form: ${sourceLabel}`
   ].filter(Boolean).join('\n');
 
   return { subject, html, text };

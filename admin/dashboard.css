@@ -198,7 +198,6 @@ input, select { font-family: inherit; }
 .detail-actions a.call { background: var(--accent); color: #fff; }
 .detail-actions a.email { background: var(--gold); color: #fff; }
 .detail-actions a.map { background: var(--white); border: 2px solid var(--accent); color: var(--accent); }
-.detail-tech { margin-top: 20px; padding-top: 14px; border-top: 1px dashed var(--border); font-family: ui-monospace, Consolas, monospace; font-size: 11px; color: var(--text-muted); line-height: 1.8; word-break: break-all; }
 
 /* ============== TOASTS ============== */
 .toast-container {

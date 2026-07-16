@@ -408,14 +408,6 @@
     }
     content.appendChild(actions);
 
-    const tech = el('div', { class: 'detail-tech' });
-    [
-      ['IP', row.ip], ['User Agent', row.user_agent], ['Page URL', row.page_url], ['Referrer', row.referrer]
-    ].forEach(([label, value]) => {
-      if (value) tech.appendChild(el('div', { text: label + ': ' + value }));
-    });
-    content.appendChild(tech);
-
     els.detailOverlay.hidden = false;
   }
 

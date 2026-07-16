@@ -80,7 +80,7 @@ module.exports = async (req, res) => {
 
     const admin = adminNotificationEmail({
       source, sourceLabel, name, phone, email, address, postcode, service, preferredColor, appointment, hearAboutUs, message,
-      submittedAt: submittedAtDisplay, ip, userAgent, pageUrl, referrer
+      submittedAt: submittedAtDisplay
     });
     const customer = customerConfirmationEmail({ name });
 
