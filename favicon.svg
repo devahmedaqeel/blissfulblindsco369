@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-6 -6 78 92" role="img" aria-label="Blissful Blinds">
+  <defs>
+    <path id="bb-glyph" d="M0,0 L26,0 A20,20 0 0 1 32,38 A22,22 0 0 1 26,80 L0,80 Z
+      M18,12 L24,12 A9,9 0 0 1 24,30 L18,30 Z
+      M18,48 L26,48 A11,11 0 0 1 26,70 L18,70 Z" fill-rule="evenodd"/>
+  </defs>
+  <use href="#bb-glyph" x="26" y="14" fill="#C6183A" stroke="#FFFFFF" stroke-width="3" stroke-opacity="0.9" paint-order="stroke fill"/>
+  <use href="#bb-glyph" x="8" y="2" fill="#0F172A" stroke="#FFFFFF" stroke-width="3" stroke-opacity="0.9" paint-order="stroke fill"/>
+</svg>
