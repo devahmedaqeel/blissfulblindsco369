@@ -4853,3 +4853,61 @@ textarea.new-form-control {
   }
 }
 
+/* =============================================
+   Trustpilot Reviews Section
+   ============================================= */
+.trustpilot-section .container {
+  display: flex;
+  justify-content: center;
+}
+
+.trustpilot-card {
+  width: 100%;
+  max-width: 720px;
+  background: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: 48px 40px;
+  text-align: center;
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+.trustpilot-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+.trustpilot-stars {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  font-size: 1.25rem;
+  color: #00b67a;
+}
+
+.trustpilot-heading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.trustpilot-heading-icon {
+  color: #00b67a;
+  font-size: 0.85em;
+}
+
+.trustpilot-cta {
+  margin-top: 8px;
+  display: inline-block;
+}
+
+@media (max-width: 600px) {
+  .trustpilot-card {
+    padding: 36px 24px;
+  }
+}
+
