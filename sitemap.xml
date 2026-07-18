@@ -109,18 +109,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://blissfulblindsltd.co.uk/curtains/</loc>
-    <lastmod>2026-07-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://blissfulblindsltd.co.uk/blinds-accessories/</loc>
-    <lastmod>2026-07-17</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://blissfulblindsltd.co.uk/privacy-policy/</loc>
     <lastmod>2026-07-16</lastmod>
     <changefreq>yearly</changefreq>
@@ -130,6 +118,72 @@
     <loc>https://blissfulblindsltd.co.uk/terms-conditions/</loc>
     <lastmod>2026-07-16</lastmod>
     <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/blinds-peterborough/</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/blinds-leicester/</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/blinds-luton-bedford/</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/blog/</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/blog/roller-vs-vertical-blinds/</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/blog/venetian-vs-vertical-blinds/</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/blog/wooden-vs-faux-wood-blinds/</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/blog/blinds-moving-in-checklist/</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/blog/made-to-measure-blinds-cost-guide/</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/blog/free-home-consultation-guide/</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/sitemap/</loc>
+    <lastmod>2026-07-18</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
 </urlset>

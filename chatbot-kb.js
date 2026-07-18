@@ -65,7 +65,6 @@
     area: ['location', 'cover', 'coverage', 'postcode'],
     location: ['area', 'cover', 'coverage', 'postcode'],
     shutter: ['shutters', 'plantation'],
-    curtain: ['curtains'],
     room: ['bedroom', 'kitchen', 'bathroom', 'living']
   };
 
