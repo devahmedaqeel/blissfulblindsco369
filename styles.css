@@ -4856,6 +4856,11 @@ textarea.new-form-control {
 /* =============================================
    Trustpilot Reviews Section
    ============================================= */
+.trustpilot-section {
+  background-color: var(--bg-secondary);
+  padding-top: 32px;
+}
+
 .trustpilot-section .container {
   display: flex;
   justify-content: center;
@@ -4892,12 +4897,19 @@ textarea.new-form-control {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+  margin-bottom: 12px;
 }
 
 .trustpilot-heading-icon {
   color: #00b67a;
-  font-size: 0.85em;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.trustpilot-card .section-subtitle {
+  margin-bottom: 28px;
 }
 
 .trustpilot-cta {
