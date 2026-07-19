@@ -53,7 +53,7 @@ be quoted exactly as shown:
 |---|---|---|
 | 4 Vertical Blinds Package | £199 / 4 windows | 4 custom-fitted vertical blinds, neutral colours/patterns, measuring & fitting included, 1-year guarantee. T&Cs apply |
 | 4 Roller Blinds | From £239 / 4 windows | 4 custom roller blinds, plain/textured/splash-proof fabrics, measuring & fitting included, child-safe. T&Cs apply |
-| Full House Blinds Bundle | £299 / up to 6 windows | Vertical or roller blinds, up to 6 windows, measuring & fitting included — aimed at new-build buyers/landlords. T&Cs apply |
+| Full House Vertical Blinds | £299 / up to 6 windows | Custom vertical blinds, up to 6 windows, measuring & fitting included — aimed at new-build buyers/landlords. T&Cs apply |
 | Conservatory Vertical Blinds | £349 / complete fitting | Vertical fabrics, high thermal performance, UV furniture protection. T&Cs apply |
 | Selected Window Blinds | 25% OFF | Applies to Venetian Blinds, Vision Day & Night Blinds, Roman Blinds, Skylights, and Shutters |
 
