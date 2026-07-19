@@ -190,5 +190,5 @@ suggest they ask the team during their free consultation.
 ## Products mentioned only as booking-form options (not separately described)
 Conservatory Blinds, Skylight Blinds, Faux Wood Blinds — these appear as selectable
 options in the "Type of Blinds" field of the booking form, and Conservatory Blinds also
-appears in the "Conservatory Blinds Package" offer (see `pricing-policy.md`), but none
+appears in the "Conservatory Vertical Blinds" offer (see `pricing-policy.md`), but none
 have their own dedicated product description on the site.

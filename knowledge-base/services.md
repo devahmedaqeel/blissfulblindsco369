@@ -42,5 +42,5 @@ described anywhere on the current site:
 - Skylight blinds, Conservatory blinds, or Faux Wood blinds as separately described
   products — these appear only as selectable options in the booking form's "Type of
   Blinds" list, with no dedicated description of their own. Conservatory blinds are
-  covered by the "Conservatory Blinds Package" offer (see `pricing-policy.md`), which
-  is fulfilled using pleated or vertical fabrics.
+  covered by the "Conservatory Vertical Blinds" offer (see `pricing-policy.md`), which
+  is fulfilled using vertical fabrics.

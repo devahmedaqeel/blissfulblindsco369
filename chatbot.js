@@ -292,10 +292,10 @@
   // Pricing policy response (mirrors knowledge-base/pricing-policy.md)
   // ---------------------------------------------------------------------
   var OFFER_TABLE = [
-    { keys: ['3 vertical', 'vertical.*3', '3.*vertical'], html: '<strong>3 Vertical Blinds Package</strong> — &pound;85 / 3 windows. Includes measuring, fitting &amp; a 1-year guarantee.' },
+    { keys: ['4 vertical', 'vertical.*4', '4.*vertical'], html: '<strong>4 Vertical Blinds Package</strong> — &pound;199 / 4 windows. Includes measuring, fitting &amp; a 1-year guarantee. T&amp;Cs apply.' },
     { keys: ['3 roller', 'roller.*3', '3.*roller'], html: '<strong>3 Roller Blinds Package</strong> — &pound;115 / 3 windows. Includes measuring, fitting &amp; child-safe operation.' },
     { keys: ['full house', '6 window', 'whole house', 'entire house'], html: '<strong>Full House Blinds Bundle</strong> — &pound;195 for up to 6 windows (vertical or roller).' },
-    { keys: ['conservatory'], html: '<strong>Conservatory Blinds Package</strong> — &pound;195 complete fitting (pleated or vertical fabrics).' },
+    { keys: ['conservatory'], html: '<strong>Conservatory Vertical Blinds</strong> — &pound;349 complete fitting. T&amp;Cs apply.' },
     { keys: ['venetian', 'vision', 'roman', 'skylight', 'shutter'], html: '<strong>25% OFF</strong> selected Venetian, Vision Day &amp; Night, Roman, Skylight and Shutter blinds.' }
   ];
 
