@@ -8,10 +8,11 @@ source: index.html (commercial section, structured data makesOffer), all product
 - Free in-home consultation and quotation
 - Free professional measuring
 - Free professional fitting/installation
-- Supply and installation of: Roller Blinds, Vertical Blinds, Venetian Blinds
-  (wood/faux wood/aluminium), Perfect Fit Blinds, Vision (Day & Night) Blinds,
+- Supply and installation of: Roller Blinds, Vertical Blinds,
+  Perfect Fit Blinds, Vision (Day & Night) Blinds,
   Pleated/Cellular Blinds, Roman Blinds, Wooden Blinds, Blackout Blinds, Window
-  Shutters (plantation shutters)
+  Shutters (plantation shutters), Perfect Metal Venetian Blinds, Cellular Blinds,
+  Day Night Blinds, and Perfect Fit Venetian Blinds
 - Motorised/remote-control operation is offered as an option on some product lines
   (explicitly mentioned for Roller Blinds and Vision Blinds)
 - Commercial and landlord blinds packages (see below)

@@ -24,12 +24,7 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
-  <url>
-    <loc>https://blissfulblindsltd.co.uk/venetian-blinds/</loc>
-    <lastmod>2026-07-19</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
+
   <url>
     <loc>https://blissfulblindsltd.co.uk/perfect-fit-blinds/</loc>
     <lastmod>2026-07-19</lastmod>
@@ -104,6 +99,30 @@
   </url>
   <url>
     <loc>https://blissfulblindsltd.co.uk/child-blinds/</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/perfect-metal-venetian-blinds/</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/cellular-blinds/</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/day-night-blinds/</loc>
+    <lastmod>2026-07-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://blissfulblindsltd.co.uk/perfect-fit-venetian-blinds/</loc>
     <lastmod>2026-07-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>

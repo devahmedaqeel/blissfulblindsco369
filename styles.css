@@ -774,14 +774,31 @@ button, input, select, textarea {
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
-  padding: 16px;
-  min-width: 440px;
+  padding: 20px;
+  min-width: 680px;
+  max-height: 75vh;
+  overflow-y: auto;
   opacity: 0;
   visibility: hidden;
   transition: var(--transition-normal);
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px 16px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 20px;
+}
+
+/* Custom premium scrollbar for the dropdown menu */
+.dropdown-menu::-webkit-scrollbar {
+  width: 6px;
+}
+.dropdown-menu::-webkit-scrollbar-track {
+  background: transparent;
+}
+.dropdown-menu::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: var(--radius-sm);
+}
+.dropdown-menu::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
 }
 
 .dropdown-link {
@@ -915,7 +932,17 @@ button, input, select, textarea {
 
 @media (max-width: 1280px) and (min-width: 1025px) {
   .nav-menu {
-    gap: 16px;
+    gap: 8px;
+  }
+  .site-header .brand-tagline {
+    display: none !important;
+  }
+  .site-header .brand-name {
+    font-size: 1.125rem !important;
+  }
+  .site-header .btn {
+    padding: clamp(0.5rem, 0.42rem + 0.35vw, 0.75rem) 16px !important;
+    font-size: 0.8125rem !important;
   }
 }
 
@@ -968,6 +995,8 @@ button, input, select, textarea {
     padding-left: 20px;
     margin-top: 10px;
     width: 100%;
+    max-height: none !important;
+    overflow-y: visible !important;
   }
   
   .nav-link {
@@ -5040,6 +5069,19 @@ textarea.new-form-control {
 }
 
 /* =============================================
+   GLOBAL RESPONSIVE SAFETY NET
+   Prevents any element from causing horizontal overflow
+   ============================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+img, video, iframe, embed, object {
+  max-width: 100%;
+  height: auto;
+}
+
+/* =============================================
    Trustpilot Wide Banner Layout
    ============================================= */
 .trustpilot-wide-banner {
@@ -5269,6 +5311,184 @@ textarea.new-form-control {
     width: 100%;
     justify-content: center;
     padding: 13px 20px;
+  }
+}
+
+/* ========================================================
+   COMPREHENSIVE RESPONSIVE POLISH — ALL DEVICES
+   Final pass fixes for layout, typography & images
+   ======================================================== */
+
+/* --- Related Products: 3 → 2 → 1 columns --- */
+@media (max-width: 900px) and (min-width: 601px) {
+  .related-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* --- Range Row h3 override: reduce on small screens --- */
+@media (max-width: 900px) {
+  .range-row-content h3 {
+    font-size: 1.5rem !important;
+  }
+}
+@media (max-width: 480px) {
+  .range-row-content h3 {
+    font-size: 1.3rem !important;
+  }
+}
+
+/* --- Hero title: proper fluid sizing on very small screens --- */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: clamp(1.85rem, 7vw, 2.4rem) !important;
+    letter-spacing: -0.02em;
+  }
+  .hero-desc {
+    font-size: 0.9375rem;
+    margin-bottom: 28px;
+  }
+  .hero .btn-primary,
+  .hero .btn-secondary {
+    padding: 13px 22px !important;
+    font-size: 0.875rem !important;
+    width: 100%;
+    justify-content: center;
+  }
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+/* --- Why Choose Us: add 3-col step on large screens --- */
+@media (min-width: 1025px) and (max-width: 1280px) {
+  .why-us-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* --- Hero on subpages: single column on mobile --- */
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    gap: 32px;
+    text-align: center;
+  }
+  .hero-image-container {
+    display: none; /* hide decorative image card on small screens */
+  }
+  .hero-desc {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-buttons {
+    justify-content: center;
+  }
+  .hero-badge-wrap {
+    justify-content: center;
+  }
+}
+
+/* --- Range image on range-list pages: fluid height --- */
+@media (max-width: 480px) {
+  .range-row-image {
+    height: 220px !important;
+  }
+  .range-row-content {
+    padding: 24px 20px !important;
+    gap: 12px !important;
+  }
+  .range-row-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+  .range-row-actions .btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+}
+
+/* --- Booking form: prevent padding overflow on tiny screens --- */
+@media (max-width: 480px) {
+  .new-booking-card-header {
+    padding: 24px 16px 12px !important;
+  }
+  .new-booking-form {
+    padding: 0 16px 20px !important;
+  }
+  .new-booking-card-header h2 {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* --- Footer bottom row: stack on mobile --- */
+@media (max-width: 480px) {
+  .footer-bottom-links {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 12px !important;
+  }
+  .footer-bottom-row {
+    text-align: center !important;
+  }
+}
+
+/* --- Section title: tighten on very small screens --- */
+@media (max-width: 360px) {
+  .section-title {
+    font-size: 1.4rem !important;
+  }
+  .container {
+    padding: 0 12px !important;
+  }
+}
+
+/* --- Why-us card image: reduce height on mobile for better ratio --- */
+@media (max-width: 640px) {
+  .why-card-image {
+    height: 150px;
+  }
+}
+
+/* --- Prevent horizontal overflow globally --- */
+html, body {
+  overflow-x: hidden;
+}
+
+/* --- Coverage grid: ensure no overflow on mobile --- */
+@media (max-width: 480px) {
+  .coverage-grid {
+    border-radius: 12px !important;
+    margin: 20px 0 !important;
+  }
+  .coverage-control-card {
+    padding: 20px 16px !important;
+  }
+}
+
+/* --- Testimonial/review cards: proper padding on tiny screens --- */
+@media (max-width: 480px) {
+  .review-card {
+    padding: 24px 18px !important;
+  }
+}
+
+/* --- Offer grid: single column on mobile phones --- */
+@media (max-width: 480px) {
+  .offers-grid {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+}
+
+/* --- Gallery: maintain aspect-ratio squares on mobile --- */
+@media (max-width: 480px) {
+  .gallery-item {
+    flex: 0 0 100% !important;
+    padding-top: 80% !important;
   }
 }
 

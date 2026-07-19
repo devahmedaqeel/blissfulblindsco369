@@ -35,20 +35,6 @@ track and rotate or draw to one or both sides to control light and privacy.
   bathrooms/kitchens)
 - Page tagline: "Classic & Adjustable"
 
-## Venetian Blinds
-A timeless, versatile window covering available in real wood, faux wood, and aluminium.
-Horizontal slats tilt to control light/privacy or raise fully for a clear view.
-
-- Real wood, faux wood & aluminium options
-- Ideal for kitchens, bathrooms & living areas
-- Precise tilt control for light direction
-- Slat widths available: 25mm, 35mm, 50mm, 63mm
-- Faux Wood: behaves like solid timber but made from PVC — 100% moisture-proof, won't
-  warp/crack in damp bathrooms or hot kitchens
-- Hardwood: FSC-certified renewably sourced timber, hand-painted coats and grain stains
-- Aluminium: lightweight, tough, modern metallic profiles — suited to workspaces/
-  offices/bathrooms
-- Page tagline: "Stylish & Traditional"
 
 ## Perfect Fit Blinds
 A no-drill blind system that clips directly into a UPVC window frame — no screws, no
@@ -154,6 +140,44 @@ PVC, and security-metal builds.
   bottom guide tracks, panels fold back 180° — good for patio sliders/bi-folds), Bay
   Window Shutters (bespoke angles for English bay windows)
 - Page tagline: "10-Year Product Warranty"
+
+## Perfect Metal Venetian Blinds
+Sleek, lightweight, and durable aluminium venetian blinds that clip directly into the UPVC window frame using a no-drill Perfect Fit bracket system.
+
+- Precise light control: tilt horizontal slats to redirect incoming sunlight without losing daylight
+- Enhanced privacy: tilt slats to prevent direct view into the room from outside
+- Highly durable: moisture-proof, waterproof, and warp-resistant aluminium slats
+- Suited for kitchens, bathrooms, workspaces, and utility areas
+- Sits flush against the window pane, leaving sills completely clear
+- Page tagline: "Timeless Style. Precise Light Control."
+
+## Cellular Blinds
+Energy-efficient window coverings made with a unique honeycomb fabric pocket structure that traps air to form an active thermal barrier.
+
+- High-performance insulation: blocks drafts, keeps rooms warm in winter and cool in summer
+- Acoustic noise reduction: honeycomb design buffers street and outside noise
+- Energy savings: lowers heat loss through windows to reduce utility bills
+- Child safe: cordless by default or secure tensioned bottom bar controls
+- Suited for bedrooms, nurseries, bi-folds, and conservatory windows
+- Page tagline: "Comfort in Every Layer."
+
+## Day Night Blinds
+Modern double-layer roller shading featuring alternating horizontal bands of sheer translucent mesh and solid opaque fabric.
+
+- Stripe overlapping control: shift translucent and solid bands past each other for intermediate light filtering
+- Privacy on demand: line up solid bands for complete blockout and visual privacy
+- Modern design: clean horizontal lines create a striking contemporary aesthetic
+- Motorisation option: raise, lower, or align stripes using a remote control or smart home integration
+- Page tagline: "Smart Light Control. Modern Living."
+
+## Perfect Fit Venetian Blinds
+Tension-fit horizontal slatted blinds mounted within a matching frame border that clips directly onto the UPVC window frame.
+
+- Easy tilt adjustments: raise, lower, or rotate slats to manage glare and brightness
+- No drilling required: clips between window glass and rubber seal with zero frame damage
+- Moves with window: perfect for tilt-and-turn windows and French doors without rattling
+- 100% cordless: operated via bottom handle, making it completely child and pet safe
+- Page tagline: "Timeless Style. Precise Light Control."
 
 ## Motorised Blinds
 Not a separate physical product line on the site — "motorised" is offered as an
