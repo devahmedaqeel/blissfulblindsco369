@@ -126,7 +126,7 @@ dev-tools/                 NOT part of the live site — nothing here is
 
 - Domain: `blissfulblindsltd.co.uk`
 - Phone: `01733 853037` (landline) / WhatsApp & mobile: `+44 7341 645339`
-- Email: `blissfulblindsco369@gmail.com` (contact mailbox kept as-is —
+- Email: `info@blissfulblindsltd.co.uk` (contact mailbox kept as-is —
   intentionally not switched to a domain-matched address, see project memory)
 - Address: 75 Ringwood Bretton, Peterborough, PE3 9SR
 - Hours: Mon–Sat 09:00–18:00, Sun closed

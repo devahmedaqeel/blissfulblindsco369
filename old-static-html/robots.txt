@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://blissfulblindsco369.com/sitemap.xml
+Sitemap: https://blissfulblindsltd.co.uk/sitemap.xml

@@ -12,7 +12,7 @@ Tap-to-call links on the site use `tel:+441733853037`.
 to `https://api.whatsapp.com/send?phone=+447341645339`.
 
 ## Email
-blissfulblindsco369@gmail.com
+info@blissfulblindsltd.co.uk
 
 ## Address (Head Office)
 75 Ringwood Bretton, Peterborough, PE3 9SR, United Kingdom
