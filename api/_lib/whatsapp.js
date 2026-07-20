@@ -1,9 +1,10 @@
 /**
  * WhatsApp notification helper for the existing booking/chatbot lead flow.
- * Sends a formatted text message and the generated lead PDF sheet to the business owner's WhatsApp.
+ * Supports CallMeBot (Free, zero-config personal API) and Meta Cloud API.
  */
 
 const OWNER_WHATSAPP = process.env.OWNER_WHATSAPP_NUMBER || '+447341645339';
+const CALLMEBOT_KEY  = process.env.CALLMEBOT_API_KEY || '';
 const ACCESS_TOKEN   = process.env.WHATSAPP_ACCESS_TOKEN  || '';
 const PHONE_ID       = process.env.WHATSAPP_PHONE_NUMBER_ID || '';
 
@@ -26,44 +27,54 @@ function formatLeadMessage({ leadId, sourceLabel, name, phone, email, address, p
     `----------------------------------------`,
     `🕐 *Submitted:* ${submittedAt || new Date().toLocaleString('en-GB', { timeZone: 'Europe/London' })}`,
     '',
-    '📄 _Lead Details PDF is attached below._'
+    `🌐 *View on Dashboard:*`,
+    `https://blissfulblindsltd.co.uk/admin/orders/`
   ];
   return lines.filter(l => l !== null).join('\n');
 }
 
 /**
- * Formats the Meta API URL.
- */
-function getMetaUrl(endpoint = 'messages') {
-  return `https://graph.facebook.com/v21.0/${PHONE_ID}/${endpoint}`;
-}
-
-/**
- * Formats request headers for Meta Cloud API.
- */
-function getMetaHeaders(contentType = 'application/json') {
-  return {
-    'Authorization': `Bearer ${ACCESS_TOKEN}`,
-    'Content-Type': contentType
-  };
-}
-
-/**
- * Send a WhatsApp text message and PDF document to the owner via Meta Cloud API.
- * Never throws — the caller's email flow must never be disrupted by a WhatsApp failure.
+ * Send a WhatsApp text message and PDF document to the owner.
+ * Tries CallMeBot first if callmebot API key is present. Otherwise, falls back to Meta Cloud API.
  */
 async function sendWhatsAppLead(leadData, pdfBuffer) {
-  // If Meta API credentials are not configured, skip silently.
+  // 1. CallMeBot Integration
+  if (CALLMEBOT_KEY && CALLMEBOT_KEY !== 'YOUR_CALLMEBOT_KEY_HERE') {
+    console.log('[whatsapp] Using CallMeBot API to dispatch booking notification.');
+    const text = formatLeadMessage(leadData);
+    const recipient = OWNER_WHATSAPP.replace(/[^\d+]/g, ''); // CallMeBot supports international numbers starting with +
+    const url = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(recipient)}&text=${encodeURIComponent(text)}&apikey=${encodeURIComponent(CALLMEBOT_KEY)}`;
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        const errText = await response.text();
+        console.error('[whatsapp] CallMeBot API error:', errText);
+        return { success: false, error: `CallMeBot API ${response.status}` };
+      }
+      console.log('[whatsapp] CallMeBot lead notification sent successfully.');
+      return { success: true };
+    } catch (err) {
+      console.error('[whatsapp] CallMeBot network error:', err.message);
+      return { success: false, error: err.message };
+    }
+  }
+
+  // 2. Meta Cloud API Integration (Fallback)
   if (!ACCESS_TOKEN || !PHONE_ID || ACCESS_TOKEN === 'YOUR_META_ACCESS_TOKEN_HERE') {
-    console.log('[whatsapp] Meta API credentials not configured — skipping WhatsApp notification.');
+    console.log('[whatsapp] Neither CallMeBot nor Meta Cloud API configured — skipping WhatsApp notification.');
     return { success: false, error: 'Not configured' };
   }
 
-  // Strip the leading '+' for the API (Meta expects numeric-only recipient)
-  const recipient = OWNER_WHATSAPP.replace(/[^\d]/g, '');
+  const recipient = OWNER_WHATSAPP.replace(/[^\d]/g, ''); // Meta expects numeric-only recipient
+  const getMetaUrl = (endpoint) => `https://graph.facebook.com/v21.0/${PHONE_ID}/${endpoint}`;
+  const getMetaHeaders = (contentType = 'application/json') => ({
+    'Authorization': `Bearer ${ACCESS_TOKEN}`,
+    'Content-Type': contentType
+  });
 
   try {
-    // 1. Send Text Notification
+    // Send Text Notification
     const textPayload = {
       messaging_product: 'whatsapp',
       recipient_type: 'individual',
@@ -83,7 +94,7 @@ async function sendWhatsAppLead(leadData, pdfBuffer) {
       console.error('[whatsapp] Failed to send text alert:', errBody);
     }
 
-    // 2. If PDF Buffer is provided, upload and send the PDF document
+    // Send PDF document if provided
     if (pdfBuffer) {
       const form = new FormData();
       const blob = new Blob([pdfBuffer], { type: 'application/pdf' });
@@ -129,10 +140,10 @@ async function sendWhatsAppLead(leadData, pdfBuffer) {
       }
     }
 
-    console.log('[whatsapp] Lead notification sent successfully to owner.');
+    console.log('[whatsapp] Meta Cloud API lead notification sent successfully to owner.');
     return { success: true };
   } catch (err) {
-    console.error('[whatsapp] WhatsApp delivery error:', err.message);
+    console.error('[whatsapp] Meta Cloud API delivery error:', err.message);
     return { success: false, error: err.message };
   }
 }

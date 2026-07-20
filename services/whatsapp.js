@@ -6,36 +6,41 @@ const NotificationLog = require('../models/NotificationLog');
 // Delays in seconds for retries (Index 0 = 5s, Index 1 = 15s, Index 2 = 30s)
 const RETRY_DELAYS = [5, 15, 30];
 
+// CallMeBot properties
+const OWNER_WHATSAPP = process.env.OWNER_WHATSAPP_NUMBER || '+447341645339';
+const CALLMEBOT_KEY = process.env.CALLMEBOT_API_KEY || '';
+
 /**
  * Orchestrates sending both WhatsApp Text alert and WhatsApp PDF document to the owner.
  * Executes asynchronously in the background.
- * @param {Object} order The Order object (same saved document used for the owner email)
- * @param {Buffer} pdfBuffer The invoice PDF buffer (same buffer attached to the owner email)
- * @param {string} [mapsLink] The same Google Maps link generated for the owner email
+ * @param {Object} order The Order object
+ * @param {Buffer} pdfBuffer The invoice PDF buffer
  */
-async function sendWhatsAppNotifications(order, pdfBuffer, mapsLink) {
-  // If configurations are missing, log a message and exit gracefully without throwing
-  if (!metaHelpers.validateMetaConfig()) {
-    console.warn(`[WhatsApp] Skipping notifications for order ${order.orderId}: Meta credentials (token, phone number ID, or owner number) are not configured.`);
-
-    // The caller already created 'Pending' log entries for these before
-    // calling us — resolve them to 'Failed' now so the admin dashboard
-    // doesn't show WhatsApp notifications stuck at "Pending" forever.
-    await NotificationLog.updateMany(
-      { orderId: order.orderId, notificationType: { $in: ['WhatsAppText', 'WhatsAppPDF'] }, status: 'Pending' },
-      { $set: { status: 'Failed' }, $push: { attempts: { attemptNumber: 1, success: false, errorMsg: 'Meta WhatsApp credentials not configured.', timestamp: new Date() } } }
+async function sendWhatsAppNotifications(order, pdfBuffer) {
+  // 1. CallMeBot Dispatch (Free, zero-config pathway)
+  if (CALLMEBOT_KEY && CALLMEBOT_KEY !== 'YOUR_CALLMEBOT_KEY_HERE') {
+    triggerWhatsAppMessageWithRetries(
+      () => sendCallMeBotAlert(order),
+      'WhatsAppText',
+      order.orderId
     );
     return;
   }
 
-  // 1. Send text alert
+  // 2. Meta Cloud API Dispatch (Fallback, premium pathway)
+  if (!metaHelpers.validateMetaConfig()) {
+    console.warn(`[WhatsApp] Skipping notifications for order ${order.orderId}: Meta credentials (token, phone number ID, or owner number) are not configured.`);
+    return;
+  }
+
+  // Send text alert
   triggerWhatsAppMessageWithRetries(
-    () => sendWhatsAppText(order, mapsLink),
+    () => sendWhatsAppText(order),
     'WhatsAppText',
     order.orderId
   );
 
-  // 2. Send PDF document
+  // Send PDF document
   triggerWhatsAppMessageWithRetries(
     () => sendWhatsAppPDF(order, pdfBuffer),
     'WhatsAppPDF',
@@ -44,10 +49,32 @@ async function sendWhatsAppNotifications(order, pdfBuffer, mapsLink) {
 }
 
 /**
+ * Sends a message via CallMeBot API containing order details and a PDF download link.
+ */
+async function sendCallMeBotAlert(order) {
+  const textBody = metaHelpers.formatWhatsAppTextBody(order);
+  const pdfDownloadLink = `\n📥 *Download Invoice PDF:* \nhttps://blissfulblindsltd.co.uk/api/orders/${order.orderId}/invoice`;
+  const fullText = textBody + pdfDownloadLink;
+  
+  const recipient = OWNER_WHATSAPP.replace(/[^\d+]/g, ''); // CallMeBot supports + in numbers
+  const url = `https://api.callmebot.com/whatsapp.php`;
+
+  const response = await axios.get(url, {
+    params: {
+      phone: recipient,
+      text: fullText,
+      apikey: CALLMEBOT_KEY
+    }
+  });
+
+  return response.data;
+}
+
+/**
  * Posts text message to Meta API.
  */
-async function sendWhatsAppText(order, mapsLink) {
-  const textBody = metaHelpers.formatWhatsAppTextBody(order, mapsLink);
+async function sendWhatsAppText(order) {
+  const textBody = metaHelpers.formatWhatsAppTextBody(order);
   const payload = {
     messaging_product: 'whatsapp',
     recipient_type: 'individual',
@@ -70,7 +97,7 @@ async function sendWhatsAppText(order, mapsLink) {
  * Uploads invoice PDF to Meta and sends it to the owner as a document.
  */
 async function sendWhatsAppPDF(order, pdfBuffer) {
-  // 1. Upload PDF media to Meta
+  // Upload PDF media to Meta
   const form = new FormData();
   const blob = new Blob([pdfBuffer], { type: 'application/pdf' });
   form.append('file', blob, `Order-${order.orderId}.pdf`);
@@ -85,7 +112,7 @@ async function sendWhatsAppPDF(order, pdfBuffer) {
     throw new Error('Meta Media API upload succeeded but returned no media ID.');
   }
 
-  // 2. Send the document using the media ID
+  // Send the document using the media ID
   const payload = {
     messaging_product: 'whatsapp',
     recipient_type: 'individual',
@@ -106,10 +133,6 @@ async function sendWhatsAppPDF(order, pdfBuffer) {
 
 /**
  * Executes a sending function with database logging and a timeout-based retry queue.
- * @param {Function} sendFn Async function that performs the api call
- * @param {string} notificationType Enums from NotificationLog (WhatsAppText, WhatsAppPDF)
- * @param {string} orderId The associated Order ID
- * @param {number} attemptNumber Current attempt index (1-based)
  */
 async function triggerWhatsAppMessageWithRetries(sendFn, notificationType, orderId, attemptNumber = 1) {
   try {
