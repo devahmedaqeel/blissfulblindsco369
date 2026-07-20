@@ -92,11 +92,22 @@ async function processOrderNotifications(order) {
       })()
     ]);
 
-    // 5. Fire WhatsApp Notifications (Text + PDF) in background
-    // (Does not block the API response time, ensuring rapid sub-10 second request times)
-    sendWhatsAppNotifications(order, pdfBuffer).catch(err => {
-      console.error(`[NotificationService] WhatsApp notification background crash for ${orderId}:`, err.message);
-    });
+    // 5. Once the owner email has sent successfully, immediately fire the
+    // WhatsApp notifications (same order document, same PDF buffer, same
+    // Maps link — no separate data source). Runs in the background so it
+    // never delays the API response; a WhatsApp failure is only logged and
+    // never affects the email result already returned above.
+    if (emailOwnerSuccess) {
+      sendWhatsAppNotifications(order, pdfBuffer, mapsLink).catch(err => {
+        console.error(`[NotificationService] WhatsApp notification background crash for ${orderId}:`, err.message);
+      });
+    } else {
+      console.warn(`[NotificationService] Skipping WhatsApp notification for ${orderId}: owner email did not send successfully.`);
+      await NotificationLog.updateMany(
+        { orderId, notificationType: { $in: ['WhatsAppText', 'WhatsAppPDF'] }, status: 'Pending' },
+        { $set: { status: 'Failed' }, $push: { attempts: { attemptNumber: 1, success: false, errorMsg: 'Skipped: owner email did not send successfully.', timestamp: new Date() } } }
+      );
+    }
 
     return {
       success: emailConfirmationSuccess && emailOwnerSuccess,

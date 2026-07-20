@@ -36,15 +36,22 @@ function getMetaHeaders(contentType = 'application/json') {
 }
 
 /**
- * Formats order detail into a premium, readable WhatsApp text template.
- * @param {Object} order The Order document
- * @returns {string} Formatted markdown text for WhatsApp
+ * Formats order detail into a WhatsApp text template.
+ *
+ * Field-for-field mirror of the owner alert email (services/emailService.js
+ * -> sendOwnerAlertEmail) so the owner sees identical information on both
+ * channels — same saved Order document, same Google Maps link, no separate
+ * data source. If a field is added to the owner email, add it here too.
+ *
+ * @param {Object} order The Order document (the same one passed to the owner email)
+ * @param {string} [mapsLink] The same Google Maps link generated for the owner email
+ * @returns {string} Formatted text for WhatsApp
  */
-function formatWhatsAppTextBody(order) {
+function formatWhatsAppTextBody(order, mapsLink) {
   const formattedDate = new Date(order.scheduling.preferredDate).toLocaleDateString('en-GB', {
     day: 'numeric', month: 'long', year: 'numeric'
   });
-  
+
   const timeSubmitted = new Date(order.createdAt || Date.now()).toLocaleString('en-GB', {
     day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit'
   });
@@ -53,30 +60,40 @@ function formatWhatsAppTextBody(order) {
 ----------------------------------------
 🏢 *Company:* Blissful Blinds Ltd
 🆔 *Order ID:* ${order.orderId}
-👤 *Customer:* ${order.customer.name}
-📞 *Phone:* ${order.customer.phone}
-📧 *Email:* ${order.customer.email}
-🏠 *Address:* ${order.customer.address}, ${order.customer.city}, ${order.customer.postcode}
 
-🪟 *Blind Details:*
-- *Type:* ${order.product.name} (${order.product.blindType})
+👤 *Customer Contact Details*
+- *Name:* ${order.customer.name}
+- *Company Name:* ${order.customer.companyName || 'None'}
+- *Email:* ${order.customer.email}
+- *Phone:* ${order.customer.phone}
+- *WhatsApp Number:* ${order.customer.whatsappNumber}
+- *Installation Address:* ${order.customer.address}
+- *City & Postcode:* ${order.customer.city}, ${order.customer.postcode}
+
+🪟 *Product Customization*
+- *Product Name:* ${order.product.name}
+- *Blind Type:* ${order.product.blindType}
 - *Colour:* ${order.product.colour}
-- *Measurements:* ${order.product.width} cm (W) x ${order.product.height} cm (H)
-- *Quantity:* ${order.product.quantity}
-- *Installation Required:* ${order.product.installationRequired ? 'Yes' : 'No'}
+- *Fabric/Material:* ${order.product.fabric}
+- *Dimensions (W x H):* ${order.product.width} cm x ${order.product.height} cm
+- *Fitting Details:* ${order.product.fittingType} (${order.product.installationRequired ? 'Installation Required' : 'Supply Only'})
+- *Room Location:* ${order.product.room}
+- *Ordered Quantity:* ${order.product.quantity}
 
-💰 *Price Summary:*
+📅 *Scheduling & Pricing*
+- *Preferred Date:* ${formattedDate}
+- *Preferred Time Slot:* ${order.scheduling.preferredTime}
+- *Special Notes:* ${order.scheduling.specialNotes || 'None'}
 - *Subtotal:* £${order.pricing.subtotal.toFixed(2)}
 - *VAT (20%):* £${order.pricing.vat.toFixed(2)}
 - *Grand Total:* £${order.pricing.grandTotal.toFixed(2)}
-
-📅 *Scheduling & Notes:*
-- *Preferred Fitting:* ${formattedDate} (${order.scheduling.preferredTime})
-- *Notes:* ${order.scheduling.specialNotes || 'None'}
+- *Customer IP / Browser:* ${order.metadata.ipAddress} / ${order.metadata.browser}
 
 ⏰ *Order Time:* ${timeSubmitted}
-🌐 *Website:* https://blissfulblindsltd.co.uk
 ----------------------------------------
+📍 *Route (Google Maps):*
+${mapsLink || 'N/A'}
+
 👉 *View in Admin Dashboard:*
 https://blissfulblindsltd.co.uk/admin/orders/?id=${order.orderId}`;
 }

@@ -9,10 +9,11 @@ const RETRY_DELAYS = [5, 15, 30];
 /**
  * Orchestrates sending both WhatsApp Text alert and WhatsApp PDF document to the owner.
  * Executes asynchronously in the background.
- * @param {Object} order The Order object
- * @param {Buffer} pdfBuffer The invoice PDF buffer
+ * @param {Object} order The Order object (same saved document used for the owner email)
+ * @param {Buffer} pdfBuffer The invoice PDF buffer (same buffer attached to the owner email)
+ * @param {string} [mapsLink] The same Google Maps link generated for the owner email
  */
-async function sendWhatsAppNotifications(order, pdfBuffer) {
+async function sendWhatsAppNotifications(order, pdfBuffer, mapsLink) {
   // If configurations are missing, log a message and exit gracefully without throwing
   if (!metaHelpers.validateMetaConfig()) {
     console.warn(`[WhatsApp] Skipping notifications for order ${order.orderId}: Meta credentials (token, phone number ID, or owner number) are not configured.`);
@@ -29,7 +30,7 @@ async function sendWhatsAppNotifications(order, pdfBuffer) {
 
   // 1. Send text alert
   triggerWhatsAppMessageWithRetries(
-    () => sendWhatsAppText(order),
+    () => sendWhatsAppText(order, mapsLink),
     'WhatsAppText',
     order.orderId
   );
@@ -45,8 +46,8 @@ async function sendWhatsAppNotifications(order, pdfBuffer) {
 /**
  * Posts text message to Meta API.
  */
-async function sendWhatsAppText(order) {
-  const textBody = metaHelpers.formatWhatsAppTextBody(order);
+async function sendWhatsAppText(order, mapsLink) {
+  const textBody = metaHelpers.formatWhatsAppTextBody(order, mapsLink);
   const payload = {
     messaging_product: 'whatsapp',
     recipient_type: 'individual',
