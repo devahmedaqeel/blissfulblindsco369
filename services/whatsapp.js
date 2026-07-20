@@ -16,6 +16,14 @@ async function sendWhatsAppNotifications(order, pdfBuffer) {
   // If configurations are missing, log a message and exit gracefully without throwing
   if (!metaHelpers.validateMetaConfig()) {
     console.warn(`[WhatsApp] Skipping notifications for order ${order.orderId}: Meta credentials (token, phone number ID, or owner number) are not configured.`);
+
+    // The caller already created 'Pending' log entries for these before
+    // calling us — resolve them to 'Failed' now so the admin dashboard
+    // doesn't show WhatsApp notifications stuck at "Pending" forever.
+    await NotificationLog.updateMany(
+      { orderId: order.orderId, notificationType: { $in: ['WhatsAppText', 'WhatsAppPDF'] }, status: 'Pending' },
+      { $set: { status: 'Failed' }, $push: { attempts: { attemptNumber: 1, success: false, errorMsg: 'Meta WhatsApp credentials not configured.', timestamp: new Date() } } }
+    );
     return;
   }
 

@@ -8,7 +8,9 @@ function validateMetaConfig() {
   return !!(
     metaConfig.accessToken &&
     metaConfig.phoneNumberId &&
-    metaConfig.ownerWhatsappNumber
+    metaConfig.ownerWhatsappNumber &&
+    metaConfig.accessToken !== 'YOUR_META_ACCESS_TOKEN_HERE' &&
+    metaConfig.phoneNumberId !== 'YOUR_META_PHONE_NUMBER_ID_HERE'
   );
 }
 

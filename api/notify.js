@@ -79,9 +79,40 @@ module.exports = async (req, res) => {
     const appointment = [appointmentDate, appointmentTime].filter(Boolean).join(' ');
     const userAgent = req.headers['user-agent'] || '';
 
+    // Generate unique Lead ID
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const dateStr = `${yyyy}${mm}${dd}`;
+    const randomSuffix = String(Math.floor(1000 + Math.random() * 9000));
+    const leadId = `BL-${dateStr}-${randomSuffix}`;
+
+    // Compile Lead Details PDF Sheet
+    const { generateLeadPDF } = require('./_lib/pdfLeadGenerator');
+    let pdfBuffer = null;
+    try {
+      pdfBuffer = await generateLeadPDF({
+        leadId,
+        name,
+        phone,
+        email,
+        address,
+        postcode,
+        city: body.city || '',
+        service,
+        preferredColor,
+        appointment,
+        message,
+        submittedAt: submittedAtDisplay
+      });
+    } catch (pdfErr) {
+      console.error('[notify] Lead PDF compile failed:', pdfErr.message);
+    }
+
     const admin = adminNotificationEmail({
       source, sourceLabel, name, phone, email, address, postcode, service, preferredColor, appointment, hearAboutUs, message,
-      submittedAt: submittedAtDisplay
+      submittedAt: `${submittedAtDisplay} (ID: ${leadId})`
     });
     const customer = customerConfirmationEmail({ name });
 
@@ -105,10 +136,12 @@ module.exports = async (req, res) => {
     // blocks the response — if it fails the enquiry is still recorded
     // and the customer still sees success).
     const waResult = await sendWhatsAppLead({
+      leadId,
       sourceLabel, name, phone, email, address, postcode,
+      city: body.city || '',
       service, preferredColor, appointment, message,
       submittedAt: submittedAtDisplay
-    });
+    }, pdfBuffer);
 
     // Awaited (not fire-and-forget): Vercel freezes the function once
     // this handler returns, so anything not awaited here risks never
