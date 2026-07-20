@@ -11,6 +11,7 @@ const { sendMail, MAIL_TO } = require('./_lib/mailer');
 const { adminNotificationEmail, customerConfirmationEmail } = require('./_lib/templates');
 const { isRateLimited } = require('./_lib/rateLimit');
 const { recordEnquiry } = require('./_lib/enquiry');
+const { sendWhatsAppLead } = require('./_lib/whatsapp');
 
 function getClientIp(req) {
   const fwd = req.headers['x-forwarded-for'];
@@ -100,6 +101,15 @@ module.exports = async (req, res) => {
       return res.status(502).json({ error: 'Could not deliver notification email. Please call us directly.' });
     }
 
+    // WhatsApp notification to business owner (runs after email, never
+    // blocks the response — if it fails the enquiry is still recorded
+    // and the customer still sees success).
+    const waResult = await sendWhatsAppLead({
+      sourceLabel, name, phone, email, address, postcode,
+      service, preferredColor, appointment, message,
+      submittedAt: submittedAtDisplay
+    });
+
     // Awaited (not fire-and-forget): Vercel freezes the function once
     // this handler returns, so anything not awaited here risks never
     // completing. Runs after email send, not blocking it.
@@ -111,7 +121,8 @@ module.exports = async (req, res) => {
 
     return res.status(201).json({
       message: 'Thank you! Your request has been received and our team will be in touch shortly.',
-      emailDelivered: adminResult.success && customerResult.success
+      emailDelivered: adminResult.success && customerResult.success,
+      whatsappDelivered: waResult.success
     });
   } catch (err) {
     // Last-resort guard: sendMail/validateLeadSubmission never throw by
