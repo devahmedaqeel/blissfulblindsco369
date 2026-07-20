@@ -8,17 +8,17 @@ const nodemailer = require('nodemailer');
 let transporterPromise = null;
 let usingEthereal = false;
 
-const SMTP_HOST = process.env.SMTP_HOST || 'smtp.hostinger.com';
-const SMTP_PORT = Number(process.env.SMTP_PORT) || 465;
+const SMTP_HOST = process.env.SMTP_HOST || process.env.EMAIL_HOST || 'smtp.hostinger.com';
+const SMTP_PORT = Number(process.env.SMTP_PORT || process.env.EMAIL_PORT) || 465;
 const SMTP_SECURE = process.env.SMTP_SECURE ? process.env.SMTP_SECURE !== 'false' : true;
-const SMTP_USER = process.env.SMTP_USER || '';
-const SMTP_PASS = process.env.SMTP_PASS || '';
+const SMTP_USER = process.env.SMTP_USER || process.env.EMAIL_USER || '';
+const SMTP_PASS = process.env.SMTP_PASS || process.env.EMAIL_PASS || '';
 // Falls back to a placeholder address (not a real mailbox) only so the
 // Ethereal dev/test path always has a syntactically valid From header —
 // production always has SMTP_USER set (enforced by getTransporter below),
 // so this branch is never reached with real mail actually being sent.
 const MAIL_FROM = process.env.MAIL_FROM || (SMTP_USER ? `Blissful Blinds Ltd <${SMTP_USER}>` : 'Blissful Blinds Ltd <no-reply@blissfulblindsltd.co.uk>');
-const MAIL_TO = process.env.MAIL_TO || SMTP_USER || 'info@blissfulblindsltd.co.uk';
+const MAIL_TO = process.env.MAIL_TO || process.env.OWNER_EMAIL || SMTP_USER || 'info@blissfulblindsltd.co.uk';
 
 // Serverless functions have a hard execution limit (Vercel's default is
 // 10s on Hobby). A hung SMTP connection must not be allowed to eat the

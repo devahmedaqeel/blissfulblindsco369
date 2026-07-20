@@ -1,195 +1,188 @@
-const axios = require('axios');
-const metaConfig = require('../config/meta');
-const metaHelpers = require('../utils/metaHelpers');
 const NotificationLog = require('../models/NotificationLog');
 
-// Delays in seconds for retries (Index 0 = 5s, Index 1 = 15s, Index 2 = 30s)
-const RETRY_DELAYS = [5, 15, 30];
+// Green API only — per product decision, this order pipeline never falls
+// back to CallMeBot or Meta Cloud API. Reads exactly these three vars.
+const GREENAPI_ID = process.env.GREENAPI_ID || '';
+const GREENAPI_TOKEN = process.env.GREENAPI_TOKEN || '';
+const MY_WHATSAPP = process.env.MY_WHATSAPP || '';
 
-// CallMeBot properties
-const OWNER_WHATSAPP = process.env.OWNER_WHATSAPP_NUMBER || '+447341645339';
-const CALLMEBOT_KEY = process.env.CALLMEBOT_API_KEY || '';
+// Vercel serverless functions don't guarantee code keeps running after the
+// response is sent, so delivery must be awaited inside the request instead
+// of fired-and-forgotten with setTimeout retries. Each call gets its own
+// hard timeout so a slow/unreachable Green API can never stall the booking
+// response or blow through the function's execution limit.
+const GREEN_API_TIMEOUT_MS = 6000;
 
-/**
- * Orchestrates sending both WhatsApp Text alert and WhatsApp PDF document to the owner.
- * Executes asynchronously in the background.
- * @param {Object} order The Order object
- * @param {Buffer} pdfBuffer The invoice PDF buffer
- */
-async function sendWhatsAppNotifications(order, pdfBuffer) {
-  // 1. CallMeBot Dispatch (Free, zero-config pathway)
-  if (CALLMEBOT_KEY && CALLMEBOT_KEY !== 'YOUR_CALLMEBOT_KEY_HERE') {
-    triggerWhatsAppMessageWithRetries(
-      () => sendCallMeBotAlert(order),
-      'WhatsAppText',
-      order.orderId
-    );
-    return;
-  }
-
-  // 2. Meta Cloud API Dispatch (Fallback, premium pathway)
-  if (!metaHelpers.validateMetaConfig()) {
-    console.warn(`[WhatsApp] Skipping notifications for order ${order.orderId}: Meta credentials (token, phone number ID, or owner number) are not configured.`);
-    return;
-  }
-
-  // Send text alert
-  triggerWhatsAppMessageWithRetries(
-    () => sendWhatsAppText(order),
-    'WhatsAppText',
-    order.orderId
-  );
-
-  // Send PDF document
-  triggerWhatsAppMessageWithRetries(
-    () => sendWhatsAppPDF(order, pdfBuffer),
-    'WhatsAppPDF',
-    order.orderId
-  );
+function isGreenApiConfigured() {
+  return !!(GREENAPI_ID && GREENAPI_TOKEN && MY_WHATSAPP);
 }
 
-/**
- * Sends a message via CallMeBot API containing order details and a PDF download link.
- */
-async function sendCallMeBotAlert(order) {
-  const textBody = metaHelpers.formatWhatsAppTextBody(order);
-  const pdfDownloadLink = `\n📥 *Download Invoice PDF:* \nhttps://blissfulblindsltd.co.uk/api/orders/${order.orderId}/invoice`;
-  const fullText = textBody + pdfDownloadLink;
-  
-  const recipient = OWNER_WHATSAPP.replace(/[^\d+]/g, ''); // CallMeBot supports + in numbers
-  const url = `https://api.callmebot.com/whatsapp.php`;
-
-  const response = await axios.get(url, {
-    params: {
-      phone: recipient,
-      text: fullText,
-      apikey: CALLMEBOT_KEY
-    }
-  });
-
-  return response.data;
+// Matches the normalization already used by api/notify.js so both Green API
+// integrations behave identically: strip everything but digits, then append
+// the fixed Green API suffix (e.g. 447341645339@c.us).
+function toChatId(rawNumber) {
+  const digits = String(rawNumber).replace(/[^\d]/g, '');
+  return `${digits}@c.us`;
 }
 
-/**
- * Posts text message to Meta API.
- */
-async function sendWhatsAppText(order) {
-  const textBody = metaHelpers.formatWhatsAppTextBody(order);
-  const payload = {
-    messaging_product: 'whatsapp',
-    recipient_type: 'individual',
-    to: metaConfig.ownerWhatsappNumber,
-    type: 'text',
-    text: {
-      preview_url: false,
-      body: textBody
-    }
-  };
-
-  const response = await axios.post(metaHelpers.getMetaUrl('messages'), payload, {
-    headers: metaHelpers.getMetaHeaders()
-  });
-
-  return response.data;
-}
-
-/**
- * Uploads invoice PDF to Meta and sends it to the owner as a document.
- */
-async function sendWhatsAppPDF(order, pdfBuffer) {
-  // Upload PDF media to Meta
-  const form = new FormData();
-  const blob = new Blob([pdfBuffer], { type: 'application/pdf' });
-  form.append('file', blob, `Order-${order.orderId}.pdf`);
-  form.append('messaging_product', 'whatsapp');
-
-  const uploadResponse = await axios.post(metaHelpers.getMetaUrl('media'), form, {
-    headers: metaHelpers.getMetaHeaders('multipart/form-data')
-  });
-
-  const mediaId = uploadResponse.data.id;
-  if (!mediaId) {
-    throw new Error('Meta Media API upload succeeded but returned no media ID.');
-  }
-
-  // Send the document using the media ID
-  const payload = {
-    messaging_product: 'whatsapp',
-    recipient_type: 'individual',
-    to: metaConfig.ownerWhatsappNumber,
-    type: 'document',
-    document: {
-      id: mediaId,
-      filename: `Order-${order.orderId}.pdf`
-    }
-  };
-
-  const sendResponse = await axios.post(metaHelpers.getMetaUrl('messages'), payload, {
-    headers: metaHelpers.getMetaHeaders()
-  });
-
-  return sendResponse.data;
-}
-
-/**
- * Executes a sending function with database logging and a timeout-based retry queue.
- */
-async function triggerWhatsAppMessageWithRetries(sendFn, notificationType, orderId, attemptNumber = 1) {
+async function fetchWithTimeout(url, options, timeoutMs) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
-    // Execute API call
-    await sendFn();
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
 
-    // Log attempt Success in MongoDB
-    await NotificationLog.findOneAndUpdate(
-      { orderId, notificationType },
-      {
-        $set: { status: 'Sent', deliveredAt: new Date() },
-        $push: {
-          attempts: {
-            attemptNumber,
-            success: true,
-            timestamp: new Date()
-          }
-        }
-      },
-      { upsert: true }
-    );
+/**
+ * Field-for-field mirror of the owner alert email (services/emailService.js
+ * -> sendOwnerAlertEmail) so the owner sees identical information on both
+ * channels — same saved Order document, same Google Maps link, no separate
+ * data source. If a field is added to the owner email, add it here too.
+ */
+function formatOrderMessage(order, mapsLink) {
+  const formattedDate = new Date(order.scheduling.preferredDate).toLocaleDateString('en-GB', {
+    day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/London'
+  });
+  const timeSubmitted = new Date(order.createdAt || Date.now()).toLocaleString('en-GB', {
+    day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London'
+  });
 
-    console.log(`[WhatsApp] Sent ${notificationType} successfully for order ${orderId} (Attempt ${attemptNumber}).`);
-  } catch (error) {
-    const errorMsg = error.response ? JSON.stringify(error.response.data) : error.message;
-    console.error(`[WhatsApp] Failed to send ${notificationType} for order ${orderId} (Attempt ${attemptNumber}):`, errorMsg);
+  return `🚨 *NEW ORDER RECEIVED*
+----------------------------------------
+🌐 *Website:* Blissful Blinds Ltd (blissfulblindsltd.co.uk)
+🆔 *Order ID:* ${order.orderId}
+⏰ *Date & Time (UK):* ${timeSubmitted}
 
-    // Log attempt failure in MongoDB
-    const log = await NotificationLog.findOneAndUpdate(
-      { orderId, notificationType },
-      {
-        $push: {
-          attempts: {
-            attemptNumber,
-            success: false,
-            errorMsg: errorMsg.slice(0, 1000), // Prevent storing overly massive API traces
-            timestamp: new Date()
-          }
-        },
-        $inc: { failuresCount: 1 }
-      },
-      { upsert: true, new: true }
-    );
+👤 *Customer Contact Details*
+- *Name:* ${order.customer.name}
+- *Company Name:* ${order.customer.companyName || 'None'}
+- *Phone:* ${order.customer.phone}
+- *Email:* ${order.customer.email}
+- *Installation Address:* ${order.customer.address}, ${order.customer.city}, ${order.customer.postcode}
 
-    // Retry logic
-    if (attemptNumber <= RETRY_DELAYS.length) {
-      const delaySeconds = RETRY_DELAYS[attemptNumber - 1];
-      console.log(`[WhatsApp] Scheduling retry #${attemptNumber} for ${notificationType} (order ${orderId}) in ${delaySeconds} seconds.`);
-      
-      setTimeout(() => {
-        triggerWhatsAppMessageWithRetries(sendFn, notificationType, orderId, attemptNumber + 1);
-      }, delaySeconds * 1000);
-    } else {
-      // Out of attempts, mark as failed
-      log.status = 'Failed';
-      await log.save();
-      console.error(`[WhatsApp] Exhausted all retries for ${notificationType} (order ${orderId}). Marked as Failed.`);
+🪟 *Product Details*
+- *Product Type:* ${order.product.name}
+- *Blind Type:* ${order.product.blindType}
+- *Colour:* ${order.product.colour}
+- *Fabric:* ${order.product.fabric}
+- *Room:* ${order.product.room}
+- *Fitting Type:* ${order.product.fittingType} (${order.product.installationRequired ? 'Installation Required' : 'Supply Only'})
+- *Width:* ${order.product.width} cm
+- *Height:* ${order.product.height} cm
+- *Quantity:* ${order.product.quantity}
+
+💰 *Price Breakdown*
+- *Subtotal:* £${order.pricing.subtotal.toFixed(2)}
+- *VAT (20%):* £${order.pricing.vat.toFixed(2)}
+- *Grand Total:* £${order.pricing.grandTotal.toFixed(2)}
+
+📝 *Customer Notes:* ${order.scheduling.specialNotes || 'None'}
+📅 *Preferred Installation:* ${formattedDate} (${order.scheduling.preferredTime})
+
+📍 *Google Maps Link:*
+${mapsLink || 'N/A'}
+
+👉 *Admin Dashboard:*
+https://blissfulblindsltd.co.uk/admin/orders/?id=${order.orderId}`;
+}
+
+async function sendGreenApiText(order, mapsLink, chatId) {
+  const url = `https://api.green-api.com/waInstance${GREENAPI_ID}/sendMessage/${GREENAPI_TOKEN}`;
+  const response = await fetchWithTimeout(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chatId, message: formatOrderMessage(order, mapsLink) })
+  }, GREEN_API_TIMEOUT_MS);
+
+  if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    throw new Error(`Green API sendMessage ${response.status}: ${body.slice(0, 300)}`);
+  }
+  return response.json();
+}
+
+// sendFileByUpload sends the exact same in-memory PDF buffer directly as
+// multipart form data in one call — no separate storage bucket, no public
+// URL, and no second PDF generation, satisfying "upload only once if
+// required" with the same buffer already attached to both emails.
+async function sendGreenApiPdf(order, pdfBuffer, chatId) {
+  const url = `https://api.green-api.com/waInstance${GREENAPI_ID}/sendFileByUpload/${GREENAPI_TOKEN}`;
+  const form = new FormData();
+  form.append('chatId', chatId);
+  form.append('file', new Blob([pdfBuffer], { type: 'application/pdf' }), `Order-${order.orderId}.pdf`);
+  form.append('caption', `Invoice for Order ${order.orderId}`);
+
+  const response = await fetchWithTimeout(url, {
+    method: 'POST',
+    body: form
+  }, GREEN_API_TIMEOUT_MS);
+
+  if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    throw new Error(`Green API sendFileByUpload ${response.status}: ${body.slice(0, 300)}`);
+  }
+  return response.json();
+}
+
+async function alreadySent(orderId, notificationType) {
+  const existing = await NotificationLog.findOne({ orderId, notificationType, status: 'Sent' });
+  return !!existing;
+}
+
+async function logResult(orderId, notificationType, success, errorMsg) {
+  await NotificationLog.findOneAndUpdate(
+    { orderId, notificationType },
+    {
+      $set: { status: success ? 'Sent' : 'Failed', ...(success ? { deliveredAt: new Date() } : {}) },
+      $push: { attempts: { attemptNumber: 1, success, errorMsg: errorMsg || '', timestamp: new Date() } },
+      $inc: { failuresCount: success ? 0 : 1 }
+    },
+    { upsert: true }
+  );
+}
+
+/**
+ * Sends the owner's WhatsApp text alert and PDF invoice via Green API,
+ * using the same Order document and PDF buffer as the emails. Awaited by
+ * the caller so delivery is guaranteed to run to completion within the
+ * request lifecycle. Never throws — every failure is caught, logged to
+ * NotificationLog, and left there; the booking response is never affected.
+ */
+async function sendWhatsAppNotifications(order, pdfBuffer, mapsLink) {
+  if (!isGreenApiConfigured()) {
+    console.warn(`[WhatsApp] Skipping Green API notifications for order ${order.orderId}: GREENAPI_ID, GREENAPI_TOKEN or MY_WHATSAPP is not configured.`);
+    return;
+  }
+
+  const chatId = toChatId(MY_WHATSAPP);
+
+  // Text first, then the PDF, so the owner reads the summary before the
+  // file lands — matches the order the owner email presents information in.
+  if (await alreadySent(order.orderId, 'WhatsAppText')) {
+    console.warn(`[WhatsApp] Skipping duplicate text send for order ${order.orderId} — already marked Sent.`);
+  } else {
+    try {
+      await sendGreenApiText(order, mapsLink, chatId);
+      await logResult(order.orderId, 'WhatsAppText', true);
+      console.log(`[WhatsApp] Green API text sent for order ${order.orderId}.`);
+    } catch (err) {
+      console.error(`[WhatsApp] Green API text failed for order ${order.orderId}:`, err.message);
+      await logResult(order.orderId, 'WhatsAppText', false, err.message);
+    }
+  }
+
+  if (await alreadySent(order.orderId, 'WhatsAppPDF')) {
+    console.warn(`[WhatsApp] Skipping duplicate PDF send for order ${order.orderId} — already marked Sent.`);
+  } else {
+    try {
+      await sendGreenApiPdf(order, pdfBuffer, chatId);
+      await logResult(order.orderId, 'WhatsAppPDF', true);
+      console.log(`[WhatsApp] Green API PDF sent for order ${order.orderId}.`);
+    } catch (err) {
+      console.error(`[WhatsApp] Green API PDF failed for order ${order.orderId}:`, err.message);
+      await logResult(order.orderId, 'WhatsAppPDF', false, err.message);
     }
   }
 }

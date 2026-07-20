@@ -92,15 +92,19 @@ async function processOrderNotifications(order) {
       })()
     ]);
 
-    // 5. Once the owner email has sent successfully, immediately fire the
-    // WhatsApp notifications (same order document, same PDF buffer, same
-    // Maps link — no separate data source). Runs in the background so it
-    // never delays the API response; a WhatsApp failure is only logged and
-    // never affects the email result already returned above.
+    // 5. Once the owner email has sent successfully, send the WhatsApp
+    // notifications (same order document, same PDF buffer, same Maps link —
+    // no separate data source). Awaited deliberately: Vercel serverless
+    // functions don't guarantee a fire-and-forget background task runs to
+    // completion after the response is sent, so delivery must finish inside
+    // the request. sendWhatsAppNotifications never throws — a Green API
+    // failure is only logged and never affects the email result above.
     if (emailOwnerSuccess) {
-      sendWhatsAppNotifications(order, pdfBuffer, mapsLink).catch(err => {
-        console.error(`[NotificationService] WhatsApp notification background crash for ${orderId}:`, err.message);
-      });
+      try {
+        await sendWhatsAppNotifications(order, pdfBuffer, mapsLink);
+      } catch (err) {
+        console.error(`[NotificationService] WhatsApp notification crash for ${orderId}:`, err.message);
+      }
     } else {
       console.warn(`[NotificationService] Skipping WhatsApp notification for ${orderId}: owner email did not send successfully.`);
       await NotificationLog.updateMany(
