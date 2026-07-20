@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Place Order - Blissful Blinds Ltd | Custom Made Window Coverings</title>
+  <meta name="description" content="Place your order online for custom, made-to-measure window blinds and shutters. Select styles, colours, measurements, and preferred installation dates.">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="/favicon-48x48.png" sizes="48x48" type="image/png">
+  <link rel="icon" href="/favicon-96x96.png" sizes="96x96" type="image/png">
+  <link rel="apple-touch-icon" href="/favicon-180x180.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#0F172A">
+
+  <!-- Core layout CSS -->
+  <link rel="stylesheet" href="../styles.css?v=3.0">
+  <!-- Custom Order Page styles -->
+  <link rel="stylesheet" href="order.css">
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="progressBar"></div>
+
+  <!-- Top Announcement Banner -->
+  <div class="top-banner" role="region" aria-label="Announcement">
+    <div class="top-banner-inner">
+      <a href="tel:+441733853037" class="tb-item tb-phone">
+        <span class="tb-icon"><i class="fa-solid fa-phone"></i></span>
+        <span class="tb-text">
+          <span class="tb-label">Call Today</span>
+          <span class="tb-value">01733 853037</span>
+        </span>
+      </a>
+      <span class="tb-divider"></span>
+      <a href="mailto:info@blissfulblindsltd.co.uk" class="tb-item tb-email">
+        <span class="tb-icon"><i class="fa-solid fa-envelope"></i></span>
+        <span class="tb-text">
+          <span class="tb-label">Email Us</span>
+          <span class="tb-value">info@blissfulblindsltd.co.uk</span>
+        </span>
+      </a>
+      <span class="tb-divider"></span>
+      <a href="../#areas-covered" class="tb-item tb-location">
+        <span class="tb-icon"><i class="fa-solid fa-location-dot"></i></span>
+        <span class="tb-text">
+          <span class="tb-label">Proudly Serving</span>
+          <span class="tb-value">Peterborough &bull; Leicester &bull; Luton</span>
+        </span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container nav-container">
+      <a href="../index.html" class="logo-container">
+        <img class="logo-icon" src="../images/logo-dark.png?v=3.0" width="575" height="450" alt="Blissful Blinds Logo">
+        <div class="brand-text">
+          <span class="brand-name">Blissful Blinds</span>
+          <span class="brand-tagline">Style. Privacy. Comfort.</span>
+        </div>
+      </a>
+      
+      <button class="mobile-nav-toggle" id="mobileToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav-menu" id="navMenu">
+        <a href="../index.html" class="nav-link">Home</a>
+        <a href="../window-blinds-range/index.html" class="nav-link">Browse Blinds</a>
+        <a href="index.html" class="nav-link active">Order Online</a>
+        <a href="../admin/orders/index.html" class="nav-link">Admin Dashboard</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page Banner -->
+  <section class="order-hero">
+    <div class="container text-center">
+      <h1>Custom Order Configurator</h1>
+      <p>Specify measurements, select materials, and build your bespoke window coverings with instant price calculations.</p>
+    </div>
+  </section>
+
+  <!-- Main Order Form Section -->
+  <main class="container order-main-container" id="main-content">
+    
+    <!-- Form Block -->
+    <div class="order-form-block">
+      <form id="orderForm" novalidate>
+        <!-- Honeypot anti-spam field -->
+        <input type="text" name="website" id="website" style="display:none !important" tabindex="-1" autocomplete="off">
+
+        <!-- STEP 1: Customer Details -->
+        <fieldset class="form-step-section">
+          <legend class="step-title"><span class="step-number">1</span> Customer Info</legend>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="customerName">Full Name <span class="required">*</span></label>
+              <input type="text" id="customerName" name="customerName" required placeholder="e.g. John Smith">
+            </div>
+            <div class="form-group">
+              <label for="companyName">Company Name <span class="optional">(Optional)</span></label>
+              <input type="text" id="companyName" name="companyName" placeholder="e.g. Acme Corporation">
+            </div>
+            <div class="form-group">
+              <label for="customerEmail">Email Address <span class="required">*</span></label>
+              <input type="email" id="customerEmail" name="customerEmail" required placeholder="e.g. john@email.com">
+            </div>
+            <div class="form-group">
+              <label for="customerPhone">Phone Number <span class="required">*</span></label>
+              <input type="tel" id="customerPhone" name="customerPhone" required placeholder="e.g. +447341645339">
+            </div>
+            <div class="form-group">
+              <label for="whatsappNumber">WhatsApp Number <span class="required">*</span></label>
+              <input type="tel" id="whatsappNumber" name="whatsappNumber" required placeholder="e.g. +447341645339">
+            </div>
+            <div class="form-group">
+              <label for="postcode">Postcode <span class="required">*</span></label>
+              <input type="text" id="postcode" name="postcode" required placeholder="e.g. PE3 9SR">
+            </div>
+            <div class="form-group full-width">
+              <label for="installationAddress">Installation Address <span class="required">*</span></label>
+              <input type="text" id="installationAddress" name="installationAddress" required placeholder="e.g. 75 Ringwood Bretton">
+            </div>
+            <div class="form-group">
+              <label for="city">City <span class="required">*</span></label>
+              <input type="text" id="city" name="city" required placeholder="e.g. Peterborough">
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- STEP 2: Product Specifications -->
+        <fieldset class="form-step-section">
+          <legend class="step-title"><span class="step-number">2</span> Product Specifications</legend>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="product">Select Product Range <span class="required">*</span></label>
+              <select id="product" name="product" required>
+                <option value="" disabled selected>-- Choose Product --</option>
+                <option value="Roller Blind">Roller Blind</option>
+                <option value="Vertical Blind">Vertical Blind</option>
+                <option value="Perfect Fit Venetian Blind">Perfect Fit Venetian Blind</option>
+                <option value="Perfect Metal Venetian Blind">Perfect Metal Venetian Blind</option>
+                <option value="Vision Blind">Vision Blind</option>
+                <option value="Pleated Blind">Pleated Blind</option>
+                <option value="Roman Blind">Roman Blind</option>
+                <option value="Wooden Blind">Wooden Blind</option>
+                <option value="Faux Wood Blind">Faux Wood Blind</option>
+                <option value="Bespoke Window Shutter">Bespoke Window Shutter</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="blindType">Blind Type Style <span class="required">*</span></label>
+              <select id="blindType" name="blindType" required>
+                <option value="" disabled selected>-- Choose Style --</option>
+                <option value="Venetian">Venetian</option>
+                <option value="Roller">Roller</option>
+                <option value="Vertical">Vertical</option>
+                <option value="Shutter">Shutter</option>
+                <option value="Roman">Roman</option>
+                <option value="Pleated">Pleated</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="colour">Colour <span class="required">*</span></label>
+              <select id="colour" name="colour" required>
+                <option value="" disabled selected>-- Select Colour --</option>
+                <option value="White">White</option>
+                <option value="Grey">Grey</option>
+                <option value="Cream">Cream</option>
+                <option value="Charcoal">Charcoal</option>
+                <option value="Black">Black</option>
+                <option value="Natural Oak">Natural Oak</option>
+                <option value="Alabaster">Alabaster</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="fabric">Fabric / Material <span class="required">*</span></label>
+              <select id="fabric" name="fabric" required>
+                <option value="" disabled selected>-- Select Material --</option>
+                <option value="Blackout Lining">Blackout Lining</option>
+                <option value="Thermal Insulating">Thermal Insulating</option>
+                <option value="Standard Light Filtering">Standard Light Filtering</option>
+                <option value="Real Basswood">Real Basswood</option>
+                <option value="Waterproof Faux Wood">Waterproof Faux Wood</option>
+                <option value="Moisture Resistant PVC">Moisture Resistant PVC</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="width">Width (cm) <span class="required">*</span></label>
+              <input type="number" id="width" name="width" min="10" max="500" placeholder="Width (10 - 500 cm)" required>
+            </div>
+            <div class="form-group">
+              <label for="height">Height (cm) <span class="required">*</span></label>
+              <input type="number" id="height" name="height" min="10" max="500" placeholder="Height (10 - 500 cm)" required>
+            </div>
+            <div class="form-group">
+              <label for="quantity">Quantity <span class="required">*</span></label>
+              <input type="number" id="quantity" name="quantity" min="1" max="100" value="1" required>
+            </div>
+            <div class="form-group">
+              <label for="room">Room Location <span class="required">*</span></label>
+              <select id="room" name="room" required>
+                <option value="" disabled selected>-- Select Room --</option>
+                <option value="Living Room">Living Room</option>
+                <option value="Bedroom">Bedroom</option>
+                <option value="Kitchen">Kitchen</option>
+                <option value="Bathroom">Bathroom</option>
+                <option value="Conservatory">Conservatory</option>
+                <option value="Dining Room">Dining Room</option>
+                <option value="Office">Office</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="fittingType">Fitting Placement <span class="required">*</span></label>
+              <select id="fittingType" name="fittingType" required>
+                <option value="Inside Recess" selected>Inside Recess</option>
+                <option value="Outside Recess">Outside Recess</option>
+              </select>
+            </div>
+            <div class="form-group checkbox-group">
+              <label class="toggle-switch">
+                <input type="checkbox" id="installationRequired" name="installationRequired" checked>
+                <span class="slider"></span>
+              </label>
+              <div class="checkbox-text">
+                <label for="installationRequired" style="margin: 0; font-weight: 600;">Free Professional Installation</label>
+                <p style="margin: 4px 0 0 0; font-size: 0.8rem; color: var(--text-muted);">Highly recommended. Includes free measuring validation and 1-year fit guarantee.</p>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- STEP 3: Scheduling Preference -->
+        <fieldset class="form-step-section">
+          <legend class="step-title"><span class="step-number">3</span> Scheduling & Notes</legend>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="preferredDate">Preferred Fitting Date <span class="required">*</span></label>
+              <input type="date" id="preferredDate" name="preferredDate" required>
+            </div>
+            <div class="form-group">
+              <label for="preferredTime">Preferred Time Slot <span class="required">*</span></label>
+              <select id="preferredTime" name="preferredTime" required>
+                <option value="Morning (9am - 12pm)">Morning (9am - 12pm)</option>
+                <option value="Afternoon (12pm - 4pm)">Afternoon (12pm - 4pm)</option>
+                <option value="Evening (4pm - 6pm)">Evening (4pm - 6pm)</option>
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label for="specialNotes">Special Instructions / Notes</label>
+              <textarea id="specialNotes" name="specialNotes" rows="3" placeholder="Specify details about access, window shapes, or requirements..."></textarea>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+
+    <!-- Pricing Sidebar Summary -->
+    <aside class="order-summary-sidebar">
+      <div class="sidebar-card">
+        <h3 class="sidebar-title">Order Summary</h3>
+        <div class="sidebar-product-preview" id="productPreview">
+          <p class="preview-placeholder">Configure product specifications to see pricing options...</p>
+        </div>
+        
+        <div class="pricing-ledger">
+          <div class="ledger-row">
+            <span>Subtotal</span>
+            <span id="ledgerSubtotal">£0.00</span>
+          </div>
+          <div class="ledger-row">
+            <span>VAT (20%)</span>
+            <span id="ledgerVat">£0.00</span>
+          </div>
+          <div class="ledger-row total-row">
+            <span>Grand Total</span>
+            <span id="ledgerTotal">£0.00</span>
+          </div>
+        </div>
+
+        <button type="submit" form="orderForm" class="btn btn-primary btn-block submit-btn" id="submitBtn">
+          <i class="fa-solid fa-cart-shopping"></i> Submit Order
+        </button>
+
+        <div class="guarantee-box">
+          <div class="g-icon"><i class="fa-solid fa-shield-halved"></i></div>
+          <div class="g-text">
+            <h4>100% Risk Free</h4>
+            <p>A 50% deposit will be settled after review. Your order includes a 1-year parts warranty.</p>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Success Overlay Screen -->
+  <div class="success-overlay" id="successOverlay" hidden>
+    <div class="success-card text-center">
+      <div class="success-icon"><i class="fa-solid fa-circle-check"></i></div>
+      <h2>Order Placed Successfully!</h2>
+      <p class="success-subtitle">Your transaction has been processed in under 10 seconds.</p>
+      
+      <div class="success-details">
+        <div class="detail-row">
+          <span>Order Reference ID</span>
+          <strong id="successOrderId" style="color: var(--accent);">BB-20260720-0001</strong>
+        </div>
+        <div class="detail-row">
+          <span>Order Price Total</span>
+          <strong id="successTotal">£0.00</strong>
+        </div>
+      </div>
+
+      <div class="success-actions">
+        <a href="" id="successPdfLink" class="btn btn-primary" download><i class="fa-solid fa-file-pdf"></i> Download Invoice PDF</a>
+        <button onclick="window.print()" class="btn btn-outline"><i class="fa-solid fa-print"></i> Print Receipt</button>
+      </div>
+
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 24px;">A confirmation email has been dispatched. Our team will coordinate next steps shortly.</p>
+      <a href="../index.html" class="back-home-link"><i class="fa-solid fa-arrow-left"></i> Back to Homepage</a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <h4 style="color: white; margin-bottom: 1rem;">Blissful Blinds Ltd</h4>
+        <p style="font-size: 0.85rem; line-height: 1.6;">Premium made-to-measure blinds, shutters, and window coverings professionally fitted in Peterborough, Leicester, and Luton.</p>
+      </div>
+      <div>
+        <h4 style="color: white; margin-bottom: 1rem;">Contact Us</h4>
+        <p style="font-size: 0.85rem; line-height: 1.6;">Phone: 01733 853037<br>WhatsApp: +44 7341 645339<br>Email: info@blissfulblindsltd.co.uk</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>&copy; 2026 Blissful Blinds Ltd. All Rights Reserved. Company No. 17329706. Registered in England & Wales.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- App script for sticky navbar, cookie banner etc. -->
+  <script src="../app.js"></script>
+  <!-- Custom Checkout Form script -->
+  <script src="order.js"></script>
+</body>
+</html>

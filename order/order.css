@@ -1,0 +1,441 @@
+/* Custom Checkout Order Configurator Stylesheet */
+
+:root {
+  --primary: #0F172A;
+  --primary-light: #1E293B;
+  --accent: #E11D48;
+  --accent-hover: #BE123C;
+  --bg-dark: #0B1120;
+  --border: #E2E8F0;
+  --text-muted: #64748B;
+  --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 10px 10px -5px rgba(0, 0, 0, 0.03);
+}
+
+.order-hero {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(20, 10, 15, 0.85) 100%), url('../images/products/luxury_hero_blinds.jpg');
+  background-size: cover;
+  background-position: center;
+  padding: 80px 0 60px 0;
+  color: white;
+  margin-top: calc(-1 * var(--header-h, 0px));
+}
+
+.order-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 12px;
+}
+
+.order-hero p {
+  color: #94A3B8;
+  font-size: 1.1rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Grid Checkout Layout */
+.order-main-container {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 40px;
+  margin-top: -30px;
+  margin-bottom: 80px;
+  position: relative;
+  z-index: 10;
+}
+
+.order-form-block {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: var(--shadow-lg);
+}
+
+.order-summary-sidebar {
+  position: sticky;
+  top: 90px;
+  height: fit-content;
+}
+
+.sidebar-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: var(--shadow-lg);
+}
+
+.sidebar-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-top: 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 12px;
+}
+
+/* Form Styles */
+.form-step-section {
+  border: none;
+  padding: 0;
+  margin: 0 0 40px 0;
+}
+
+.form-step-section:last-of-type {
+  margin-bottom: 0;
+}
+
+.step-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.step-number {
+  background-color: var(--accent);
+  color: white;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full-width {
+  grid-column: span 2;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  font-family: inherit;
+  font-size: 0.95rem;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background-color: #F8FAFC;
+  color: var(--primary);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--accent);
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.08);
+}
+
+.form-group .required {
+  color: var(--accent);
+}
+
+.form-group .optional {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: normal;
+}
+
+/* Custom Toggle Switch for Installation */
+.form-group.checkbox-group {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 16px;
+  background-color: #FFF1F2;
+  border: 1px solid #FFE4E6;
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 10px;
+}
+
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #CBD5E1;
+  transition: .3s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.toggle-switch input:checked + .slider {
+  background-color: var(--accent);
+}
+
+.toggle-switch input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+/* Pricing summary ledger */
+.sidebar-product-preview {
+  margin-bottom: 24px;
+  min-height: 100px;
+  background-color: #F8FAFC;
+  border: 1px dashed var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 0.85rem;
+}
+
+.preview-placeholder {
+  color: var(--text-muted);
+  text-align: center;
+  margin: 20px 0;
+}
+
+.preview-list {
+  list-style: none;
+  padding: 0; margin: 0;
+}
+
+.preview-list li {
+  margin-bottom: 6px;
+  line-height: 1.4;
+  color: #334155;
+}
+
+.pricing-ledger {
+  background-color: #F8FAFC;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.ledger-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+  color: #475569;
+}
+
+.ledger-row:last-of-type {
+  margin-bottom: 0;
+}
+
+.ledger-row.total-row {
+  border-top: 1.5px solid var(--border);
+  padding-top: 16px;
+  margin-top: 16px;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 20px;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.guarantee-box {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+
+.guarantee-box .g-icon {
+  color: #059669;
+  font-size: 1.4rem;
+  margin-top: 2px;
+}
+
+.guarantee-box .g-text h4 {
+  margin: 0 0 4px 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.guarantee-box .g-text p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Success Overlay Screen */
+.success-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(15, 23, 42, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+}
+
+.success-card {
+  background: white;
+  border-radius: 20px;
+  max-width: 500px;
+  width: 100%;
+  padding: 40px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  animation: modalPop 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.9) translateY(20px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.success-icon {
+  color: #10B981;
+  font-size: 4.5rem;
+  margin-bottom: 20px;
+}
+
+.success-card h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--primary);
+  margin: 0 0 8px 0;
+}
+
+.success-subtitle {
+  color: var(--text-muted);
+  margin: 0 0 32px 0;
+  font-size: 0.95rem;
+}
+
+.success-details {
+  background-color: #F8FAFC;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 32px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  margin-bottom: 12px;
+}
+
+.detail-row:last-of-type {
+  margin-bottom: 0;
+}
+
+.success-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.success-actions .btn {
+  padding: 12px 20px;
+}
+
+.back-home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-top: 24px;
+  transition: color 0.2s ease;
+}
+
+.back-home-link:hover {
+  color: var(--accent);
+}
+
+/* Responsiveness */
+@media (max-width: 992px) {
+  .order-main-container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .order-summary-sidebar {
+    position: static;
+  }
+}
+
+@media (max-width: 576px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .form-group.full-width {
+    grid-column: span 1;
+  }
+  .order-form-block {
+    padding: 24px;
+  }
+  .success-card {
+    padding: 30px 20px;
+  }
+}

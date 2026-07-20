@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
     "verify-smtp": "node scripts/verify-smtp.js",
     "test:email": "node scripts/test-email-flows.js",
     "test:realtime": "node scripts/test-realtime-flow.js",
@@ -11,7 +13,18 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.7",
+    "axios": "^1.6.8",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-rate-limit": "^7.4.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.3.1",
     "nodemailer": "^9.0.3",
+    "pdfkit": "^0.15.0",
+    "qrcode": "^1.5.3",
+    "socket.io": "^4.7.5",
     "web-push": "^3.6.7"
   }
 }

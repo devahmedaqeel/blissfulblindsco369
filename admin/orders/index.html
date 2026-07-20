@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders Dashboard - Blissful Blinds Admin</title>
+  <meta name="robots" content="noindex, nofollow">
+  
+  <!-- Dashboard Styling -->
+  <link rel="stylesheet" href="dashboard.css">
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div class="login-overlay" id="loginScreen">
+    <div class="login-card">
+      <div class="brand-header text-center">
+        <i class="fa-solid fa-gears brand-icon"></i>
+        <h2>Blissful Blinds</h2>
+        <p>Order Management Console</p>
+      </div>
+      
+      <form id="loginForm">
+        <div class="alert alert-error" id="loginError" hidden></div>
+        
+        <div class="form-group">
+          <label for="loginUsername">Username</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-user"></i>
+            <input type="text" id="loginUsername" required placeholder="Enter username" autocomplete="username">
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="loginPassword">Password</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" id="loginPassword" required placeholder="Enter password" autocomplete="current-password">
+          </div>
+        </div>
+        
+        <button type="submit" class="btn btn-primary btn-block" id="loginSubmit">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MAIN DASHBOARD CONTENT -->
+  <div class="dashboard-wrapper" id="dashboard" hidden>
+    
+    <!-- Top Navbar -->
+    <header class="dash-header">
+      <div class="header-left">
+        <div class="dash-logo">
+          <i class="fa-solid fa-sliders"></i>
+          <div>
+            <h1>Blissful Blinds Ltd</h1>
+            <span class="dash-sub">Real-Time Order Desk</span>
+          </div>
+        </div>
+        <span class="status-badge" id="connectionStatus">Connecting...</span>
+      </div>
+      <div class="header-right">
+        <button class="btn btn-outline btn-sm" id="logoutBtn">
+          <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+        </button>
+      </div>
+    </header>
+
+    <!-- METRICS GRID -->
+    <section class="metrics-grid">
+      <div class="metric-card new" data-filter="New">
+        <div class="m-left">
+          <h3>New Orders</h3>
+          <span class="m-count" id="countNew">0</span>
+        </div>
+        <div class="m-icon"><i class="fa-solid fa-bell"></i></div>
+      </div>
+      <div class="metric-card pending" data-filter="Pending">
+        <div class="m-left">
+          <h3>Pending</h3>
+          <span class="m-count" id="countPending">0</span>
+        </div>
+        <div class="m-icon"><i class="fa-solid fa-clock"></i></div>
+      </div>
+      <div class="metric-card confirmed" data-filter="Confirmed">
+        <div class="m-left">
+          <h3>Confirmed</h3>
+          <span class="m-count" id="countConfirmed">0</span>
+        </div>
+        <div class="m-icon"><i class="fa-solid fa-square-check"></i></div>
+      </div>
+      <div class="metric-card completed" data-filter="Completed">
+        <div class="m-left">
+          <h3>Completed</h3>
+          <span class="m-count" id="countCompleted">0</span>
+        </div>
+        <div class="m-icon"><i class="fa-solid fa-truck-ramp-box"></i></div>
+      </div>
+      <div class="metric-card cancelled" data-filter="Cancelled">
+        <div class="m-left">
+          <h3>Cancelled</h3>
+          <span class="m-count" id="countCancelled">0</span>
+        </div>
+        <div class="m-icon"><i class="fa-solid fa-ban"></i></div>
+      </div>
+    </section>
+
+    <!-- CONTROLS SECTION -->
+    <section class="controls-panel">
+      <div class="search-wrapper">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="Search orders by customer, postcode, blind type, order ID...">
+      </div>
+      
+      <div class="filters-wrapper">
+        <select id="statusFilter">
+          <option value="all">All Statuses</option>
+          <option value="New">New</option>
+          <option value="Pending">Pending</option>
+          <option value="Confirmed">Confirmed</option>
+          <option value="Completed">Completed</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+        
+        <button class="btn btn-outline" id="refreshBtn"><i class="fa-solid fa-rotate"></i> Refresh</button>
+      </div>
+    </section>
+
+    <!-- MAIN BODY GRID -->
+    <main class="dashboard-body">
+      
+      <!-- Orders List Column -->
+      <div class="orders-list-col">
+        <div class="list-header">
+          <h2>Order Registry (<span id="totalOrdersCount">0</span>)</h2>
+        </div>
+        
+        <div class="orders-container" id="ordersList">
+          <!-- Dynamically populated cards -->
+          <div class="list-loading text-center"><i class="fa-solid fa-circle-notch fa-spin"></i> Fetching records...</div>
+        </div>
+      </div>
+
+      <!-- Order Details Pane -->
+      <div class="order-details-col" id="detailsPane">
+        <div class="details-empty-state" id="detailsEmpty">
+          <i class="fa-solid fa-receipt"></i>
+          <h3>No Order Selected</h3>
+          <p>Choose an order card from the registry to manage customer specs, view timelines, check WhatsApp retry records, and print invoices.</p>
+        </div>
+
+        <div class="details-container" id="detailsContent" hidden>
+          <!-- Order ID Header -->
+          <div class="details-header">
+            <div>
+              <h2 id="detOrderId">BB-20260720-0001</h2>
+              <span id="detOrderDate" class="date-sub">Placed on 20 July 2026</span>
+            </div>
+            
+            <div class="status-updater">
+              <label for="detStatusSelect">Update Status</label>
+              <select id="detStatusSelect">
+                <option value="New">New</option>
+                <option value="Pending">Pending</option>
+                <option value="Confirmed">Confirmed</option>
+                <option value="Completed">Completed</option>
+                <option value="Cancelled">Cancelled</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Quick Action Buttons -->
+          <div class="actions-strip">
+            <a href="#" id="actCall" class="action-btn btn-call"><i class="fa-solid fa-phone"></i> Call Customer</a>
+            <a href="#" id="actWhatsApp" target="_blank" class="action-btn btn-wa"><i class="fa-brands fa-whatsapp"></i> Chat WhatsApp</a>
+            <a href="#" id="actMaps" target="_blank" class="action-btn btn-maps"><i class="fa-solid fa-route"></i> Google Maps</a>
+            <a href="#" id="actPdf" class="action-btn btn-pdf"><i class="fa-solid fa-file-pdf"></i> Download PDF</a>
+            <button id="actPrint" class="action-btn btn-print"><i class="fa-solid fa-print"></i> Print Invoice</button>
+          </div>
+
+          <!-- Customer details -->
+          <div class="details-section">
+            <h3 class="section-title"><i class="fa-solid fa-address-card"></i> Customer Information</h3>
+            <table class="info-table">
+              <tr>
+                <td class="label">Name / Company</td>
+                <td class="val" id="detCustName">John Smith (Acme Co)</td>
+              </tr>
+              <tr>
+                <td class="label">Email Address</td>
+                <td class="val" id="detCustEmail">john@email.com</td>
+              </tr>
+              <tr>
+                <td class="label">Installation Location</td>
+                <td class="val" id="detCustAddress">75 Ringwood Bretton, PE3 9SR</td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- Specs -->
+          <div class="details-section">
+            <h3 class="section-title"><i class="fa-solid fa-ruler-combined"></i> Product Configuration</h3>
+            <table class="info-table">
+              <tr>
+                <td class="label">Product / Style</td>
+                <td class="val" id="detProdName">Perfect Fit Venetian Blind (Venetian)</td>
+              </tr>
+              <tr>
+                <td class="label">Specs & Fabric</td>
+                <td class="val" id="detProdSpecs">White Colour, Blackout Lining Fabric</td>
+              </tr>
+              <tr>
+                <td class="label">Dimensions (W x H)</td>
+                <td class="val" id="detProdSize">120 cm x 150 cm</td>
+              </tr>
+              <tr>
+                <td class="label">Fitting Details</td>
+                <td class="val" id="detProdFitting">Inside Recess (Installation Required)</td>
+              </tr>
+              <tr>
+                <td class="label">Room Location / Qty</td>
+                <td class="val" id="detProdQty">Living Room (Quantity: 3)</td>
+              </tr>
+            </table>
+          </div>
+
+          <!-- Pricing & Schedule -->
+          <div class="details-section split">
+            <div>
+              <h3 class="section-title"><i class="fa-solid fa-sterling-sign"></i> Pricing Ledger</h3>
+              <table class="info-table">
+                <tr>
+                  <td class="label">Subtotal</td>
+                  <td class="val" id="detPriceSub">£0.00</td>
+                </tr>
+                <tr>
+                  <td class="label">VAT (20%)</td>
+                  <td class="val" id="detPriceVat">£0.00</td>
+                </tr>
+                <tr class="highlight-row">
+                  <td class="label">Total Paid/Due</td>
+                  <td class="val" id="detPriceTotal">£0.00</td>
+                </tr>
+              </table>
+            </div>
+            <div>
+              <h3 class="section-title"><i class="fa-solid fa-calendar-days"></i> Booking & Notes</h3>
+              <table class="info-table">
+                <tr>
+                  <td class="label">Preferred Fitting</td>
+                  <td class="val" id="detSchedDate">25 July 2026 (Morning)</td>
+                </tr>
+                <tr>
+                  <td class="label">Special Notes</td>
+                  <td class="val" id="detSchedNotes">None</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+
+          <!-- Order Timeline -->
+          <div class="details-section">
+            <h3 class="section-title"><i class="fa-solid fa-timeline"></i> Order Status History</h3>
+            <div class="timeline-log" id="detTimelineList">
+              <!-- Dynamically populated timeline -->
+            </div>
+          </div>
+
+          <!-- Notification Delivery status -->
+          <div class="details-section">
+            <h3 class="section-title"><i class="fa-solid fa-paper-plane"></i> Automated Communications Dispatch</h3>
+            <div class="logs-grid" id="detNotificationLogs">
+              <!-- Email / WA status boxes -->
+            </div>
+          </div>
+
+          <!-- Audit Logs -->
+          <div class="details-section">
+            <h3 class="section-title"><i class="fa-solid fa-shield-halved"></i> Dashboard Audit Trail</h3>
+            <div class="audit-log" id="detAuditList">
+              <!-- Admin actions -->
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Status comment modal -->
+  <div class="modal" id="statusModal" hidden>
+    <div class="modal-card">
+      <h3>Add Action Note</h3>
+      <p>Log a comment explaining this status update (will be added to the order timeline):</p>
+      <textarea id="statusComment" rows="3" placeholder="e.g. Deposit received, scheduled fitting team..."></textarea>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="modalCancel">Cancel</button>
+        <button class="btn btn-primary" id="modalConfirm">Save Update</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chime sound for new orders -->
+  <audio id="chimeSound" src="../../public/uploads/chime.mp3" preload="auto"></audio>
+
+  <!-- External libraries: Socket.IO client -->
+  <script src="/socket.io/socket.io.js"></script>
+  <!-- Main Dashboard Script -->
+  <script src="dashboard.js"></script>
+</body>
+</html>
