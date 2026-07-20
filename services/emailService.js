@@ -137,20 +137,26 @@ async function sendCustomerConfirmationEmail(order, pdfBuffer) {
     </html>
   `;
 
-  return transporter.sendMail({
-    from: `Blissful Blinds Ltd <${config.emailUser || 'no-reply@blissfulblindsltd.co.uk'}>`,
-    to: order.customer.email,
-    subject: 'Thank you for your Order - Blissful Blinds Ltd',
-    html: html,
-    text: `Thank you for your order, ${order.customer.name}! Order ID: ${order.orderId}. Your order total is £${order.pricing.grandTotal.toFixed(2)}. We have attached your invoice PDF. Expected manufacturing time is 7-14 working days.`,
-    attachments: [
-      {
-        filename: `Order-${order.orderId}.pdf`,
-        content: pdfBuffer,
-        contentType: 'application/pdf'
-      }
-    ]
-  });
+  try {
+    const info = await transporter.sendMail({
+      from: `Blissful Blinds Ltd <${config.emailUser || 'no-reply@blissfulblindsltd.co.uk'}>`,
+      to: order.customer.email,
+      subject: 'Thank you for your Order - Blissful Blinds Ltd',
+      html: html,
+      text: `Thank you for your order, ${order.customer.name}! Order ID: ${order.orderId}. Your order total is £${order.pricing.grandTotal.toFixed(2)}. We have attached your invoice PDF. Expected manufacturing time is 7-14 working days.`,
+      attachments: [
+        {
+          filename: `Order-${order.orderId}.pdf`,
+          content: pdfBuffer,
+          contentType: 'application/pdf'
+        }
+      ]
+    });
+    return { success: true, messageId: info.messageId };
+  } catch (err) {
+    console.error(`[email] Failed to send customer confirmation for ${order.orderId}:`, err.message);
+    return { success: false, error: err.message };
+  }
 }
 
 /**
@@ -306,21 +312,27 @@ async function sendOwnerAlertEmail(order, pdfBuffer, googleMapsLink) {
     </html>
   `;
 
-  return transporter.sendMail({
-    from: `Blissful Blinds Notifications <${config.emailUser || 'no-reply@blissfulblindsltd.co.uk'}>`,
-    to: config.ownerEmail,
-    subject: `🚨 NEW ORDER RECEIVED - Order ID: ${order.orderId}`,
-    html: html,
-    text: `New order alert! Order ID: ${order.orderId}. Customer: ${order.customer.name}. Product: ${order.product.name}. Total: £${order.pricing.grandTotal.toFixed(2)}. Open dashboard: https://blissfulblindsltd.co.uk/admin/orders/?id=${order.orderId}`,
-    replyTo: order.customer.email,
-    attachments: [
-      {
-        filename: `Order-${order.orderId}.pdf`,
-        content: pdfBuffer,
-        contentType: 'application/pdf'
-      }
-    ]
-  });
+  try {
+    const info = await transporter.sendMail({
+      from: `Blissful Blinds Notifications <${config.emailUser || 'no-reply@blissfulblindsltd.co.uk'}>`,
+      to: config.ownerEmail,
+      subject: `🚨 NEW ORDER RECEIVED - Order ID: ${order.orderId}`,
+      html: html,
+      text: `New order alert! Order ID: ${order.orderId}. Customer: ${order.customer.name}. Product: ${order.product.name}. Total: £${order.pricing.grandTotal.toFixed(2)}. Open dashboard: https://blissfulblindsltd.co.uk/admin/orders/?id=${order.orderId}`,
+      replyTo: order.customer.email,
+      attachments: [
+        {
+          filename: `Order-${order.orderId}.pdf`,
+          content: pdfBuffer,
+          contentType: 'application/pdf'
+        }
+      ]
+    });
+    return { success: true, messageId: info.messageId };
+  } catch (err) {
+    console.error(`[email] Failed to send owner alert for ${order.orderId}:`, err.message);
+    return { success: false, error: err.message };
+  }
 }
 
 module.exports = {

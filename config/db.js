@@ -1,15 +1,12 @@
 const mongoose = require('mongoose');
+const config = require('./config');
 
 /**
- * Connects to the MongoDB database using the environment variable MONGODB_URI.
- * Includes automated connection retry logic and error logging.
+ * Connects to the MongoDB database using config.mongodbUri (which falls back
+ * to a local dev URI when MONGODB_URI isn't set). Includes error logging.
  */
 async function connectDB() {
-  const uri = process.env.MONGODB_URI;
-  if (!uri) {
-    console.error('Error: MONGODB_URI is not defined in the environment variables.');
-    process.exit(1);
-  }
+  const uri = config.mongodbUri;
 
   try {
     // Set Mongoose options
