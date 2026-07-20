@@ -1,6 +1,6 @@
 const { generateInvoicePDF } = require('./pdfGenerator');
 const { sendCustomerConfirmationEmail, sendOwnerAlertEmail } = require('./emailService');
-const { sendWhatsAppNotifications } = require('./whatsappService');
+const { sendWhatsAppNotifications } = require('./whatsapp');
 const { generateMapsLink } = require('./googleMapsHelper');
 const { logAudit } = require('./loggerService');
 const NotificationLog = require('../models/NotificationLog');
