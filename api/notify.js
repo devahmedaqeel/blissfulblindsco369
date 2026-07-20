@@ -1,13 +1,14 @@
 // POST /api/notify — upgraded form-submission endpoint
 // Generates a unique ID in format ORD-YYYY-XXXX, compiles a PDF using pdf-lib,
-// uploads it to a private Supabase bucket, sends an email (with PDF attachment),
-// and dispatches a CallMeBot WhatsApp text alert (with a signed PDF link) to the owner.
+// sends an email (with PDF attachment), and dispatches a Green API WhatsApp
+// text alert plus the same PDF (sent directly, no file hosting needed) to
+// the owner. Free WhatsApp Web-linked instance — no business verification,
+// no manual opt-in message, no Supabase bucket required.
 const { validateLeadSubmission } = require('./_lib/validateLead');
 const { sendMail, MAIL_TO } = require('./_lib/mailer');
 const { adminNotificationEmail, customerConfirmationEmail } = require('./_lib/templates');
 const { isRateLimited } = require('./_lib/rateLimit');
 const { recordEnquiry } = require('./_lib/enquiry');
-const { createClient } = require('@supabase/supabase-js');
 const { PDFDocument, rgb, StandardFonts } = require('pdf-lib');
 
 function getClientIp(req) {
@@ -182,48 +183,7 @@ module.exports = async (req, res) => {
       console.error('[notify] PDF compilation error:', pdfErr);
     }
 
-    // 3. Upload to a private Supabase bucket & get a time-limited signed URL.
-    // The bucket stays private (never public) because the PDF contains the
-    // client's name/phone/email/address — a public bucket would let anyone
-    // who guesses/finds a filename open another client's data. A signed URL
-    // grants time-boxed access to this one file only.
-    let pdfLink = '';
-    const SIGNED_URL_TTL_SECONDS = 7 * 24 * 60 * 60; // 7 days
-    const supabaseUrl = process.env.SUPABASE_URL;
-    const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
-
-    if (supabaseUrl && supabaseServiceKey && pdfBuffer) {
-      try {
-        const supabase = createClient(supabaseUrl, supabaseServiceKey);
-        const { error: uploadError } = await supabase.storage
-          .from('orders')
-          .upload(`${orderId}.pdf`, pdfBuffer, {
-            contentType: 'application/pdf',
-            upsert: true
-          });
-
-        if (uploadError) {
-          console.error('[notify] Supabase storage upload failed:', uploadError.message);
-        } else {
-          const { data: signedData, error: signError } = await supabase.storage
-            .from('orders')
-            .createSignedUrl(`${orderId}.pdf`, SIGNED_URL_TTL_SECONDS);
-
-          if (signError) {
-            console.error('[notify] Supabase signed URL creation failed:', signError.message);
-          } else {
-            pdfLink = signedData.signedUrl;
-            console.log('[notify] Supabase upload succeeded. Signed URL (7-day):', pdfLink);
-          }
-        }
-      } catch (sbErr) {
-        console.error('[notify] Supabase client error:', sbErr.message);
-      }
-    } else {
-      console.warn('[notify] Supabase credentials or PDF buffer missing — skipping upload.');
-    }
-
-    // 4. Send Nodemailer Emails (with PDF attachment + ID in body)
+    // 3. Send Nodemailer Emails (with PDF attachment + ID in body)
     let emailDelivered = false;
     try {
       const admin = adminNotificationEmail({
@@ -257,15 +217,20 @@ module.exports = async (req, res) => {
       console.error('[notify] Nodemailer dispatch failed:', mailErr.message);
     }
 
-    // 5. Send WhatsApp notification via CallMeBot (owner alert).
-    // CallMeBot's free tier is text-only — it can't attach a file — so the
-    // signed Supabase PDF link (from step 3) is appended to the message
-    // instead of the PDF itself.
-    const callMeBotApiKey = process.env.CALLMEBOT_API_KEY;
-    const ownerWhatsappNumber = process.env.OWNER_WHATSAPP_NUMBER;
+    // 4. Send WhatsApp notification via Green API (owner alert): text first,
+    // then the same PDF buffer sent directly (no file hosting/URL needed —
+    // sendFileByUpload takes the multipart buffer straight to WhatsApp).
+    const greenApiId = process.env.GREENAPI_ID;
+    const greenApiToken = process.env.GREENAPI_TOKEN;
+    const myWhatsapp = process.env.MY_WHATSAPP;
 
-    if (callMeBotApiKey && ownerWhatsappNumber) {
+    if (greenApiId && greenApiToken && myWhatsapp) {
       try {
+        let chatId = myWhatsapp.replace(/[^\d]/g, '');
+        if (!chatId.endsWith('@c.us')) {
+          chatId += '@c.us';
+        }
+
         const formattedText = `🔔 *NEW BOOKING RECEIVED*
 ----------------------------------------
 🆔 *Order ID:* ${orderId}
@@ -279,27 +244,47 @@ module.exports = async (req, res) => {
 💬 *Message:* ${message || 'None'}
 ----------------------------------------
 🕐 *Submitted:* ${submittedAtDisplay}
-🌐 *Website:* https://blissfulblindsltd.co.uk${pdfLink ? `\n📥 *Invoice PDF (valid 7 days):* ${pdfLink}` : ''}`;
+🌐 *Website:* https://blissfulblindsltd.co.uk`;
 
-        // CallMeBot expects the recipient with a leading + and country code.
-        const recipient = ownerWhatsappNumber.replace(/[^\d+]/g, '');
-        const callMeBotUrl = `https://api.callmebot.com/whatsapp.php?phone=${encodeURIComponent(recipient)}&text=${encodeURIComponent(formattedText)}&apikey=${encodeURIComponent(callMeBotApiKey)}`;
+        const sendTextUrl = `https://api.green-api.com/waInstance${greenApiId}/sendMessage/${greenApiToken}`;
+        const textResponse = await fetch(sendTextUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ chatId, message: formattedText })
+        });
 
-        const cmbResponse = await fetch(callMeBotUrl);
-        if (!cmbResponse.ok) {
-          const errText = await cmbResponse.text().catch(() => '');
-          console.error('[notify] CallMeBot dispatch failed status:', cmbResponse.status, errText.slice(0, 300));
+        if (!textResponse.ok) {
+          console.error('[notify] Green API text dispatch failed status:', textResponse.status);
         } else {
-          console.log('[notify] CallMeBot WhatsApp alert dispatched.');
+          console.log('[notify] Green API text alert dispatched.');
+        }
+
+        // Send the PDF directly — same in-memory buffer as the email
+        // attachment, never regenerated, no separate storage step.
+        if (pdfBuffer) {
+          const sendFileUrl = `https://api.green-api.com/waInstance${greenApiId}/sendFileByUpload/${greenApiToken}`;
+          const form = new FormData();
+          form.append('chatId', chatId);
+          form.append('file', new Blob([pdfBuffer], { type: 'application/pdf' }), `${orderId}.pdf`);
+          form.append('caption', `Booking PDF for Order ID: ${orderId}`);
+
+          const fileResponse = await fetch(sendFileUrl, { method: 'POST', body: form });
+
+          if (!fileResponse.ok) {
+            const errText = await fileResponse.text().catch(() => '');
+            console.error('[notify] Green API file dispatch failed status:', fileResponse.status, errText.slice(0, 300));
+          } else {
+            console.log('[notify] Green API PDF document dispatched.');
+          }
         }
       } catch (waErr) {
-        console.error('[notify] CallMeBot process error:', waErr.message);
+        console.error('[notify] Green API process error:', waErr.message);
       }
     } else {
-      console.warn('[notify] CallMeBot credentials missing — skipping WhatsApp alert.');
+      console.warn('[notify] Green API credentials missing — skipping WhatsApp alert.');
     }
 
-    // 6. Record to DB (Supabase lead record fallback)
+    // 5. Record to DB (Supabase lead record fallback)
     try {
       await recordEnquiry({
         source, sourceLabel, name, email, phone, address, postcode, service, preferredColor,
@@ -310,7 +295,7 @@ module.exports = async (req, res) => {
       console.error('[notify] Database record failed:', dbErr.message);
     }
 
-    // 7. Safe return 201/200 code
+    // 6. Safe return 201/200 code
     return res.status(201).json({
       message: 'Thank you! Your request has been received and our team will be in touch shortly.',
       orderId,
