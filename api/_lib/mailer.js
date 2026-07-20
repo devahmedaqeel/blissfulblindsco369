@@ -96,7 +96,7 @@ function sanitizeHeaderValue(value) {
  * just because email delivery had a hiccup. Returns
  * { success, error?, previewUrl? } so the caller can log/report as needed.
  */
-async function sendMail({ to, subject, html, text, replyTo }) {
+async function sendMail({ to, subject, html, text, replyTo, attachments }) {
   try {
     if (!MAIL_FROM) {
       throw new Error('MAIL_FROM is not configured.');
@@ -108,7 +108,8 @@ async function sendMail({ to, subject, html, text, replyTo }) {
       subject: sanitizeHeaderValue(subject),
       html,
       text,
-      replyTo: replyTo ? sanitizeHeaderValue(replyTo) : undefined
+      replyTo: replyTo ? sanitizeHeaderValue(replyTo) : undefined,
+      attachments
     });
 
     const result = { success: true, messageId: info.messageId };
