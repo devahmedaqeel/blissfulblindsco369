@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const Counter = require('../models/Counter');
 const { validateOrderSubmission } = require('../utils/validation');
 const { processOrderNotifications } = require('../services/notificationService');
 const { logAudit } = require('../services/loggerService');
@@ -6,28 +7,28 @@ const { logAudit } = require('../services/loggerService');
 /**
  * Generates a unique Order ID in the format BB-YYYYMMDD-XXXX.
  * E.g., BB-20260720-0001
+ *
+ * Uses an atomic $inc on a per-day Counter document rather than
+ * count-then-insert — counting existing orders and computing count+1 races
+ * under concurrent submissions (two requests can read the same count before
+ * either saves), producing duplicate IDs and a failed order for one of them.
+ * findOneAndUpdate's $inc is atomic at the database level, so concurrent
+ * callers always get distinct sequence numbers.
  */
 async function generateUniqueOrderId() {
   const now = new Date();
-  
-  // Format date as YYYYMMDD
   const yyyy = now.getFullYear();
   const mm = String(now.getMonth() + 1).padStart(2, '0');
   const dd = String(now.getDate()).padStart(2, '0');
   const dateStr = `${yyyy}${mm}${dd}`;
 
-  // Start and end of today
-  const startOfToday = new Date(now.setHours(0, 0, 0, 0));
-  const endOfToday = new Date(now.setHours(23, 59, 59, 999));
+  const counter = await Counter.findOneAndUpdate(
+    { _id: `order-${dateStr}` },
+    { $inc: { seq: 1 } },
+    { new: true, upsert: true }
+  );
 
-  // Count orders placed today
-  const count = await Order.countDocuments({
-    createdAt: { $gte: startOfToday, $lte: endOfToday }
-  });
-
-  const nextNumber = count + 1;
-  const sequenceStr = String(nextNumber).padStart(4, '0');
-  
+  const sequenceStr = String(counter.seq).padStart(4, '0');
   return `BB-${dateStr}-${sequenceStr}`;
 }
 
