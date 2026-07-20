@@ -13,10 +13,7 @@ const SMTP_PORT = Number(process.env.SMTP_PORT || process.env.EMAIL_PORT) || 465
 const SMTP_SECURE = process.env.SMTP_SECURE ? process.env.SMTP_SECURE !== 'false' : true;
 const SMTP_USER = process.env.SMTP_USER || process.env.EMAIL_USER || '';
 const SMTP_PASS = process.env.SMTP_PASS || process.env.EMAIL_PASS || '';
-// Falls back to a placeholder address (not a real mailbox) only so the
-// Ethereal dev/test path always has a syntactically valid From header —
-// production always has SMTP_USER set (enforced by getTransporter below),
-// so this branch is never reached with real mail actually being sent.
+
 const MAIL_FROM = process.env.MAIL_FROM || (SMTP_USER ? `Blissful Blinds Ltd <${SMTP_USER}>` : 'Blissful Blinds Ltd <no-reply@blissfulblindsltd.co.uk>');
 const MAIL_TO = process.env.MAIL_TO || process.env.OWNER_EMAIL || SMTP_USER || 'info@blissfulblindsltd.co.uk';
 
@@ -58,6 +55,7 @@ async function createEtherealTransport() {
 function getTransporter() {
   if (!transporterPromise) {
     if (SMTP_PASS && SMTP_USER) {
+      console.log('[email] Initializing real SMTP transport using:', SMTP_HOST, SMTP_USER);
       transporterPromise = Promise.resolve(createRealTransport());
     } else if (IS_PRODUCTION) {
       // Never fall back to a fake transport in production — that would
@@ -117,6 +115,8 @@ async function sendMail({ to, subject, html, text, replyTo, attachments }) {
       const previewUrl = nodemailer.getTestMessageUrl(info);
       result.previewUrl = previewUrl;
       console.log(`[email] (Ethereal preview) "${subject}" -> ${to}: ${previewUrl}`);
+    } else {
+      console.log(`[email] Sent successfully: "${subject}" -> ${to}`);
     }
     return result;
   } catch (err) {

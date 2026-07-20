@@ -1,3 +1,4 @@
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 const notifyHandler = require('../api/notify');
 
 // Mock request and response objects
@@ -40,10 +41,10 @@ const mockRes = {
     
     if (this.statusCode === 201) {
       console.log('✓ TEST PASSED: Booking lead processed, ID generated, and alerts successfully triggered.');
-      process.exit(0);
+      setTimeout(() => process.exit(0), 1000);
     } else {
       console.error('❌ TEST FAILED: Processing did not return status 201.');
-      process.exit(1);
+      setTimeout(() => process.exit(1), 1000);
     }
   }
 };
