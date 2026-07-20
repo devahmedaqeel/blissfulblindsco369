@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 const mongoose = require('mongoose');
 const AdminUser = require('../models/AdminUser');
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
 const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/blissful-blinds';
 

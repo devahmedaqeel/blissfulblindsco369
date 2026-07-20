@@ -6,7 +6,7 @@ const { calculateOrderPricing } = require('../controllers/orderController');
 const { generateInvoicePDF } = require('../services/pdfGenerator');
 const { processOrderNotifications } = require('../services/notificationService');
 
-require('dotenv').config();
+require('dotenv').config({ path: require('path').resolve(__dirname, '../.env') });
 
 // Standard test colors
 const GREEN = '\x1b[32m';
